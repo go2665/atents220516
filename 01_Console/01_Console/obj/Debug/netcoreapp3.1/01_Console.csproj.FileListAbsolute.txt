@@ -1,0 +1,14 @@
+D:\Go\Repository\atents220516\01_Console\01_Console\bin\Debug\netcoreapp3.1\01_Console.exe
+D:\Go\Repository\atents220516\01_Console\01_Console\bin\Debug\netcoreapp3.1\01_Console.deps.json
+D:\Go\Repository\atents220516\01_Console\01_Console\bin\Debug\netcoreapp3.1\01_Console.runtimeconfig.json
+D:\Go\Repository\atents220516\01_Console\01_Console\bin\Debug\netcoreapp3.1\01_Console.runtimeconfig.dev.json
+D:\Go\Repository\atents220516\01_Console\01_Console\bin\Debug\netcoreapp3.1\01_Console.dll
+D:\Go\Repository\atents220516\01_Console\01_Console\bin\Debug\netcoreapp3.1\01_Console.pdb
+D:\Go\Repository\atents220516\01_Console\01_Console\obj\Debug\netcoreapp3.1\01_Console.csproj.AssemblyReference.cache
+D:\Go\Repository\atents220516\01_Console\01_Console\obj\Debug\netcoreapp3.1\01_Console.GeneratedMSBuildEditorConfig.editorconfig
+D:\Go\Repository\atents220516\01_Console\01_Console\obj\Debug\netcoreapp3.1\01_Console.AssemblyInfoInputs.cache
+D:\Go\Repository\atents220516\01_Console\01_Console\obj\Debug\netcoreapp3.1\01_Console.AssemblyInfo.cs
+D:\Go\Repository\atents220516\01_Console\01_Console\obj\Debug\netcoreapp3.1\01_Console.csproj.CoreCompileInputs.cache
+D:\Go\Repository\atents220516\01_Console\01_Console\obj\Debug\netcoreapp3.1\01_Console.dll
+D:\Go\Repository\atents220516\01_Console\01_Console\obj\Debug\netcoreapp3.1\01_Console.pdb
+D:\Go\Repository\atents220516\01_Console\01_Console\obj\Debug\netcoreapp3.1\01_Console.genruntimeconfig.cache
