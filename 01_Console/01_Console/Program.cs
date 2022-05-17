@@ -35,7 +35,8 @@ namespace _01_Console
 
             string myName = "고병조";
 
-            int level = 5;
+            // 변수를 만드는 것을 "선언"이라고 함.
+            int level = 5;      
             float exp = 95.12345f;
             string name = "인간";
 
@@ -52,6 +53,47 @@ namespace _01_Console
             // 가장 최신 방법
             Console.WriteLine($"나는 {name}이고 레벨은 {level}고 경험치는 {exp:f2}%이다.");
 
+
+            // 스코프(scope)
+            // 변수가 살아있는 범위
+            //  int i = 0;
+            //  {
+            //      int j = 20;
+            //  }
+            //  j = 30; //j의 스코프 밖이라 접근이 불가능하다. 에러 발생
+
+            // 개행문자(줄바꿈용 문자)
+            // "개굴개굴 개구리 노래를 한다."
+            // "아들 손자 며느리 다 모여서."
+            string song = "개굴개굴 개구리 노래를 한다.\n아들 손자 며느리 다 모여서.";
+            Console.WriteLine(song);
+
+            //Console.Write("입력해 주세요 : ");
+            //string inputline = Console.ReadLine();  //입력 받기
+            //Console.WriteLine(inputline);
+
+            string userName;
+            string userLevel;
+            string userExp;
+            string userStr;
+            string userDex;
+            string userInt;
+
+            Console.Write("이름을 입력해 주세요 : ");
+            userName = Console.ReadLine();
+            Console.Write("레벨을 입력해 주세요 : ");
+            userLevel = Console.ReadLine();
+            Console.Write("경험치를 입력해 주세요 : ");
+            userExp = Console.ReadLine();
+            Console.Write("힘을 입력해 주세요 : ");
+            userStr = Console.ReadLine();
+            Console.Write("민첩을 입력해 주세요 : ");
+            userDex = Console.ReadLine();
+            Console.Write("지능을 입력해 주세요 : ");
+            userInt = Console.ReadLine();
+
+            Console.WriteLine(
+                $"나의 이름은 {userName}이고 레벨은 {userLevel}이며 경험치는 {userExp}%이다.\n힘: {userStr}, 민첩: {userDex}, 지능: {userInt}");
         }
     }
 }
