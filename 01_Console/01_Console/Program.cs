@@ -214,7 +214,7 @@ namespace _01_Console
         //  4) 함수 바디( {} 사이 )
 
         // 함수 프로토타입 : 리턴타입 함수이름(파라메터), 다른 함수와의 구분에 사용됨
-        //                  void PrintStatus(int, int, int)
+        //                  void PrintStatus(int, int, int);    //아래의 모든 함수들은 다 다른 함수
         //                  void PrintStatus2(int, int, int)
         //                  int PrintStatus(int, int, int)
         //                  void PrintStatus(int, int)
