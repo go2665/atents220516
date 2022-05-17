@@ -72,28 +72,122 @@ namespace _01_Console
             //string inputline = Console.ReadLine();  //입력 받기
             //Console.WriteLine(inputline);
 
-            string userName;
-            int userLevel;
-            float userExp;
-            int userStr;
-            int userDex;
-            int userInt;
+            string userName = "고";
+            int userLevel = 15;
+            float userExp = 31.0f;
+            int userStr = 15;
+            int userDex = 5;
+            int userInt = 10;
 
-            Console.Write("이름을 입력해 주세요 : ");
-            userName = Console.ReadLine();
-            Console.Write("레벨을 입력해 주세요 : ");
-            userLevel = int.Parse(Console.ReadLine());
-            Console.Write("경험치를 입력해 주세요 : ");
-            userExp = float.Parse(Console.ReadLine());
-            Console.Write("힘을 입력해 주세요 : ");
-            userStr = int.Parse(Console.ReadLine());
-            Console.Write("민첩을 입력해 주세요 : ");
-            userDex = int.Parse(Console.ReadLine());
-            Console.Write("지능을 입력해 주세요 : ");
-            userInt = int.Parse(Console.ReadLine());
-
+            //Console.Write("이름을 입력해 주세요 : ");
+            //userName = Console.ReadLine();
+            //Console.Write("레벨을 입력해 주세요 : ");
+            //userLevel = int.Parse(Console.ReadLine());
+            //Console.Write("경험치를 입력해 주세요 : ");
+            //userExp = float.Parse(Console.ReadLine());
+            //Console.Write("힘을 입력해 주세요 : ");
+            //userStr = int.Parse(Console.ReadLine());
+            //Console.Write("민첩을 입력해 주세요 : ");
+            //userDex = int.Parse(Console.ReadLine());
+            //Console.Write("지능을 입력해 주세요 : ");
+            //userInt = int.Parse(Console.ReadLine());
+            
             Console.WriteLine(
                 $"나의 이름은 {userName}이고 레벨은 {userLevel}이며 경험치는 {userExp}%이다.\n힘: {userStr}, 민첩: {userDex}, 지능: {userInt}");
+
+            // 제어문
+            // 조건에 따라 다른 코드를 실행하거나 특정 횟수만큼 반복하도록 하게 하는 문구
+            //  조건문 - if elseif else
+            //  반복문 - for, while, do-while
+
+
+            // if문의 기본 형태
+            // if( 조건 )
+            // {
+            //     조건이 맞으면 실행될 코드
+            // }
+
+            // 레벨이 10보다 크면 "고랩이다"를 출력. 10보다 작거나 같으면 "저랩이다"를 출력.
+            // 레벨이 10보다 크면 "고랩이다"를 출력. 아니면 "저랩이다"를 출력.
+            //if ( userLevel > 10 )   // 15 > 10
+            //{
+            //    //if문은 ()사이의 조건이 맞는 말이면 {} 사이의 코드가 실행됨
+            //    Console.WriteLine("고랩이다.");
+            //}
+
+            //if ( userLevel <= 10 )
+            //{
+            //    Console.WriteLine("저랩이다.");
+            //}
+
+            // if-else문의 기본 형태
+            // if( 조건 )
+            // {
+            //     조건이 맞으면 실행될 코드
+            // }
+            // else
+            // {
+            //     조건이 틀리면 실행될 코드
+            // }
+            if( userLevel > 10 )
+            {
+                Console.WriteLine("고랩이다.");
+            }
+            else
+            {
+                Console.WriteLine("저랩이다.");
+            }
+
+            // if-else if문의 기본 형태
+            // if( 조건1 )
+            // {
+            //     조건1이 맞으면 실행될 코드
+            // }
+            // else if( 조건2 )
+            // {
+            //     조건2가 맞으면 실행될 코드
+            // }
+            // else
+            // {
+            //     모든 조건이 틀리면 실행될 코드
+            // }
+
+            // 레벨이 10 이하면 저랩, 11~20 이면 중랩, 21~30 이면 고랩
+            if ( userLevel > 20)
+            {
+                Console.WriteLine("고랩");
+            }
+            else if( userLevel > 10 )
+            {
+                Console.WriteLine("중랩");
+            }
+            else
+            {
+                Console.WriteLine("저랩");
+            }
+
+            // 반복문 
+            // 반복하는 문장. 특정 회수만큼 반복하고 싶을 때 사용. 특정 조건이 참이면 계속 반복되는 문장
+            // while, for
+
+            // while (조건)
+            // {
+            //     조건이 만족하면 반복해서 실행될 코드
+            //     코드를 실행한 후 다시 조건을 확인
+            // }
+
+            // 레벨업 10번찍기
+            int count = 0;
+            while(count < 10)
+            {
+                Console.WriteLine("Level up!!!");                
+                count++;    //count = count + 1;
+            }
+
+            for( int countFor = 0; countFor < 10; countFor++)
+            {
+                Console.WriteLine("Level up!!!!!");
+            }
         }
     }
 }
