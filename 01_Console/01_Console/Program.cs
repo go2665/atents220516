@@ -188,6 +188,45 @@ namespace _01_Console
             {
                 Console.WriteLine("Level up!!!!!");
             }
+
+
+            /// 실습 2번
+            Console.Write("얼마를 랩업할까요? : ");
+            string temp = Console.ReadLine();       // 입력 받기
+            int levelUpCount = int.Parse(temp);     // 입력 받은 문자열을 숫자로 바꾸기
+            PrintStatus(userStr, userDex, userInt); // PrintStatus 함수 호출
+            for (int i=0; i<levelUpCount; i++)       // 입력받은 횟수만큼 반복
+            {
+                userStr++;              // 1 증가 시키기
+                userDex = userDex + 1;  // 1 증가 시키기
+                userInt += 1;           // 1 증가 시키기
+                Console.WriteLine("Level UP!!!!!!!!");
+            }
+            PrintStatus(userStr, userDex, userInt); // PrintStatus 함수 호출
+        }
+
+
+        // 함수 : 특정한 기능을 수행하기 위해 코드를 모아 놓은 것
+        // 함수의 구성요소
+        //  1) 이름 (ex)PrintStatus)
+        //  2) 함수 리턴타입 (void는 리턴값이 없는 경우)
+        //  3) 파라메터 (이름 뒤에 있는 () 사이에 있는 변수들, 0개 이상 존재)
+        //  4) 함수 바디( {} 사이 )
+
+        // 함수 프로토타입 : 리턴타입 함수이름(파라메터), 다른 함수와의 구분에 사용됨
+        //                  void PrintStatus(int, int, int)
+        //                  void PrintStatus2(int, int, int)
+        //                  int PrintStatus(int, int, int)
+        //                  void PrintStatus(int, int)
+        //                  void PrintStatus(int, int, float)
+
+        static void PrintStatus(int str, int dex, int intelligence)
+        {
+            Console.WriteLine($"┌ 스테이터스 ────────────────────────────┐");
+            Console.WriteLine($"│   힘 : {str,5}                           │");
+            Console.WriteLine($"│ 민첩 : {dex,5}                           │");
+            Console.WriteLine($"│ 지능 : {intelligence,5}                           │");
+            Console.WriteLine($"└────────────────────────────────────────┘");
         }
     }
 }
