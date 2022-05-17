@@ -73,24 +73,24 @@ namespace _01_Console
             //Console.WriteLine(inputline);
 
             string userName;
-            string userLevel;
-            string userExp;
-            string userStr;
-            string userDex;
-            string userInt;
+            int userLevel;
+            float userExp;
+            int userStr;
+            int userDex;
+            int userInt;
 
             Console.Write("이름을 입력해 주세요 : ");
             userName = Console.ReadLine();
             Console.Write("레벨을 입력해 주세요 : ");
-            userLevel = Console.ReadLine();
+            userLevel = int.Parse(Console.ReadLine());
             Console.Write("경험치를 입력해 주세요 : ");
-            userExp = Console.ReadLine();
+            userExp = float.Parse(Console.ReadLine());
             Console.Write("힘을 입력해 주세요 : ");
-            userStr = Console.ReadLine();
+            userStr = int.Parse(Console.ReadLine());
             Console.Write("민첩을 입력해 주세요 : ");
-            userDex = Console.ReadLine();
+            userDex = int.Parse(Console.ReadLine());
             Console.Write("지능을 입력해 주세요 : ");
-            userInt = Console.ReadLine();
+            userInt = int.Parse(Console.ReadLine());
 
             Console.WriteLine(
                 $"나의 이름은 {userName}이고 레벨은 {userLevel}이며 경험치는 {userExp}%이다.\n힘: {userStr}, 민첩: {userDex}, 지능: {userInt}");
