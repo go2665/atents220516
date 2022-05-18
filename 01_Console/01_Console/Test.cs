@@ -8,7 +8,7 @@ namespace _01_Console
     {        
         public void Test3_ClassInstance()
         {
-            Human human1 = new Human(20,10,10);
+            Human human1 = new Human(20,10,10, "인간1");
             Human human2 = new Human(15,15,15);
 
             human1.HealthPoint = 50;

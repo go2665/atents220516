@@ -18,6 +18,7 @@ namespace _01_Console
         private int strength = 10;
         private int dexterity = 10;
         private int wisdom = 10;
+        public string name = "이름";
 
         // 프로퍼티 : 특수한 함수(매서드)
         public int HealthPoint
@@ -73,23 +74,33 @@ namespace _01_Console
             dexterity = 10;
             wisdom = 10;
         }
-        public Human(int str, int dex, int wis)
+
+        public Human(int str, int dex, int wis, string newName = "새이름")
         {
             strength = str;
             dexterity = dex;
             wisdom = wis;
-        }
-        
+            name = newName;
+        }        
 
         // 기능 -> 맴버 함수(매서드)로 표현
-        public void Attack()
+        public void Attack(Human attackTarget)
         {
             // 공격할 수 있다.
+            Console.WriteLine($"{name}은(는) {attackTarget.name}를 공격합니다.");
+            Console.WriteLine($"{name}은(는) {strength} 만큼 피해를 줍니다.");
+            attackTarget.TakeDamage(strength);
         }
 
-        public void TakeDamage()
+        public void TakeDamage(int damage)
         {
             // 데미지를 받을 수 있다.
+            Console.WriteLine($"{name}은(는) {damage}만큼 피해를 입었습니다.");            
+            HealthPoint -= damage;
+            if ( HealthPoint <= 0 )     // 비교를 할때는 최대한 큰 범위로 비교를 해야한다.(나중에 실수나 수정할 일이 대체로 줄어든다)
+            {
+                Console.WriteLine($"{name}은(는) 죽었다.");
+            }
         }
 
         public void PrintStatus()
