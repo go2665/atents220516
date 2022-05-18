@@ -10,12 +10,30 @@ namespace _01_Console
         {
             Human humanInstance = null;
             humanInstance = new Human();    // Human클래스의 인스턴스를 만들었다.
-
-            //humanInstance.HealthPoint = 200;
-            //Console.WriteLine($"Health Point : {humanInstance.HealthPoint}");
-
+            
             //humanInstance.healthPoint = 200;
             //Console.WriteLine($"Health Point : {humanInstance.healthPoint}");
+
+            humanInstance.HealthPoint = 90;    // HealthPoint 프로퍼티를 이용해 값을 변경했다.
+            Console.WriteLine($"Health Point : {humanInstance.HealthPoint}");
+
+            // 힘과 민첩과 지능을 출력하기
+            Console.WriteLine($"힘 : {humanInstance.Strength}");
+            Console.WriteLine($"민첩 : {humanInstance.Dexterity}");
+            Console.WriteLine($"지혜 : {humanInstance.Wisdom}\n");
+            
+            // Human이 힐을 받아서 HealthPoint가 50 증가했다.
+            Console.WriteLine("Human이 힐을 받아서 HealthPoint가 50 증가했다.");   // 최대 HP는 100이다.
+            humanInstance.HealthPoint += 50;            // hp = 140. humanInstance.HealthPoint = humanInstance.HealthPoint + 50;            
+
+            // HealthPoint의 set 프로퍼티 때문에 이제 필요없음
+            //if (humanInstance.HealthPoint > 100)      // humanInstance.HealthPoint가 100을 초과하면 
+            //{
+            //    humanInstance.HealthPoint = 100;
+            //}        
+
+            Console.WriteLine($"Health Point : {humanInstance.HealthPoint}");
+
         }
 
         public void Test1_VariableFunctionContol()

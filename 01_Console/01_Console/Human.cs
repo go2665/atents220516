@@ -14,6 +14,7 @@ namespace _01_Console
     {
         // 데이터 -> 맴버 변수(필드)로 표현
         private int healthPoint = 100;
+        private int healthPointMax = 100;
         private int strength = 10;
         private int dexterity = 10;
         private int wisdom = 10;
@@ -29,6 +30,10 @@ namespace _01_Console
             {
                 //strength = value;
                 healthPoint = value;
+                if(healthPoint > healthPointMax)
+                {
+                    healthPoint = healthPointMax;
+                }
             }
         }
 
