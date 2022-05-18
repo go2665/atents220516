@@ -13,3 +13,5 @@
 5/18
 1. Human 클래스의 변수 strength, dexterity, wisdom의 읽기 전용 프로퍼티 만들기
    4시 5분까지
+2. Human의 HealthPoint가 0이하로 내려갔을 때 0이 되도록 수정하기
+   6시까지

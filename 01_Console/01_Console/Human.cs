@@ -30,10 +30,17 @@ namespace _01_Console
             {
                 //strength = value;
                 healthPoint = value;
-                if(healthPoint > healthPointMax)
-                {
-                    healthPoint = healthPointMax;
-                }
+
+
+                //if(healthPoint > healthPointMax)
+                //{
+                //    healthPoint = healthPointMax;
+                //}
+                //else if( healthPoint < 0 )
+                //{
+                //    healthPoint = 0;
+                //}                
+                healthPoint = Math.Clamp(healthPoint, 0, healthPointMax);
             }
         }
 
