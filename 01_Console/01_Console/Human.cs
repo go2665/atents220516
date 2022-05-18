@@ -92,6 +92,14 @@ namespace _01_Console
             attackTarget.TakeDamage(strength);
         }
 
+        public void Attack(Orc attackTarget)
+        {
+            // 공격할 수 있다.
+            Console.WriteLine($"{name}은(는) {attackTarget.name}를 공격합니다.");
+            Console.WriteLine($"{name}은(는) {strength} 만큼 피해를 줍니다.");
+            attackTarget.TakeDamage(strength);
+        }
+
         public void TakeDamage(int damage)
         {
             // 데미지를 받을 수 있다.
