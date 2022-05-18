@@ -6,6 +6,23 @@ namespace _01_Console
 {
     class Test
     {        
+        public void Test4_HumanVSOrc()
+        {
+            Human human = new Human(30, 20, 20, "인간A");
+            Orc orc = new Orc();
+
+            // 산술연산자 : + - * /
+
+            // 논리 연산자 : 참이냐 거짓이냐를 계산하는 연산자.
+            // && (and, 앤드, 그리고, 논리곱) : && 양쪽의 값이 둘 다 참이면 참, 아니면 거짓 ( true && true == true,  true && false == false, false && true == false, false && false == false )
+            // || (or, 오어, 또는, 논리합) : || 양쪽의 값이 하나라도 참이면 참, 둘다 거짓이면 거짓 ( true || true == true, true || false == true, false || true = true, false || false == false)
+            while ((human.HealthPoint > 0) && (orc.HealthPoint > 0))    // 둘 중 한명이라도 hp가 0보다 작거나 같이지면 while 종료
+            {
+                human.Attack(orc);
+                orc.Attack(human);
+            }
+        }
+
         public void Test3_ClassInstance()
         {
             Human human1 = new Human(20,10,10, "개구리");

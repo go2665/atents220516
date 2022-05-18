@@ -15,7 +15,8 @@ namespace _01_Console
 
             //aaa.Test1_VariableFunctionContol();
             //aaa.Test2_ClassTest();
-            aaa.Test3_ClassInstance();            
+            //aaa.Test3_ClassInstance();            
+            aaa.Test4_HumanVSOrc();
         }
     }
 }
