@@ -6,6 +6,18 @@ namespace _01_Console
 {
     class Test
     {        
+        public void Test3_ClassInstance()
+        {
+            Human human1 = new Human(20,10,10);
+            Human human2 = new Human(15,15,15);
+
+            human1.HealthPoint = 50;
+            Console.WriteLine($"Human1");
+            human1.PrintStatus();
+            Console.WriteLine($"Human2");
+            human2.PrintStatus();
+        }
+
         public void Test2_ClassTest()
         {
             // 주석 설정 단축키

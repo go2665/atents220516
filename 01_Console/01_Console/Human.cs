@@ -66,6 +66,21 @@ namespace _01_Console
             get => wisdom;
         }
 
+        // 생성자(Constructor)
+        public Human()
+        {
+            strength = 10;
+            dexterity = 10;
+            wisdom = 10;
+        }
+        public Human(int str, int dex, int wis)
+        {
+            strength = str;
+            dexterity = dex;
+            wisdom = wis;
+        }
+        
+
         // 기능 -> 맴버 함수(매서드)로 표현
         public void Attack()
         {
@@ -75,6 +90,16 @@ namespace _01_Console
         public void TakeDamage()
         {
             // 데미지를 받을 수 있다.
-        }       
+        }
+
+        public void PrintStatus()
+        {
+            Console.WriteLine($"┌ 스테이터스 ────────────────────────────┐");
+            Console.WriteLine($"│   HP : {healthPoint,5}                           │");
+            Console.WriteLine($"│   힘 : {strength,5}                           │");
+            Console.WriteLine($"│ 민첩 : {dexterity,5}                           │");
+            Console.WriteLine($"│ 지능 : {wisdom,5}                           │");
+            Console.WriteLine($"└────────────────────────────────────────┘");
+        }
     }
 }
