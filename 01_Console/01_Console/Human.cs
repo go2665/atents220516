@@ -9,6 +9,7 @@ using System.Text;
 
 namespace _01_Console
 {
+    // 클래스 : 특정한 유형의 물체를 코드로 표현한 것(붕어빵틀)
     class Human
     {
         // 데이터 -> 맴버 변수(필드)로 표현
@@ -17,7 +18,41 @@ namespace _01_Console
         private int dexterity = 10;
         private int wisdom = 10;
 
-        // 프로퍼티
+        // 프로퍼티 : 특수한 함수(매서드)
+        public int HealthPoint
+        {
+            get // HealthPoint를 읽을 때 실행되는 함수.
+            {
+                return healthPoint;
+            }
+            set // HealthPoint 프로퍼티에 값을 넣을 때 실행되는 함수. 설정되는 값은 value라는 키워드에 들어있다.
+            {
+                //strength = value;
+                healthPoint = value;
+            }
+        }
+
+        public int Strength
+        {
+            get
+            {
+                return strength;
+            }
+        }
+
+        public int Dexterity
+        {
+            get => dexterity;   // 아래 주석과 같은 내용
+            //get
+            //{
+            //    return dexterity;
+            //}
+        }
+
+        public int Wisdom
+        {
+            get => wisdom;
+        }
 
         // 기능 -> 맴버 함수(매서드)로 표현
         public void Attack()
@@ -28,7 +63,6 @@ namespace _01_Console
         public void TakeDamage()
         {
             // 데미지를 받을 수 있다.
-        }
-       
+        }       
     }
 }
