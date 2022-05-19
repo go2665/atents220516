@@ -16,6 +16,7 @@ namespace _01_Console
     {
         // 데이터 -> 맴버 변수(필드)로 표현
         private int wisdom = 10;
+        Random random = new Random(DateTime.Now.Millisecond);
 
         // 프로퍼티 : 특수한 함수(매서드)
         public int Wisdom
@@ -35,6 +36,26 @@ namespace _01_Console
             dexterity = dex;
             wisdom = wis;
             name = newName;
+        }
+
+        public override void Attack(Character attackTarget)
+        {           
+            //30% 확률로 스킬로 공격한다.
+            if( random.NextDouble() < 0.3 )
+            {
+                Skill(attackTarget);
+            }
+            else
+            {
+                base.Attack(attackTarget);
+            }
+        }
+
+        void Skill(Character attackTarget)
+        {
+            Console.WriteLine($"{name}은(는) {attackTarget.name}를 스킬로 공격합니다.");
+            Console.WriteLine($"{name}은(는) {Wisdom * 2} 만큼 피해를 줍니다.");
+            attackTarget.TakeDamage(Wisdom * 2);
         }
 
         // 기능 -> 맴버 함수(매서드)로 표현
