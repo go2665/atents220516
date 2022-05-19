@@ -45,7 +45,7 @@ namespace _01_Console
         }
 
         // 부모 클래스로 된 변수는 자식 클래스도 담을 수 있다.
-        public void Attack(Character attackTarget)
+        public virtual void Attack(Character attackTarget)
         {
             // 공격할 수 있다.
             Console.WriteLine($"{name}은(는) {attackTarget.name}를 공격합니다.");

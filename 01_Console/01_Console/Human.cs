@@ -25,9 +25,7 @@ namespace _01_Console
 
         // 생성자(Constructor)
         public Human() : base()
-        {            
-            strength = 10;
-            dexterity = 10;
+        {
             wisdom = 10;
         }
 
