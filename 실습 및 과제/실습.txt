@@ -22,3 +22,6 @@
 5/19
 1. Orc클래스가 Character 클래스를 상속받게 하기
    7시 50까지
+
+2. Human 클래스의 Attack 함수 override 하기
+   9시 15분까지

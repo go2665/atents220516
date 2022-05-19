@@ -35,7 +35,7 @@ namespace _01_Console
             dexterity = dex;
             wisdom = wis;
             name = newName;
-        }        
+        }
 
         // 기능 -> 맴버 함수(매서드)로 표현
         public override void PrintStatus()
