@@ -5,7 +5,20 @@ using System.Text;
 namespace _01_Console
 {
     class Test
-    {        
+    {
+        public void Test5_Player()
+        {
+            // 컴퓨터는 시킨것만 한다.(절대적)
+            // 프로그래머가 설정하지 않은 상황에 컴퓨터가 도달하면 죽는다.(가벼우면 프로그램만 죽음. 무거우면 컴퓨터 자체가 다운(블루스크린))
+            // 프로그래머가 설정하지 않은 상황 = Exception
+            // throw new NotImplementedException();    // 어디가 문제인지 쉽게 알아보기 위해 설정한 것
+
+            Player player = new Player("너굴맨");
+            player.PrintStatus();
+            player.RestStatus();
+            player.PrintStatus();
+        }
+
         public void Test4_HumanVSOrc()
         {
             Human human = new Human(30, 20, 20, "인간A");

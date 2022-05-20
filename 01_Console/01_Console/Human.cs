@@ -15,8 +15,8 @@ namespace _01_Console
     class Human : Character
     {
         // 데이터 -> 맴버 변수(필드)로 표현
-        private int wisdom = 10;
-        Random random = new Random(DateTime.Now.Millisecond);
+        protected int wisdom = 10;
+        protected Random random = new Random(DateTime.Now.Millisecond);
 
         // 프로퍼티 : 특수한 함수(매서드)
         public int Wisdom
