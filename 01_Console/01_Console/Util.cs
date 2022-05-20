@@ -50,5 +50,11 @@ namespace _01_Console
 
             return result;
         }
+
+        //static public int ChiceSelection(params string[] ops)
+        //{
+        //    ops.Length;
+        //    ops[0]
+        //}
     }
 }
