@@ -13,8 +13,16 @@ namespace _01_Console
             Console.Write("당신의 이름을 입력해 주세요 : ");
             string name = Console.ReadLine();
             Player player = new Player(name);
-            player.RestStatus();
-            player.PrintStatus();
+
+            do
+            {
+                player.RestStatus();
+                player.PrintStatus();                
+            }
+            while ( !Util.ChoiceYesNo("이대로 진행할까요?") );    // do-while : 일단 실행하고 조건을 확인하는 반복문
+
+            // 비교 연산자
+            // ==(같다), !=(다르다), < , > , <=, >=
 
         }
 
