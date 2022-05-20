@@ -46,7 +46,12 @@ namespace _01_Console
             Console.Write($"{question} : ");
 
             string number = Console.ReadLine();
-            int.TryParse(number, out result);
+            int.TryParse(number, out result);   // 우선 문자열을 숫자로 변환 시도. 실패시 result에는 0이 들어간다.
+
+            if( result > 3 )
+            {
+                result = WRONG_OPTION;
+            }
 
             return result;
         }
