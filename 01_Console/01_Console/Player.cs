@@ -26,6 +26,39 @@ namespace _01_Console
             this.healthPoint = this.healthPointMax;
         }
 
+        public override void Attack(Character attackTarget)
+        {
+            int op = Util.WRONG_OPTION;
+            do
+            {
+                op = Util.Choice123("근접공격", "원거리공격", "마법공격", "어떻게 공격할까요?");
+            }
+            while (op == Util.WRONG_OPTION);
+
+            int damage = 0;
+            switch(op)
+            {
+                case 1: // 근접 공격을 선택했다.
+                    {
+                        damage = strength;
+                    }
+                    break;
+                case 2: // 원거리 공격을 선택했다.
+                    {
+                        damage = dexterity;
+                    }
+                    break;
+                case 3: // 마법 공격을 선택했다.
+                    {
+                        damage = wisdom;
+                    }
+                    break;
+                default:// 절대로 들어오면 안되는 것
+                    break;
+            }
+            attackTarget.TakeDamage(damage);
+        }
+
         public override void PrintStatus()
         {
             // base.PrintStatus();

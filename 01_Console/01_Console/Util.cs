@@ -22,6 +22,32 @@ namespace _01_Console
                 result = true;
             }
 
+            //switch(answer)
+            //{
+            //    case "yes":
+            //    case "Yes":
+            //    case "y":
+            //    case "Y":
+            //        result = true;
+            //        break;
+            //    default:
+            //        break;
+            //}
+
+            return result;
+        }
+
+        public const int WRONG_OPTION = 0; // 상수(항상 같은 수)
+        static public int Choice123(string op1, string op2, string op3, string question = "번호를 선택해 주세요")
+        {
+            int result = WRONG_OPTION;
+
+            Console.WriteLine($"1. {op1}     2. {op2}     3. {op3}");
+            Console.Write($"{question} : ");
+
+            string number = Console.ReadLine();
+            int.TryParse(number, out result);
+
             return result;
         }
     }

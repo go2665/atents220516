@@ -24,6 +24,28 @@ namespace _01_Console
             // 비교 연산자
             // ==(같다), !=(다르다), < , > , <=, >=
 
+            Orc enemy = new Orc();
+            Console.WriteLine($"{enemy.name}이 나타났다.");
+            enemy.PrintStatus();
+
+            Console.WriteLine("\n\n----------------------전투 시작----------------------\n\n");
+
+            while (true)   
+            {
+                player.Attack(enemy);
+                if (enemy.HealthPoint <= 0)
+                {
+                    Console.WriteLine("\n\n승리!\n\n");
+                    break;
+                }
+                enemy.Attack(player);
+                if (player.HealthPoint <= 0)
+                {
+                    Console.WriteLine("\n\n패배.....\n\n");
+                    break;
+                }
+                Console.WriteLine("\n\n");
+            }
         }
 
         static void Test()
