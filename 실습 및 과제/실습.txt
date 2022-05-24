@@ -25,3 +25,8 @@
 
 2. Human 클래스의 Attack 함수 override 하기
    9시 15분까지
+
+
+5/24
+1. WASD를 눌러서 Player 비행기 움직이기
+   7시 50분까지
