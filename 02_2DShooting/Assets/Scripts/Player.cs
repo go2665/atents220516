@@ -7,6 +7,7 @@ public class Player : MonoBehaviour
 {
     // public 변수는 인스펙터 창에서 확인 할 수 있다.
     public float moveSpeed = 2.0f;
+    private Vector3 direction = new Vector3();
 
     // Start is called before the first frame update => 게임이 시작되었을 때 Start가 호출됩니다.
     //void Start()
@@ -29,15 +30,52 @@ public class Player : MonoBehaviour
         // Time.deltaTime; //이전 프레임에서 지금 프레임까지 걸린 시간
         // Updata 함수안에서 (moveSpeed * Time.deltaTime)는 1초에 moveSpeed 만큼 이라는 의미가 된다.
 
+        //----------------------------------------------------------------------------------------------------
+
         // transform.position = transform.position + new Vector3(moveSpeed * Time.deltaTime, 0.0f, 0.0f);
         // transform.position = transform.position + Vector3.right * moveSpeed * Time.deltaTime;
-        if( Keyboard.current.aKey.ReadValue() > 0.0f )
-        {
-            Debug.Log($"A 키 눌렀습니다.");
-        }
-        if (Keyboard.current.sKey.ReadValue() > 0.0f)
-        {
-            Debug.Log($"S 키 눌렀습니다.");
-        }
+
+        //----------------------------------------------------------------------------------------------------
+
+        //if ( Keyboard.current.wKey.ReadValue() > 0.0f )
+        //{
+        //    direction.y = 1.0f;
+        //}
+        //else if (Keyboard.current.sKey.ReadValue() > 0.0f)
+        //{
+        //    direction.y = -1.0f;
+        //}
+        //else
+        //{
+        //    direction.y = 0.0f;
+        //}
+        //if (Keyboard.current.aKey.ReadValue() > 0.0f)
+        //{
+        //    direction.x = -1.0f;
+        //}
+        //else if (Keyboard.current.dKey.ReadValue() > 0.0f)
+        //{
+        //    direction.x = 1.0f;
+        //}
+        //else
+        //{
+        //    direction.x = 0.0f;
+        //}
+
+        //// 백터의 정규화 : 백터의 크기를 1로 만드는 작업. 백터에서 순수하게 방향만 남기는 작업. 백터의 x,y,z를 백터의 길이로 나누면 된다.
+        //// 단위 백터 : 백터를 정규화한 결과. 길이가 1인 백터
+        //transform.position = transform.position + direction.normalized * moveSpeed * Time.deltaTime;
+
+        //----------------------------------------------------------------------------------------------------
+    }
+
+    public void OnMove(InputAction.CallbackContext context)
+    {
+
+    }
+
+    public void OnFire(InputAction.CallbackContext context)
+    {
+        Debug.Log("Fire!!!!!");
     }
 }
