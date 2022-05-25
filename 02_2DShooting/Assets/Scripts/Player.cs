@@ -7,7 +7,7 @@ public class Player : MonoBehaviour
 {
     // public 변수는 인스펙터 창에서 확인 할 수 있다.
     public float moveSpeed = 2.0f;
-    private Vector3 direction = new Vector3();
+    private Vector3 direction = Vector3.zero;
 
     // Start is called before the first frame update => 게임이 시작되었을 때 Start가 호출됩니다.
     //void Start()
@@ -71,11 +71,30 @@ public class Player : MonoBehaviour
 
     public void OnMove(InputAction.CallbackContext context)
     {
+        if (context.started)
+        {
+            //Debug.Log("Move!");
+        }
 
+        Vector2 direction = context.ReadValue<Vector2>();
+        transform.position += (Vector3)direction; // (Vector3)direction; 타입 캐스팅. direction의 타입을 임시로 Vector3로 취급하는 것
+
+        Debug.Log(direction);
     }
 
     public void OnFire(InputAction.CallbackContext context)
     {
-        Debug.Log("Fire!!!!!");
+        if(context.started)         // 키를 누르기 시작했을 때(키보드에서는 started와 performed의 차이가 없다)
+        {
+            Debug.Log("Fire!!!!! - 시작");
+        }
+        else if(context.performed)  // 키를 완전히 눌렀을 때
+        {
+            Debug.Log("Fire!!!!!! - 완전히 누름");
+        }
+        else if (context.canceled)  // 키를 땠을 때
+        {
+            Debug.Log("Fire!!!!!!! - 키보드 땠음");
+        }        
     }
 }
