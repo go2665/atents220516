@@ -9,11 +9,12 @@ public class Player : MonoBehaviour
     public float moveSpeed = 2.0f;
     private Vector3 direction = Vector3.zero;
     private Rigidbody2D rigid = null;           // 계속 사용할 컴포넌트는 한번만 찾는게 좋다.
+    float boostSpeed = 1.0f;
 
     private void Awake()        // 게임 오브젝트가 만들어진 직후에 호출
     {
         rigid = GetComponent<Rigidbody2D>();
-        
+
         // Unity는 안 움직이는 Collider는 하나로 합친 후 움직이는 Collider와 충돌처리를 계산한다.
         // Unity는 Rigidbody가 있은 오브젝트만 움직인 오브젝트로 판단한다.
         // Rigidbody가 없는 Collider가 움직이게 되면 다음 프레임에 다시 Collider를 합치기 때문에
@@ -79,7 +80,7 @@ public class Player : MonoBehaviour
 
         //----------------------------------------------------------------------------------------------------
 
-        
+
     }
 
     private void FixedUpdate()
@@ -100,7 +101,7 @@ public class Player : MonoBehaviour
         //transform.Translate(1*Time.deltaTime, 0, 0);  // 계속 오른쪽으로 이동하는 코드
 
         // Rigidbody를 이용해서 이동        
-        rigid.MovePosition(transform.position + (direction * moveSpeed * Time.fixedDeltaTime));
+        rigid.MovePosition(transform.position + (direction * moveSpeed * boostSpeed * Time.fixedDeltaTime));
     }
 
     public void OnMoveInput(InputAction.CallbackContext context) // context는 이 함수와 연결된 액션에서 전달된 입력관련 정보가 들어있다.
@@ -118,17 +119,29 @@ public class Player : MonoBehaviour
 
     public void OnFireInput(InputAction.CallbackContext context)
     {
-        if(context.started)         // 키를 누르기 시작했을 때(키보드에서는 started와 performed의 차이가 없다)
+        if (context.started)         // 키를 누르기 시작했을 때(키보드에서는 started와 performed의 차이가 없다)
         {
             Debug.Log("Fire!!!!! - 시작");
         }
-        else if(context.performed)  // 키를 완전히 눌렀을 때
+        else if (context.performed)  // 키를 완전히 눌렀을 때
         {
             Debug.Log("Fire!!!!!! - 완전히 누름");
         }
         else if (context.canceled)  // 키를 땠을 때
         {
             Debug.Log("Fire!!!!!!! - 키보드 땠음");
-        }        
+        }
+    }
+
+    public void OnBoostInput(InputAction.CallbackContext context)
+    {
+        if(context.started)
+        {
+            boostSpeed = 2.0f;
+        }
+        if(context.canceled)
+        {
+            boostSpeed = 1.0f;
+        }
     }
 }
