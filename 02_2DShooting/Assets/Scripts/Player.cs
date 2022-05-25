@@ -8,8 +8,19 @@ public class Player : MonoBehaviour
     // public 변수는 인스펙터 창에서 확인 할 수 있다.
     public float moveSpeed = 2.0f;
     private Vector3 direction = Vector3.zero;
+    private Rigidbody2D rigid = null;           // 계속 사용할 컴포넌트는 한번만 찾는게 좋다.
 
-    // Start is called before the first frame update => 게임이 시작되었을 때 Start가 호출됩니다.
+    private void Awake()        // 게임 오브젝트가 만들어진 직후에 호출
+    {
+        rigid = GetComponent<Rigidbody2D>();
+        
+        // Unity는 안 움직이는 Collider는 하나로 합친 후 움직이는 Collider와 충돌처리를 계산한다.
+        // Unity는 Rigidbody가 있은 오브젝트만 움직인 오브젝트로 판단한다.
+        // Rigidbody가 없는 Collider가 움직이게 되면 다음 프레임에 다시 Collider를 합치기 때문에
+        // 이런 동작이 반복되면 최적화에 심각한 악영향을 미친다.
+    }
+
+    // Start is called before the first frame update => 게임이 시작되었을 때 Start가 호출됩니다.(첫번째 Update가 실행되기 전에)
     //void Start()
     //{        
     //}
@@ -67,22 +78,45 @@ public class Player : MonoBehaviour
         //transform.position = transform.position + direction.normalized * moveSpeed * Time.deltaTime;
 
         //----------------------------------------------------------------------------------------------------
+
+        
     }
 
-    public void OnMove(InputAction.CallbackContext context)
+    private void FixedUpdate()
     {
-        if (context.started)
-        {
-            //Debug.Log("Move!");
-        }
+        // 물리 연산은 정확한 시간 간격으로 실행해야 정확한 결과가 나온다.
+        // 그런데 Update함수는 항상 똑같은 시간 간격으로 실행되지 않는다. 
+        //  => 일반 Update에서는 물리 연산에 오류가 있을 수 있다.
+        // FixedUpdate는 설정에 지정되어 있는 일정한 시간간격으로 항상 호출된다.
+        // Rigidbody를 가지는 오브젝트를 움직일(이동, 회전 등) 때는 FixedUpdate 안에서 해야 한다.
+        Move();
+    }
 
-        Vector2 direction = context.ReadValue<Vector2>();
-        transform.position += (Vector3)direction; // (Vector3)direction; 타입 캐스팅. direction의 타입을 임시로 Vector3로 취급하는 것
+    private void Move()
+    {
+        // transform의 position 변경
+        //transform.position += (direction * moveSpeed * Time.deltaTime);
+        //transform.Translate(direction * moveSpeed * Time.deltaTime);
+        //transform.Translate(1*Time.deltaTime, 0, 0);  // 계속 오른쪽으로 이동하는 코드
+
+        // Rigidbody를 이용해서 이동        
+        rigid.MovePosition(transform.position + (direction * moveSpeed * Time.fixedDeltaTime));
+    }
+
+    public void OnMoveInput(InputAction.CallbackContext context) // context는 이 함수와 연결된 액션에서 전달된 입력관련 정보가 들어있다.
+    {
+        //if (context.started)
+        //{
+        //    //Debug.Log("Move!");
+        //}
+
+        direction = context.ReadValue<Vector2>();   // input action asset에 vector2로 지정되어 있다.
+        //transform.position += (Vector3)direction; // (Vector3)direction; 타입 캐스팅. direction의 타입을 임시로 Vector3로 취급하는 것
 
         Debug.Log(direction);
     }
 
-    public void OnFire(InputAction.CallbackContext context)
+    public void OnFireInput(InputAction.CallbackContext context)
     {
         if(context.started)         // 키를 누르기 시작했을 때(키보드에서는 started와 performed의 차이가 없다)
         {
