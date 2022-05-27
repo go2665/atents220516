@@ -13,6 +13,7 @@ public class Player : MonoBehaviour
     // public 변수는 인스펙터 창에서 확인 할 수 있다.
     public float moveSpeed = 2.0f;
     public GameObject shootPrefab = null;   // 프리팹은 GameObject 타입에 담을 수 있다.
+    public Transform[] firePosition = null;
 
     private Vector3 direction = Vector3.zero;
     private Rigidbody2D rigid = null;           // 계속 사용할 컴포넌트는 한번만 찾는게 좋다.
@@ -140,10 +141,27 @@ public class Player : MonoBehaviour
 
         if( context.started)
         {
-            GameObject obj = Instantiate(shootPrefab);      // 총알 생성
-            obj.transform.position = transform.position + transform.right * 1.2f;   // 플레이어 오른쪽으로 1.2만큼 떨어진 위치에 배치
-            obj.transform.rotation = transform.rotation;    //플레이어의 회전을 그대로 적용
-            Debug.Log(obj.name);
+            //GameObject obj = Instantiate(shootPrefab);      // 총알 생성
+            //obj.transform.position = transform.position + transform.right * 1.2f;   // 플레이어 오른쪽으로 1.2만큼 떨어진 위치에 배치
+            //obj.transform.rotation = transform.rotation;    //플레이어의 회전을 그대로 적용
+            //Debug.Log(obj.name);
+
+            //// 3줄로 발사하기
+            //for (int i = 0; i < 3; i++)
+            //{
+            //    GameObject obj = Instantiate(shootPrefab);
+            //    obj.transform.position = transform.position + transform.right * 1.2f + (transform.up * (1-i));  
+            //    obj.transform.rotation = transform.rotation;
+            //}
+
+            // 위치 표시용 빈 게임 오브젝트를 이용해 총알 발사(여러개 가능)
+            for (int i = 0; i < firePosition.Length; i++)
+            {
+                GameObject obj = Instantiate(shootPrefab);
+                obj.transform.position = firePosition[i].position;
+                obj.transform.rotation = firePosition[i].rotation;
+                //obj.transform.parent = null;    // obj의 부모를 제거하기
+            }
         }
     }
 
