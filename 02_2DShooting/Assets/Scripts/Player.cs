@@ -8,7 +8,7 @@ public class Player : MonoBehaviour
     // 값타입(Value type : 실제 값을 가지는 타입int, float, bool) 
     // 참조타입(Reference type : 각종 클래스들을 new한 것들을 담을 수 있는 타입, 메모리 주소 같은 것들을 저장하는 타입 )
     // null은 참조타입의 변수가 비어있다고 표시하는 키워드
-    // var는 컴파일타임에 변의 타입을 결정해주는 키워드이다.
+    // var는 컴파일타임에 변수의 타입을 결정해주는 키워드이다.
 
     // public 변수는 인스펙터 창에서 확인 할 수 있다.
     public float moveSpeed = 2.0f;
@@ -120,7 +120,7 @@ public class Player : MonoBehaviour
         direction = context.ReadValue<Vector2>();   // input action asset에 vector2로 지정되어 있다.
         //transform.position += (Vector3)direction; // (Vector3)direction; 타입 캐스팅. direction의 타입을 임시로 Vector3로 취급하는 것
 
-        Debug.Log(direction);
+        //Debug.Log(direction);
     }
 
     public void OnFireInput(InputAction.CallbackContext context)
@@ -140,7 +140,9 @@ public class Player : MonoBehaviour
 
         if( context.started)
         {
-            GameObject obj = Instantiate(shootPrefab);
+            GameObject obj = Instantiate(shootPrefab);      // 총알 생성
+            obj.transform.position = transform.position + transform.right * 1.2f;   // 플레이어 오른쪽으로 1.2만큼 떨어진 위치에 배치
+            obj.transform.rotation = transform.rotation;    //플레이어의 회전을 그대로 적용
             Debug.Log(obj.name);
         }
     }
