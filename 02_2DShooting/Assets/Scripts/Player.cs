@@ -5,11 +5,18 @@ using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
+    // 값타입(Value type : 실제 값을 가지는 타입int, float, bool) 
+    // 참조타입(Reference type : 각종 클래스들을 new한 것들을 담을 수 있는 타입, 메모리 주소 같은 것들을 저장하는 타입 )
+    // null은 참조타입의 변수가 비어있다고 표시하는 키워드
+    // var는 컴파일타임에 변의 타입을 결정해주는 키워드이다.
+
     // public 변수는 인스펙터 창에서 확인 할 수 있다.
     public float moveSpeed = 2.0f;
+    public GameObject shootPrefab = null;   // 프리팹은 GameObject 타입에 담을 수 있다.
+
     private Vector3 direction = Vector3.zero;
     private Rigidbody2D rigid = null;           // 계속 사용할 컴포넌트는 한번만 찾는게 좋다.
-    float boostSpeed = 1.0f;
+    private float boostSpeed = 1.0f;
 
     private void Awake()        // 게임 오브젝트가 만들어진 직후에 호출
     {
@@ -79,8 +86,7 @@ public class Player : MonoBehaviour
         //transform.position = transform.position + direction.normalized * moveSpeed * Time.deltaTime;
 
         //----------------------------------------------------------------------------------------------------
-
-
+        
     }
 
     private void FixedUpdate()
@@ -119,17 +125,23 @@ public class Player : MonoBehaviour
 
     public void OnFireInput(InputAction.CallbackContext context)
     {
-        if (context.started)         // 키를 누르기 시작했을 때(키보드에서는 started와 performed의 차이가 없다)
+        //if (context.started)         // 키를 누르기 시작했을 때(키보드에서는 started와 performed의 차이가 없다)
+        //{
+        //    Debug.Log("Fire!!!!! - 시작");
+        //}
+        //else if (context.performed)  // 키를 완전히 눌렀을 때
+        //{
+        //    Debug.Log("Fire!!!!!! - 완전히 누름");
+        //}
+        //else if (context.canceled)  // 키를 땠을 때
+        //{
+        //    Debug.Log("Fire!!!!!!! - 키보드 땠음");
+        //}
+
+        if( context.started)
         {
-            Debug.Log("Fire!!!!! - 시작");
-        }
-        else if (context.performed)  // 키를 완전히 눌렀을 때
-        {
-            Debug.Log("Fire!!!!!! - 완전히 누름");
-        }
-        else if (context.canceled)  // 키를 땠을 때
-        {
-            Debug.Log("Fire!!!!!!! - 키보드 땠음");
+            GameObject obj = Instantiate(shootPrefab);
+            Debug.Log(obj.name);
         }
     }
 
