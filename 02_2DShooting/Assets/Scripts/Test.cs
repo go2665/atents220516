@@ -8,6 +8,9 @@ public class Test : MonoBehaviour
 
     private void Start()
     {
+        //Random.Range(0, 10);          // 유니티 랜덤. 0~10까지(0과 10 포함)
+        //Random.Range(0.0f, 10.0f);    // 유니티 랜덤. 0.0~10.0까지(0.0과 10.0 포함)
+
         StartCoroutine(TestCoroutine());            // TestCoroutine을 실행        
     }
 
