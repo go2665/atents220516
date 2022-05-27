@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class Asteroid : MonoBehaviour
 {
+    public int splitCount = 2;
+
+
+
     // 뭔가 계속하는 것은 Update 계열의 함수에서 실행
     private void Update()
     {

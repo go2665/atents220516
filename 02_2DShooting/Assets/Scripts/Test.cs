@@ -19,7 +19,7 @@ public class Test : MonoBehaviour
         {
             GameObject obj = Instantiate(shoot);    // 총알 만들기
             obj.transform.position = this.transform.position;
-            yield return new WaitForSeconds(0.5f);  // 0.5초 대기
+            yield return new WaitForSeconds(0.2f);  // 0.2초 대기
         }
     }
 }
