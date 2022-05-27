@@ -26,7 +26,7 @@ public class Shoot : MonoBehaviour
     // Update 함수를 이용해 일정 시간 후에 삭제하기
     //private void Update()
     //{
-    //    // Time.deltaTime;  // 이전 업데이트 함수가 호출되고 현제 업데이트 함수가 호출될 때까지의 시간                
+    //    // Time.deltaTime;  // 이전 업데이트 함수가 호출되고 현재 업데이트 함수가 호출될 때까지의 시간                
     //    lifeTime -= Time.deltaTime;
     //    if( lifeTime < 0.0f )
     //    {
