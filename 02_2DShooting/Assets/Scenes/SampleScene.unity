@@ -519,6 +519,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1795276548}
+  - component: {fileID: 1795276549}
   m_Layer: 0
   m_Name: "\uCF54\uB8E8\uD2F4 \uD14C\uC2A4\uD2B8"
   m_TagString: Untagged
@@ -534,13 +535,26 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1795276547}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.96096, y: 0.2345225, z: 4.7276287}
+  m_LocalPosition: {x: -5.6, y: -2.98, z: 4.7276287}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1795276549
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1795276547}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7248999e6a1e67f40ba1d0a8f674f38b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shoot: {fileID: 6055736001341755082, guid: 05078bcafdc8d7f4086eda874df6100d, type: 3}
 --- !u!1 &1992354985
 GameObject:
   m_ObjectHideFlags: 0
