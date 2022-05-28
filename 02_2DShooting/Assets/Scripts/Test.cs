@@ -18,6 +18,8 @@ public class Test : MonoBehaviour
         StartCoroutine(coroutine);      // TestCoroutine을 실행        
 
         //StopCoroutine(coroutine);     // 코루틴 정지시키기
+
+        Vector3 a;
     }
 
     IEnumerator TestCoroutine()     // 코루틴을 정의
