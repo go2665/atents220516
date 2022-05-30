@@ -8,6 +8,6 @@ public class Asteroid_Small : MonoBehaviour
 
     private void Update()
     {
-        transform.Translate(Vector3.up * speed * Time.deltaTime);
+        transform.Translate(Vector3.up * speed * Time.deltaTime);   // 그냥 위로 올라가기
     }
 }

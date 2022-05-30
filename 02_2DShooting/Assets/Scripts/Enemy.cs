@@ -8,6 +8,6 @@ public class Enemy : MonoBehaviour
 
     private void Update()
     {
-        transform.Translate(-transform.right * speed * Time.deltaTime);
+        transform.Translate(-transform.right * speed * Time.deltaTime); // 계속 자신의 왼쪽 방향으로 날아간다.
     }
 }
