@@ -19,6 +19,8 @@ public class Player : MonoBehaviour
     private Rigidbody2D rigid = null;           // 계속 사용할 컴포넌트는 한번만 찾는게 좋다.
     private float boostSpeed = 1.0f;
 
+    private IEnumerator fireContinue = null;
+
     private void Awake()        // 게임 오브젝트가 만들어진 직후에 호출
     {
         rigid = GetComponent<Rigidbody2D>();
@@ -30,9 +32,10 @@ public class Player : MonoBehaviour
     }
 
     // Start is called before the first frame update => 게임이 시작되었을 때 Start가 호출됩니다.(첫번째 Update가 실행되기 전에)
-    //void Start()
-    //{        
-    //}
+    void Start()
+    {
+        fireContinue = FireCoroutine();
+    }
 
     // Update is called once per frame => 게임이 실행되는 도중에 주기적(매 프레임마다)으로 계속 호출된다.
     private void Update()
@@ -154,14 +157,20 @@ public class Player : MonoBehaviour
             //    obj.transform.rotation = transform.rotation;
             //}
 
-            // 위치 표시용 빈 게임 오브젝트를 이용해 총알 발사(여러개 가능)
-            for (int i = 0; i < firePosition.Length; i++)
-            {
-                GameObject obj = Instantiate(shootPrefab);
-                obj.transform.position = firePosition[i].position;
-                obj.transform.rotation = firePosition[i].rotation;
-                //obj.transform.parent = null;    // obj의 부모를 제거하기
-            }
+            //// 위치 표시용 빈 게임 오브젝트를 이용해 총알 발사(여러개 가능)
+            //for (int i = 0; i < firePosition.Length; i++)
+            //{
+            //    GameObject obj = Instantiate(shootPrefab);
+            //    obj.transform.position = firePosition[i].position;
+            //    obj.transform.rotation = firePosition[i].rotation;
+            //    //obj.transform.parent = null;    // obj의 부모를 제거하기
+            //}
+            StartCoroutine(fireContinue);
+        }
+        if( context.canceled )
+        {
+            StopCoroutine(fireContinue);
+            //StopAllCoroutines();
         }
     }
 
@@ -174,6 +183,22 @@ public class Player : MonoBehaviour
         if(context.canceled)
         {
             boostSpeed = 1.0f;
+        }
+    }
+
+    IEnumerator FireCoroutine()
+    {
+        while (true)
+        {
+            for (int i = 0; i < firePosition.Length; i++)
+            {
+                GameObject obj = Instantiate(shootPrefab);
+                obj.transform.position = firePosition[i].position;
+                obj.transform.rotation = firePosition[i].rotation;
+                //obj.transform.parent = null;    // obj의 부모를 제거하기
+            }
+
+            yield return new WaitForSeconds(0.2f);  // 0.2초 대기
         }
     }
 }

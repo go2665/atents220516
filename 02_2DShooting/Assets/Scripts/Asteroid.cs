@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Asteroid : MonoBehaviour
 {
-    public int splitCount = 2;
-
-
+    public int splitCount = 3;
+    public float lifeTime = 0.2f;
+    public GameObject small = null;
 
     // 뭔가 계속하는 것은 Update 계열의 함수에서 실행
     private void Update()
@@ -21,6 +21,19 @@ public class Asteroid : MonoBehaviour
         transform.Rotate(0, 0, 30.0f * Time.deltaTime);
         //transform.Rotate(new Vector3(0, 0, 30.0f * Time.deltaTime));
 
-
+        lifeTime -= Time.deltaTime; // 수명 감소
+        if( lifeTime < 0.0f )   
+        {
+            // 터질 때가 되었다.
+            float angle = 360.0f / (float)splitCount;       // 사이 각도 구하기
+            for( int i=0; i< splitCount; i++)               // 쪼개질 개수만큼 반복
+            {
+                GameObject obj = Instantiate(small);        // 작은 운석 만들고
+                obj.transform.position = transform.position;    // 기준위치(큰운석)로 일단 이돌
+                obj.transform.Rotate(0, 0, angle * i);          // 계산한 사이 각도만큼 회전
+                obj.transform.position += (obj.transform.up * 2);   // 서로 떨어진체로 시작하고 싶을 때
+            }
+            Destroy(this.gameObject);   // 다 만들고 나면 큰 운석 죽이기
+        }
     }
 }
