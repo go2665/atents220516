@@ -10,4 +10,9 @@ public class Asteroid_Small : MonoBehaviour
     {
         transform.Translate(Vector3.up * speed * Time.deltaTime);   // 그냥 위로 올라가기
     }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        Destroy(this.gameObject);
+    }
 }

@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class Asteroid : MonoBehaviour
 {
-    public int splitCount = 3;
-    public float lifeTime = 0.2f;
-    public GameObject small = null;
-    public int hitPoint = 3;
+    public int splitCount = 3;          // 쪼개질 개수
+    public float lifeTime = 0.2f;       // 자연사 시간
+    public GameObject small = null;     // 쪼개질 때 생길 작은 운석
+    public int hitPoint = 3;            // HP(총알 버티는 수)
 
 
     // 뭔가 계속하는 것은 Update 계열의 함수에서 실행
