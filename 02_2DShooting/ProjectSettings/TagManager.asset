@@ -43,3 +43,18 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Background
+    uniqueID: 3861404795
+    locked: 0
+  - name: Asteroid
+    uniqueID: 3467454373
+    locked: 0
+  - name: Enemy
+    uniqueID: 3865317941
+    locked: 0
+  - name: Player
+    uniqueID: 4233865489
+    locked: 0
+  - name: Bullet
+    uniqueID: 976173363
+    locked: 0
