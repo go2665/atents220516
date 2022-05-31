@@ -52,10 +52,10 @@ public class Shoot : MonoBehaviour
     {
         //Debug.Log($"OnTriggerEnter2D : {collision.gameObject.name}");
         //if (collision.tag == "KillZone") ;    // 매우 좋지 않음
-        if( collision.CompareTag("KillZone") )  // 해시 (Hash) -> 유니크한 요약본을 만들어준다.
-        {
-            // 킬존에 들어갔다.
-            Destroy(this.gameObject);
-        }
+        //if( collision.CompareTag("KillZone") )  // 해시 (Hash) -> 유니크한 요약본을 만들어준다.
+        //{
+        //    // 킬존에 들어갔다.
+        //    Destroy(this.gameObject);
+        //}
     }
 }
