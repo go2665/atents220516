@@ -34,7 +34,7 @@ public class Background : MonoBehaviour
             if (bgSlot.position.x < minusX)
             {
                 // 충분히 왼쪽으로 이동한 위치
-                Debug.Log("충분히 왼쪽이다.");
+                //Debug.Log("충분히 왼쪽이다.");
                 bgSlot.Translate(transform.right * BG_WIDTH * 3.0f);    //오른쪽으로 BG_WIDTH의 3배 만큼 이동
             }
         }
@@ -51,7 +51,7 @@ public class Background : MonoBehaviour
                 // rand의 2진수 결과 = 0일때 00, 1일때 01, 2일때 10, 3일때 11
                 // & 연산자 : 양변이 각 자리수별로 둘 다 1일 때 1. 특정 자리수가 1로 되어있는지 확인할 때 좋음.
                 //if ( (rand & 0b_01) != 0 ){}   // rand의 제일 오른쪽 비트가 1로 되어있는지 아닌지 확인(1로 되어있으면 결괴는 true. 아니면 false)
-                
+                                
                 starsRenderer[i].flipX = ((rand & 0b_01) != 0);
                 starsRenderer[i].flipY = ((rand & 0b_10) != 0);
             }

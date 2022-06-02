@@ -1479,6 +1479,10 @@ MonoBehaviour:
   - {fileID: 1455005746}
   - {fileID: 1902593250}
   scrollingSpeed: 2.5
+  bgStars:
+  - {fileID: 433003505}
+  - {fileID: 57601854}
+  starSpeed: 5
   bgPlanet: {fileID: 581405000}
   planetSpeed: 10
 --- !u!1 &1795276547
