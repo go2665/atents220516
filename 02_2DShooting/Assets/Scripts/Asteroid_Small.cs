@@ -12,6 +12,9 @@ public class Asteroid_Small : MonoBehaviour
         int rand = Random.Range(0, 4);
         renderer.flipX = ((rand & 0b_01) != 0);
         renderer.flipY = ((rand & 0b_10) != 0);
+
+        // & 연산자 : 결과는 int
+        // != 연산자 : 결과는 bool
     }
 
     private void Update()

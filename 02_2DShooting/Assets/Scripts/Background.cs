@@ -50,10 +50,18 @@ public class Background : MonoBehaviour
                 // 0b_01 : 2진수 1 ( 0b_0000_0000_0000_0000_0000_0000_0000_0001)
                 // rand의 2진수 결과 = 0일때 00, 1일때 01, 2일때 10, 3일때 11
                 // & 연산자 : 양변이 각 자리수별로 둘 다 1일 때 1. 특정 자리수가 1로 되어있는지 확인할 때 좋음.
-                //if ( (rand & 0b_01) != 0 ){}   // rand의 제일 오른쪽 비트가 1로 되어있는지 아닌지 확인(1로 되어있으면 결괴는 true. 아니면 false)
                                 
                 starsRenderer[i].flipX = ((rand & 0b_01) != 0);
                 starsRenderer[i].flipY = ((rand & 0b_10) != 0);
+                // 58~65번 까지의 코드가 56번 라인과 결과가 똑같음.
+                //if ((rand & 0b_10) != 0)  // rand의 제일 오른쪽에서 두번째 비트가 1로 되어있는지 아닌지 확인(1로 되어있으면 결괴는 true. 아니면 false)
+                //{
+                //    starsRenderer[i].flipY = true;
+                //}
+                //else
+                //{
+                //    starsRenderer[i].flipY = false;
+                //}
             }
         }
 

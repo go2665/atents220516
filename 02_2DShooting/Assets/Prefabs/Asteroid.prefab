@@ -100,9 +100,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   splitCount: 10
-  lifeTime: 5
+  lifeTime: 15
   small: {fileID: 4795279595575935766, guid: 08ebdf7fef600b1438a985bf5d10562a, type: 3}
   hitPoint: 3
+  moveSpeed: 1
 --- !u!50 &921177889
 Rigidbody2D:
   serializedVersion: 4

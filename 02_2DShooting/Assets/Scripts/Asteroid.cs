@@ -8,6 +8,7 @@ public class Asteroid : MonoBehaviour
     public float lifeTime = 0.2f;       // 자연사 시간
     public GameObject small = null;     // 쪼개질 때 생길 작은 운석(prefab)
     public int hitPoint = 3;            // HP(총알 버티는 수)
+    public float moveSpeed = 1.0f;      // 이동속도
 
     private void Awake()        // 게임 오브젝트가 완성된 직후에 호출
     {
@@ -39,6 +40,31 @@ public class Asteroid : MonoBehaviour
         //transform.rotation *= Quaternion.Euler(0, 0, 30.0f * Time.deltaTime);   // 1초에 30도씩 돌려라(반시계방향)
         transform.Rotate(0, 0, 30.0f * Time.deltaTime);
         //transform.Rotate(new Vector3(0, 0, 30.0f * Time.deltaTime));
+        transform.Translate(Vector2.left * moveSpeed * Time.deltaTime, Space.World);    //43, 44 똑같다.
+        //transform.position += (Vector3)(Vector2.left * moveSpeed * Time.deltaTime);
+
+
+        //움직임
+        // transform을 이용해서 움직이는 것 : 물리같은 것 고려없음. 그냥 무조건 지정된 위치로 위치 변경(텔레포트)
+        //   - position으로 움직이는 것
+        //   - Translate로 움직이는 것
+        // Rigidbody를 이용해서 움직이는 것 : 물리 고려(운동량, 속도, 질량). MovePosition(텔레포트는 텔레포트인데 물체의 충돌영역은 고려함)
+
+        // 월드 좌표계(World Coordinate System)
+        //  - 월드(맵, 씬)의 원점을 기준으로 만들어진 좌표계
+        // 로컬 좌표계(Local Coordinate System)
+        //  - 각 오브젝트의 중심점(Pivot)을 기준으로 만들어진 좌표계
+
+        // 백터 : 힘의 방향과 크기(스칼라)를 나타내는 개념
+        // 3D 백터 (x, y, z)
+        // 2D 백터 (x, y)
+        // 백터와 위치는 완전히 다른 개념
+        // 백터는 위치와 전혀 상관없다.
+        // 백터의 더하기 (1, 2, 3) + ( 2, -1, 3) = (3, 1, 6)
+        // 백터의 빼기 (1, 2, 3) - ( 2, -1, 3) = (-1, 3, 0)
+        // 목표 위치 - 출발점 위치 = 출발점에서 목표지점으로 향하는 방향 백터     (무조건 외울 것)
+
+
 
         lifeTime -= Time.deltaTime; // 수명 감소
         if( lifeTime < 0.0f )
