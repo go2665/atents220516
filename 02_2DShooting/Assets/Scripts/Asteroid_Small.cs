@@ -6,6 +6,14 @@ public class Asteroid_Small : MonoBehaviour
 {
     public float speed = 3.0f;
 
+    private void Awake()        // 게임 오브젝트가 완성된 직후에 호출
+    {
+        SpriteRenderer renderer = GetComponent<SpriteRenderer>();
+        int rand = Random.Range(0, 4);
+        renderer.flipX = ((rand & 0b_01) != 0);
+        renderer.flipY = ((rand & 0b_10) != 0);
+    }
+
     private void Update()
     {
         transform.Translate(Vector3.up * speed * Time.deltaTime);   // 그냥 위로 올라가기

@@ -6,9 +6,26 @@ public class Asteroid : MonoBehaviour
 {
     public int splitCount = 3;          // 쪼개질 개수
     public float lifeTime = 0.2f;       // 자연사 시간
-    public GameObject small = null;     // 쪼개질 때 생길 작은 운석
+    public GameObject small = null;     // 쪼개질 때 생길 작은 운석(prefab)
     public int hitPoint = 3;            // HP(총알 버티는 수)
 
+    private void Awake()        // 게임 오브젝트가 완성된 직후에 호출
+    {
+        SpriteRenderer renderer = GetComponent<SpriteRenderer>();
+        int rand = Random.Range(0, 4);
+        renderer.flipX = ((rand & 0b_01) != 0);
+        renderer.flipY = ((rand & 0b_10) != 0);
+    }
+
+    //private void OnEnable()     // 게임 오브젝트가 활성화 될 때 호출
+    //{
+        
+    //}
+
+    //private void Start()        // 첫번째 업데이트 직전
+    //{
+        
+    //}
 
     // 뭔가 계속하는 것은 Update 계열의 함수에서 실행
     private void Update()
