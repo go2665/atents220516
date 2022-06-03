@@ -66,8 +66,6 @@ public class Asteroid : MonoBehaviour
         // 백터의 빼기 (1, 2, 3) - ( 2, -1, 3) = (-1, 3, 0)
         // 목표 위치 - 출발점 위치 = 출발점에서 목표지점으로 향하는 방향 백터     (무조건 외울 것)
 
-
-
         lifeTime -= Time.deltaTime; // 수명 감소
         if( lifeTime < 0.0f )
         {
@@ -102,4 +100,9 @@ public class Asteroid : MonoBehaviour
         Destroy(this.gameObject);   // 다 만들고 나면 큰 운석 죽이기
     }
 
+    //private void OnDrawGizmos()
+    //{
+    //    Gizmos.color = Color.green;
+    //    Gizmos.DrawLine(transform.position, targetDir * 10);
+    //}
 }

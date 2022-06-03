@@ -30,12 +30,10 @@ public class AsteroidSpawner : EnemySpanwer
             Asteroid asteroid = obj.GetComponent<Asteroid>();
             asteroid.targetDir = (toPosition - obj.transform.position).normalized;
 
-
             // 도착지점을 향하도록 회전하기
             //float angle = Vector3.SignedAngle(Vector3.left, toPosition - transform.position, Vector3.forward);
             //obj.transform.rotation = Quaternion.Euler(Vector3.forward * angle);
         }
-
     }
 
     private void OnDrawGizmos()
@@ -43,8 +41,6 @@ public class AsteroidSpawner : EnemySpanwer
         Gizmos.color = Color.red;
         Gizmos.DrawLine(target.position, target.position + Vector3.up * targetLength);       
     }
-
-
 }
 
 // public : 모두가 사용 가능
