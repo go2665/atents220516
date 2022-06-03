@@ -26,7 +26,7 @@ public class AsteroidSpawner : EnemySpanwer
             obj.transform.Translate(Vector3.up * Random.Range(0.0f, randomRange));  // 적을 랜덤한 높이만큼 올리기
 
             // 도착지점을 랜덤으로 정하기
-            Vector3 toPosition = target.transform.position;// + Vector3.up * Random.Range(0.0f, targetLength);
+            Vector3 toPosition = target.transform.position + Vector3.up * Random.Range(0.0f, targetLength);
             Asteroid asteroid = obj.GetComponent<Asteroid>();
             asteroid.targetDir = (toPosition - obj.transform.position).normalized;
 
