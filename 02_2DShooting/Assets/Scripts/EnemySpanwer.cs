@@ -7,6 +7,7 @@ public class EnemySpanwer : MonoBehaviour
     public GameObject enemy = null;     // 생성할 적
     public float spawnInterval = 1.0f;  // 생성 간격
     public float randomRange = 8.0f;    // 높이 랜덤 범위
+    public Color myGizmoColor = Color.white;
 
     protected WaitForSeconds waitSecond = null;   // 코루틴에서 사용할 일정 시간 대기
 
@@ -25,5 +26,11 @@ public class EnemySpanwer : MonoBehaviour
             obj.transform.position = this.transform.position;   // 적 초기 위치 설정
             obj.transform.Translate(Vector3.up * Random.Range(0.0f, randomRange));  // 적을 랜덤한 높이만큼 올리기
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = myGizmoColor;
+        Gizmos.DrawLine(transform.position, transform.position + Vector3.up * randomRange);
     }
 }

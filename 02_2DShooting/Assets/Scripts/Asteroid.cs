@@ -100,9 +100,10 @@ public class Asteroid : MonoBehaviour
         Destroy(this.gameObject);   // 다 만들고 나면 큰 운석 죽이기
     }
 
-    //private void OnDrawGizmos()
-    //{
-    //    Gizmos.color = Color.green;
-    //    Gizmos.DrawLine(transform.position, targetDir * 10);
-    //}
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.green;
+        // 현재 운석의 위치에서 목표 방향으로 1.5만큼 진행한 지점까지 선 그리기
+        Gizmos.DrawLine(transform.position, transform.position + targetDir * 1.5f);  
+    }
 }

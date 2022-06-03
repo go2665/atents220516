@@ -6,6 +6,7 @@ public class AsteroidSpawner : EnemySpanwer
 {
     public Transform target = null;
     public float targetLength = 10.0f;
+    //public Color gizmoColor = Color.white;  // public으로 만들어서 인스팩터창에서 컬러 설정 가능하게 변경
 
     private void Awake()
     {
@@ -44,8 +45,12 @@ public class AsteroidSpawner : EnemySpanwer
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.red;
-        Gizmos.DrawLine(target.position, target.position + Vector3.up * targetLength);       
+        Gizmos.color = myGizmoColor;  // 입력받은 gizmoColor를 현재 기즈모의 색상으로 변경
+
+        // 목표지점의 위치 ~ 목표지점의 위치 위쪽으로 targetLength 만큼 직선을 그리기
+        Gizmos.DrawLine(target.position, target.position + Vector3.up * targetLength);
+        // 오브젝트의 위치 ~ 오브젝트의 위치 위쪽으로 randomRange 만큼 직선을 그리기
+        Gizmos.DrawLine(transform.position, transform.position + Vector3.up * randomRange);
     }
 }
 
