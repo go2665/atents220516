@@ -8,7 +8,7 @@ public class EnemySpanwer : MonoBehaviour
     public float spawnInterval = 1.0f;  // 생성 간격
     public float randomRange = 8.0f;    // 높이 랜덤 범위
 
-    WaitForSeconds waitSecond = null;   // 코루틴에서 사용할 일정 시간 대기
+    protected WaitForSeconds waitSecond = null;   // 코루틴에서 사용할 일정 시간 대기
 
     private void Start()
     {
@@ -16,7 +16,7 @@ public class EnemySpanwer : MonoBehaviour
         StartCoroutine(Spawn());        // 코루틴 시작
     }
 
-    IEnumerator Spawn()
+    protected virtual IEnumerator Spawn()
     {
         while(true) // 무한 반복
         {

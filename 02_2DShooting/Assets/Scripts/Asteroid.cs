@@ -10,6 +10,8 @@ public class Asteroid : MonoBehaviour
     public int hitPoint = 3;            // HP(총알 버티는 수)
     public float moveSpeed = 1.0f;      // 이동속도
 
+    public Vector3 targetDir = Vector3.zero;
+
     private void Awake()        // 게임 오브젝트가 완성된 직후에 호출
     {
         SpriteRenderer renderer = GetComponent<SpriteRenderer>();
@@ -40,7 +42,7 @@ public class Asteroid : MonoBehaviour
         //transform.rotation *= Quaternion.Euler(0, 0, 30.0f * Time.deltaTime);   // 1초에 30도씩 돌려라(반시계방향)
         transform.Rotate(0, 0, 30.0f * Time.deltaTime);
         //transform.Rotate(new Vector3(0, 0, 30.0f * Time.deltaTime));
-        transform.Translate(Vector2.left * moveSpeed * Time.deltaTime, Space.World);    //43, 44 똑같다.
+        transform.Translate(targetDir * moveSpeed * Time.deltaTime, Space.World);    //43, 44 똑같다.
         //transform.position += (Vector3)(Vector2.left * moveSpeed * Time.deltaTime);
 
 
