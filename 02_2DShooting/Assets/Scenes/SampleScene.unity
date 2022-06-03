@@ -169,7 +169,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemy: {fileID: 5662935504028778641, guid: 49a72677e84eac54d9130179f4dec168, type: 3}
-  spawnInterval: 15
+  spawnInterval: 1
   randomRange: 8
   myGizmoColor: {r: 0, g: 1, b: 0.11277914, a: 1}
   target: {fileID: 2130266397}
@@ -298,6 +298,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 8969049676178753160, guid: 4e5297e830ec2264ebaafb4e71f73c73, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8969049676178753161, guid: 4e5297e830ec2264ebaafb4e71f73c73, type: 3}
       propertyPath: m_Name
       value: Player
