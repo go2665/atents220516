@@ -25,13 +25,19 @@ public class AsteroidSpawner : EnemySpanwer
             obj.transform.position = this.transform.position;   // 적 초기 위치 설정
             obj.transform.Translate(Vector3.up * Random.Range(0.0f, randomRange));  // 적을 랜덤한 높이만큼 올리기
 
-            // 도착지점을 랜덤으로 정하기
+            // 도착방향을 랜덤으로 정하기
+
+            // 타겟의 위치 + 위쪽방향으로 최대 targetLength까지 증가
             Vector3 toPosition = target.transform.position + Vector3.up * Random.Range(0.0f, targetLength);
-            Asteroid asteroid = obj.GetComponent<Asteroid>();
+            // 생성한 obj에서 Asteroid 컴포넌트 가져오기
+            Asteroid asteroid = obj.GetComponent<Asteroid>();   
+            // obj의 위치에서 toPosition로 가는 방향벡터 구하고 단위벡터로 변경해서 asteroid의 targetDir에 저장
             asteroid.targetDir = (toPosition - obj.transform.position).normalized;
 
             // 도착지점을 향하도록 회전하기
-            //float angle = Vector3.SignedAngle(Vector3.left, toPosition - transform.position, Vector3.forward);
+            // 왼쪽으로 가는 방향벡터와 obj의 위치에서 toPosition로 가는 방향벡터 사이각 구하기(2d니까 회전축을 Vector3.forward로 설정)
+            //float angle = Vector3.SignedAngle(Vector3.left, toPosition - obj.transform.position, Vector3.forward);
+            // 구해진 각도로 회전 만들기
             //obj.transform.rotation = Quaternion.Euler(Vector3.forward * angle);
         }
     }
