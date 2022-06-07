@@ -5,6 +5,7 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     public float speed = 3.0f;
+    public GameObject explosion = null;
 
     private void Update()
     {
@@ -25,10 +26,8 @@ public class Enemy : MonoBehaviour
     // 이 스크립트를 가지고 있는 게임 오브젝트의 컬라이더가 다른 컬라이더와 부딪쳐야 실행
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        //Debug.Log($"OnCollisionEnter2D : {collision.gameObject.name}");
-        //if (collision.gameObject.CompareTag("Bullet"))
-        //{
-            Destroy(this.gameObject);
-        //}
+        explosion.transform.parent = null;  // explotion이 부모가 없도록 만든다.
+        explosion.SetActive(true);
+        Destroy(this.gameObject);
     }
 }

@@ -14,6 +14,7 @@ public class Player : MonoBehaviour
     public float moveSpeed = 2.0f;
     public GameObject shootPrefab = null;   // 프리팹은 GameObject 타입에 담을 수 있다.
     public Transform[] firePosition = null;
+    public GameObject flash = null;
 
     private Vector3 direction = Vector3.zero;
     private float boostSpeed = 1.0f;
@@ -205,10 +206,18 @@ public class Player : MonoBehaviour
                 GameObject obj = Instantiate(shootPrefab);
                 obj.transform.position = firePosition[i].position;
                 obj.transform.rotation = firePosition[i].rotation;
-                //obj.transform.parent = null;    // obj의 부모를 제거하기
+                //obj.transform.parent = null;    // obj의 부모를 제거하기                
             }
+            flash.SetActive(true);  // 비활성화 되어있던 게임 오브젝트를 활성화
+            StartCoroutine(FlashOff());
 
             yield return new WaitForSeconds(0.2f);  // 0.2초 대기
         }
+    }
+
+    IEnumerator FlashOff()
+    {
+        yield return new WaitForSeconds(0.1f);
+        flash.SetActive(false);
     }
 }
