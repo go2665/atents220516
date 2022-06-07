@@ -16,14 +16,18 @@ public class Player : MonoBehaviour
     public Transform[] firePosition = null;
 
     private Vector3 direction = Vector3.zero;
-    private Rigidbody2D rigid = null;           // 계속 사용할 컴포넌트는 한번만 찾는게 좋다.
     private float boostSpeed = 1.0f;
-
     private IEnumerator fireContinue = null;
+    private readonly int anim_hash_InputY = Animator.StringToHash("InputY");
+
+    private Rigidbody2D rigid = null;           // 계속 사용할 컴포넌트는 한번만 찾는게 좋다.
+    private Animator anim = null;
+
 
     private void Awake()        // 게임 오브젝트가 만들어진 직후에 호출
     {
         rigid = GetComponent<Rigidbody2D>();
+        anim = GetComponent<Animator>();
 
         // Unity는 안 움직이는 Collider는 하나로 합친 후 움직이는 Collider와 충돌처리를 계산한다.
         // Unity는 Rigidbody가 있은 오브젝트만 움직인 오브젝트로 판단한다.
@@ -123,6 +127,12 @@ public class Player : MonoBehaviour
 
         direction = context.ReadValue<Vector2>();   // input action asset에 vector2로 지정되어 있다.
         //transform.position += (Vector3)direction; // (Vector3)direction; 타입 캐스팅. direction의 타입을 임시로 Vector3로 취급하는 것
+        //anim.SetFloat("InputY", direction.y);
+        anim.SetFloat(anim_hash_InputY, direction.y);
+
+        // 해시 함수 : 데이터를 특정 크기의 유일한 요약본으로 만들어 주는 함수
+        // 해시 충돌 : 다른 데이터를 해시 함수로 돌렸는데 같은 해시 값이 나온 경우
+        
 
         //Debug.Log(direction);
     }
