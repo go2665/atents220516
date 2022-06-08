@@ -78,11 +78,12 @@ public class Asteroid : MonoBehaviour
         // 피직스 레이어 설정으로 적들끼리는 부딪치지 안게 만들어서 체크할 필요 없음.
         //if (collision.gameObject.CompareTag("Bullet") || collision.gameObject.CompareTag("Player"))
         //{
-            hitPoint--;
-            if (hitPoint < 1)
-            {
-                Crush();
-            }
+
+        hitPoint--;
+        if (hitPoint < 1)
+        {
+            Crush();
+        }
         //}
     }
 

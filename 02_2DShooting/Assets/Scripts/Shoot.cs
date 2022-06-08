@@ -6,6 +6,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))] 
 public class Shoot : MonoBehaviour
 {
+    public GameObject spark = null;
     public float lifeTime = 3.0f;   // 총알의 수명
     public float speed = 10.0f;
     Rigidbody2D rigid = null;
@@ -19,7 +20,6 @@ public class Shoot : MonoBehaviour
     {
         // 백터 : 힘의 방향과 크기
         rigid.velocity = transform.right * speed;
-
         Destroy(this.gameObject, lifeTime);     // lifeTime초 후에 게임 오브젝트를 삭제한다.
     }
 
@@ -42,6 +42,17 @@ public class Shoot : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         //Debug.Log($"OnCollisionEnter2D : {collision.gameObject.name}");
+
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            spark.transform.parent = null;
+            spark.transform.position = collision.contacts[0].point;
+            //spark.transform.position = collision.contacts[0].normal;  //노멀벡터 : 특정 평면에 수직인 벡터. 외적을 통해 구할 수 있다.
+            //노멀벡터를 이용해 반사를 계산할 수 있다. => 빛과 그림자. 물리 반사 등을 계산하는데 필수.
+            //반사된 벡터 = Vector3.Reflect(진입벡터, 노멀벡터);
+            spark.SetActive(true);
+        }
+
         Destroy(this.gameObject);
     }
 
