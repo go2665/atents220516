@@ -35,25 +35,30 @@ public class Shoot : MonoBehaviour
     //    }
     //}
 
+    bool isOnDestroy = false;
     /// <summary>
     /// 서로 충돌했을 때 실행되는 함수(이 스크립트를 가지고 있는 게임 오브젝트의 컬라이더에 다른 컬라이더가 충돌했을 때 실행)
     /// </summary>
     /// <param name="collision"></param>
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        //Debug.Log($"OnCollisionEnter2D : {collision.gameObject.name}");
-
-        if (collision.gameObject.CompareTag("Enemy"))
+        if (!isOnDestroy)
         {
-            spark.transform.parent = null;
-            spark.transform.position = collision.contacts[0].point;
-            //spark.transform.position = collision.contacts[0].normal;  //노멀벡터 : 특정 평면에 수직인 벡터. 외적을 통해 구할 수 있다.
-            //노멀벡터를 이용해 반사를 계산할 수 있다. => 빛과 그림자. 물리 반사 등을 계산하는데 필수.
-            //반사된 벡터 = Vector3.Reflect(진입벡터, 노멀벡터);
-            spark.SetActive(true);
-        }
+            isOnDestroy = true;
+            //Debug.Log($"OnCollisionEnter2D : {collision.gameObject.name}");
 
-        Destroy(this.gameObject);
+            if (collision.gameObject.CompareTag("Enemy"))
+            {
+                spark.transform.parent = null;
+                spark.transform.position = collision.contacts[0].point;     // 부딪친 위치
+                // spark.transform.position = collision.contacts[0].normal; // 부딪친 면의 노멀 벡터  
+                // 노멀벡터 : 특정 평면에 수직인 벡터. 외적을 통해 구할 수 있다.
+                // 노멀벡터를 이용해 반사를 계산할 수 있다. => 빛과 그림자. 물리 반사 등을 계산하는데 필수.
+                // 반사된 벡터 = Vector3.Reflect(진입벡터, 노멀벡터);
+                spark.SetActive(true);
+            }
+            Destroy(this.gameObject);
+        }
     }
 
     /// <summary>
