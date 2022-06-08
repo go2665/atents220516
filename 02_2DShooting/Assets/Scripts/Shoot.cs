@@ -9,6 +9,8 @@ public class Shoot : MonoBehaviour
     public GameObject spark = null;
     public float lifeTime = 3.0f;   // 총알의 수명
     public float speed = 10.0f;
+
+    bool isOnDestroy = false;       // OnCollisionEnter2D 중복실행 방지용
     Rigidbody2D rigid = null;
 
     private void Awake()
@@ -35,14 +37,14 @@ public class Shoot : MonoBehaviour
     //    }
     //}
 
-    bool isOnDestroy = false;
+    
     /// <summary>
     /// 서로 충돌했을 때 실행되는 함수(이 스크립트를 가지고 있는 게임 오브젝트의 컬라이더에 다른 컬라이더가 충돌했을 때 실행)
     /// </summary>
     /// <param name="collision"></param>
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (!isOnDestroy)
+        if (!isOnDestroy)   // 중복해서 OnCollisionEnter2D가 실행되는 것을 방지
         {
             isOnDestroy = true;
             //Debug.Log($"OnCollisionEnter2D : {collision.gameObject.name}");
