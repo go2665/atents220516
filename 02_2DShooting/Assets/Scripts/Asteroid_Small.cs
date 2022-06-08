@@ -5,6 +5,7 @@ using UnityEngine;
 public class Asteroid_Small : MonoBehaviour
 {
     public float speed = 3.0f;
+    public int score = 1;
 
     private void Awake()        // 게임 오브젝트가 완성된 직후에 호출
     {
@@ -24,6 +25,11 @@ public class Asteroid_Small : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if (collision.gameObject.CompareTag("Bullet"))
+        {
+            GameManager.Inst.Score += score;
+        }
+
         Destroy(this.gameObject);
     }
 }

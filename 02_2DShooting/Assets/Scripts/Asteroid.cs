@@ -9,6 +9,7 @@ public class Asteroid : MonoBehaviour
     public GameObject small = null;     // 쪼개질 때 생길 작은 운석(prefab)
     public int hitPoint = 3;            // HP(총알 버티는 수)
     public float moveSpeed = 1.0f;      // 이동속도
+    public int score = 10;
 
     public Vector3 targetDir = Vector3.zero;
 
@@ -82,6 +83,10 @@ public class Asteroid : MonoBehaviour
         hitPoint--;
         if (hitPoint < 1)
         {
+            if (collision.gameObject.CompareTag("Bullet"))
+            {
+                GameManager.Inst.Score += score;
+            }
             Crush();
         }
         //}
