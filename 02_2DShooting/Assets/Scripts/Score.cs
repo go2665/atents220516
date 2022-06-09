@@ -15,7 +15,7 @@ public class Score : MonoBehaviour
 
     private void Start()
     {
-        GameManager.Inst.onScoreChange = Refresh;
+        GameManager.Inst.onScoreChange = Refresh;   // onScoreChange 이전에 들어간 함수는 제거하고 Refresh로 대체
         scoreText.text = $"Score : {(int)currentScore,4}";
     }
 

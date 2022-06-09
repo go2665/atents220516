@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,6 +22,9 @@ public class Player : MonoBehaviour
     private IEnumerator fireContinue = null;
     private readonly int anim_hash_InputY = Animator.StringToHash("InputY");
     private int life = 3;
+    public int Life { get => life; }
+
+    public Action onHit = null;     // action : c#이 미리 만들어 놓은 delegate 타입
 
 
     private Rigidbody2D rigid = null;           // 계속 사용할 컴포넌트는 한번만 찾는게 좋다.
@@ -221,5 +225,15 @@ public class Player : MonoBehaviour
     {
         yield return new WaitForSeconds(0.1f);
         flash.SetActive(false);
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if( collision.gameObject.CompareTag("Enemy") )
+        {
+            life -= 1;
+            onHit();
+            Debug.Log($"Life : {life}");
+        }    
     }
 }
