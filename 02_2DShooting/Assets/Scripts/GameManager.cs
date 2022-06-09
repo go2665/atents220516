@@ -25,21 +25,21 @@ public class GameManager : MonoBehaviour
         set
         {
             score = value;
-            onScoreChange?.Invoke();        //29~32랑 같은 코드
+            //Debug.Log($"Score : {score}");
+
+            //onScoreChange();  //onScoreChange가 null이면 에러가 뜨기 때문에 사용안하는 것이 좋다.
+            onScoreChange?.Invoke();        //아래 4줄(32~35)과 같은 코드. onScoreChange가 null이 아니면 [등록된 함수 실행]
             //if( onScoreChange != null )
             //{
             //    onScoreChange.Invoke();
-            //}
-
-
-            //Debug.Log($"Score : {score}");
+            //}            
         }
     }
 
     // 델리게이트(delegate) : 대리자. 함수를 등록할 수 있는 변수. (C언어의 함수포인터 발전형.) 
-    public delegate void UI_Refresh_Delegate();     // UI_Refresh_Delegate 이름의 델리게이트 종류를 만든 것
+    public delegate void UI_Refresh_Delegate();     // UI_Refresh_Delegate 이름의 델리게이트 [종류]를 만든 것
                                                     // (파라메터 없고 리턴타입도 없는 함수만 저장가능한 델리게이트)
-    public UI_Refresh_Delegate onScoreChange = null; // UI_Refresh_Delegate 타입으로 onScoreChange라는 이름의 델리게이트 변수를 만든 것
+    public UI_Refresh_Delegate onScoreChange = null;    // UI_Refresh_Delegate 타입으로 onScoreChange라는 이름의 [델리게이트 변수]를 만든 것
 
     private void Awake()
     {
