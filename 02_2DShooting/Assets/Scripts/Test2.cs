@@ -17,6 +17,7 @@ public class Test2 : MonoBehaviour
 
     public void TestTest()
     {
+        i = i + 10;
         j = 30;
 
         Test2.TestTest2();  // static 함수는 객체를 생성하지 않아도 사용할 수 있다.
@@ -25,8 +26,8 @@ public class Test2 : MonoBehaviour
     public static void TestTest2()
     {
         //i = 20;   //안됨. static은 static만 접근 가능
-        j = 30;
+        j = j + 30;
 
-        //GameManager.Inst.Test();
+        //GameManager.Inst.Test();        
     }
 }
