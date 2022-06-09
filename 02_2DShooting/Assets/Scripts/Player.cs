@@ -233,7 +233,7 @@ public class Player : MonoBehaviour
         if( collision.gameObject.CompareTag("Enemy") )  //Enemy 태그가 붙은 적과 충돌했을 때
         {
             life -= 1;  // 생명 1감소
-            onHit();    // 델리게이트 실행
+            onHit?.Invoke();    // 델리게이트 실행
             //Debug.Log($"Life : {life}");
         }    
     }

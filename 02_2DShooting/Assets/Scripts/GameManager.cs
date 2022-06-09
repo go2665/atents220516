@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
 {
     private static GameManager instance = null; // static이 붙어서 주소가 고정이다 = 이 클래스의 모든 인스턴스가 이 변수를 같이 사용한다.
     private int score = 0;          // 점수 저장용
-    private Player player = null;   // 플레이어. 자주 사용할 것이기 때문에 미리 찾아둠.
+    private Player player = null;   // 플레이어. 자주 사용할 것이기 때문에 미리 찾아둠.(찾는 행위는 빠르지 않다.)
 
     // 프로퍼티(속성). 특이한 메서드(함수). 읽기 전용, 쓰기 전용 등으로 설정해서 객체지향적 특성을 유지할 수 있음.
     // 값을 쓸거나 읽을 때 실행되어야 할 기능들을 쉽게 추가할 수 있다.
