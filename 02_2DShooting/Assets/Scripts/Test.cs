@@ -18,6 +18,9 @@ public class Test : MonoBehaviour
         StartCoroutine(coroutine);      // TestCoroutine을 실행        
 
         //StopCoroutine(coroutine);     // 코루틴 정지시키기
+
+        
+        // ?. : ?앞에 있는 변수가 null이 아니면 접근하고 실행해라.
     }
 
     IEnumerator TestCoroutine()     // 코루틴을 정의

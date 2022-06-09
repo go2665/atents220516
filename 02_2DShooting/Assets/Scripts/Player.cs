@@ -20,6 +20,8 @@ public class Player : MonoBehaviour
     private float boostSpeed = 1.0f;
     private IEnumerator fireContinue = null;
     private readonly int anim_hash_InputY = Animator.StringToHash("InputY");
+    private int life = 3;
+
 
     private Rigidbody2D rigid = null;           // 계속 사용할 컴포넌트는 한번만 찾는게 좋다.
     private Animator anim = null;
