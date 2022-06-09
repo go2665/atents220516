@@ -21,10 +21,11 @@ public class Player : MonoBehaviour
     private float boostSpeed = 1.0f;
     private IEnumerator fireContinue = null;
     private readonly int anim_hash_InputY = Animator.StringToHash("InputY");
-    private int life = 3;
-    public int Life { get => life; }
+    private int life = 3;               // 플레이어의 생명 표시
+    public int Life { get => life; }    // 플레이어의 생명을 읽기 전용으로 확인만 가능한 프로퍼티
 
-    public Action onHit = null;     // action : c#이 미리 만들어 놓은 delegate 타입
+    // action : c#이 미리 만들어 놓은 delegate 타입
+    public Action onHit = null;         // 플레이어가 적에게 맞을 때마다 실행될 델리게이트
 
 
     private Rigidbody2D rigid = null;           // 계속 사용할 컴포넌트는 한번만 찾는게 좋다.
@@ -229,11 +230,11 @@ public class Player : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if( collision.gameObject.CompareTag("Enemy") )
+        if( collision.gameObject.CompareTag("Enemy") )  //Enemy 태그가 붙은 적과 충돌했을 때
         {
-            life -= 1;
-            onHit();
-            Debug.Log($"Life : {life}");
+            life -= 1;  // 생명 1감소
+            onHit();    // 델리게이트 실행
+            //Debug.Log($"Life : {life}");
         }    
     }
 }

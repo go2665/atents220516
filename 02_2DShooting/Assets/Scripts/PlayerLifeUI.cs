@@ -17,8 +17,11 @@ public class PlayerLifeUI : MonoBehaviour
         GameManager.Inst.MainPlayer.onHit += Refresh;   // onHit에 Refresh를 추가
     }
 
+    /// <summary>
+    /// 플레이어가 맞아서 생명이 감소할 때마다 실행될 함수
+    /// </summary>
     void Refresh()
-    {
+    {       
         lifeText.text = $"X {GameManager.Inst.MainPlayer.Life}";
     }
 }
