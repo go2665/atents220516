@@ -16,13 +16,22 @@ public class Player : MonoBehaviour
     public GameObject shootPrefab = null;   // 프리팹은 GameObject 타입에 담을 수 있다.
     public Transform[] firePosition = null;
     public GameObject flash = null;
+    public GameObject gameOver = null;
 
     private Vector3 direction = Vector3.zero;
     private float boostSpeed = 1.0f;
     private IEnumerator fireContinue = null;
     private readonly int anim_hash_InputY = Animator.StringToHash("InputY");
     private int life = 3;               // 플레이어의 생명 표시
-    public int Life { get => life; }    // 플레이어의 생명을 읽기 전용으로 확인만 가능한 프로퍼티
+    public int Life     // 플레이어의 생명을 읽기 전용으로 확인만 가능한 프로퍼티
+    { 
+        get => life; 
+        private set
+        {
+            life = value;
+            onHit?.Invoke();
+        }
+    }    
 
     // action : c#이 미리 만들어 놓은 delegate 타입
     public Action onHit = null;         // 플레이어가 적에게 맞을 때마다 실행될 델리게이트
@@ -254,30 +263,37 @@ public class Player : MonoBehaviour
     {
         if( collision.gameObject.CompareTag("Enemy") )  //Enemy 태그가 붙은 적과 충돌했을 때
         {
-            life -= 1;          // 생명 1감소
+            //life -= 1;          // 생명 1감소
+            //onHit?.Invoke();    // 델리게이트 실행(UI 갱신)
+            Life -= 1;
 
             if (life > 10)
             {
                 //Debug.Log($"Life : {life}");
-                onHit?.Invoke();    // 델리게이트 실행
-
                 StartCoroutine(OnHitProcess());      // 3초 뒤에 다시 정상이 되도록 코루틴 실행
             }
             else
             {
                 // hit는 0 이하
                 //Debug.Log("GameOver");
-                isDead = true;
-
-                PlayerInput input = GetComponent<PlayerInput>();                
-                input.currentActionMap.Disable();       // 입력 막고
-
-                rigid.gravityScale = 1.0f;              // 중력 적용 받아 바닥에 떨어지게 만들기
-                rigid.freezeRotation = false;           // 회전 막아놓았던 것 풀기
-
-                GetComponent<CapsuleCollider2D>().enabled = false;  // 다른 애들과 부딪치는 것 방지
+                Dead();
             }
         }
+    }
+
+    void Dead()
+    {
+        isDead = true;
+
+        PlayerInput input = GetComponent<PlayerInput>();
+        input.currentActionMap.Disable();       // 입력 막고
+
+        rigid.gravityScale = 1.0f;              // 중력 적용 받아 바닥에 떨어지게 만들기
+        rigid.freezeRotation = false;           // 회전 막아놓았던 것 풀기
+
+        GetComponent<CapsuleCollider2D>().enabled = false;  // 다른 애들과 부딪치는 것 방지
+
+        gameOver.SetActive(true);
     }
 
     IEnumerator OnHitProcess()
