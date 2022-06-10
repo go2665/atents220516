@@ -34,6 +34,7 @@ public class Player : MonoBehaviour
 
     int layerIndex = 0;         // 플레이어가 다른적과 충돌하지 않기 위해 변경시킬 Border의 레이어 인덱스(Border와 Enemy는 서로 충돌하지 않도록 설정되어있음)
     float timeElapsed = 0.0f;   // 알파값이 주기적으로 0~1로 변경되게 하도록 사용하는 Cos 함수에 들어갈 값
+    bool isDead = false;
 
 
     private void Awake()        // 게임 오브젝트가 만들어진 직후에 호출
@@ -136,7 +137,15 @@ public class Player : MonoBehaviour
         //transform.Translate(1*Time.deltaTime, 0, 0);  // 계속 오른쪽으로 이동하는 코드
 
         // Rigidbody를 이용해서 이동        
-        rigid.MovePosition(transform.position + (direction * moveSpeed * boostSpeed * Time.fixedDeltaTime));
+        if (!isDead)
+        {
+            rigid.MovePosition(transform.position + (direction * moveSpeed * boostSpeed * Time.fixedDeltaTime));
+        }
+        else
+        {
+            rigid.AddForce(Vector2.left * 0.1f, ForceMode2D.Impulse);   // 뒤로 미는 힘 더하기
+            rigid.AddTorque(10.0f); //10도씩 돌리는 힘 더하기
+        }
     }
 
     public void OnMoveInput(InputAction.CallbackContext context) // context는 이 함수와 연결된 액션에서 전달된 입력관련 정보가 들어있다.
@@ -246,10 +255,28 @@ public class Player : MonoBehaviour
         if( collision.gameObject.CompareTag("Enemy") )  //Enemy 태그가 붙은 적과 충돌했을 때
         {
             life -= 1;          // 생명 1감소
-            //Debug.Log($"Life : {life}");
-            onHit?.Invoke();    // 델리게이트 실행
-            
-            StartCoroutine(OnHitProcess());      // 3초 뒤에 다시 정상이 되도록 코루틴 실행
+
+            if (life > 10)
+            {
+                //Debug.Log($"Life : {life}");
+                onHit?.Invoke();    // 델리게이트 실행
+
+                StartCoroutine(OnHitProcess());      // 3초 뒤에 다시 정상이 되도록 코루틴 실행
+            }
+            else
+            {
+                // hit는 0 이하
+                //Debug.Log("GameOver");
+                isDead = true;
+
+                PlayerInput input = GetComponent<PlayerInput>();                
+                input.currentActionMap.Disable();       // 입력 막고
+
+                rigid.gravityScale = 1.0f;              // 중력 적용 받아 바닥에 떨어지게 만들기
+                rigid.freezeRotation = false;           // 회전 막아놓았던 것 풀기
+
+                GetComponent<CapsuleCollider2D>().enabled = false;  // 다른 애들과 부딪치는 것 방지
+            }
         }
     }
 
@@ -259,7 +286,7 @@ public class Player : MonoBehaviour
         timeElapsed = 0.0f;             // timeElapsed 초기화
         //anim.SetTrigger("Hit");       // animator에게 Hit이라는 트리거를 발동시킴
 
-        yield return new WaitForSeconds(3.0f);  // 3초 대기
+        yield return new WaitForSeconds(1.0f);  // 1초 대기
 
         gameObject.layer = LayerMask.NameToLayer("Default"); // 3초가 지나면 Default로 돌아오기
         spriteRenderer.color = Color.white;     // 색상도 다시 완전 불투명으로 복구
