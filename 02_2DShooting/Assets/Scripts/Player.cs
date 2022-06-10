@@ -107,13 +107,14 @@ public class Player : MonoBehaviour
         //transform.position = transform.position + direction.normalized * moveSpeed * Time.deltaTime;
 
         //----------------------------------------------------------------------------------------------------
-        
-        if(gameObject.layer == layerIndex)      // 지금 충돌한 상황인지 확인(충돌을 했으면 플레이어의 레이어가 Border로 바뀜)
+
+        if (gameObject.layer == layerIndex)      // 지금 충돌한 상황인지 확인(충돌을 했으면 플레이어의 레이어가 Border로 바뀜)
         {
             timeElapsed += Time.deltaTime * 30.0f;  // timeElapsed에 시간 누적
             //MathF.Cos(timeElepsed) 1 ~ -1 ~ 1
             float alpha = (MathF.Cos(timeElapsed) + 1.0f) * 0.5f;   // cos의 결과를 timeElapsed를 이용해 얻은 후 0~1사이의 값이 되게 정규화
             spriteRenderer.color = new Color(1, 1, 1, alpha);   // 위에서 계산한 alpha를 적용
+            //Debug.Log(spriteRenderer.color);
         }
     }
 
@@ -245,19 +246,23 @@ public class Player : MonoBehaviour
         if( collision.gameObject.CompareTag("Enemy") )  //Enemy 태그가 붙은 적과 충돌했을 때
         {
             life -= 1;          // 생명 1감소
-            onHit?.Invoke();    // 델리게이트 실행
             //Debug.Log($"Life : {life}");
-
-            gameObject.layer = LayerMask.NameToLayer("Border");     // 플레이어의 레이어를 Border로 변경해서 적과 안 부딪치게 만들기
-            timeElapsed = 0.0f;             // timeElapsed 초기화
-            StartCoroutine(Restart());      // 3초 뒤에 다시 정상이 되도록 코루틴 실행
-        }    
+            onHit?.Invoke();    // 델리게이트 실행
+            
+            StartCoroutine(OnHitProcess());      // 3초 뒤에 다시 정상이 되도록 코루틴 실행
+        }
     }
 
-    IEnumerator Restart()
+    IEnumerator OnHitProcess()
     {
+        gameObject.layer = LayerMask.NameToLayer("Border");     // 플레이어의 레이어를 Border로 변경해서 적과 안 부딪치게 만들기
+        timeElapsed = 0.0f;             // timeElapsed 초기화
+        //anim.SetTrigger("Hit");       // animator에게 Hit이라는 트리거를 발동시킴
+
         yield return new WaitForSeconds(3.0f);  // 3초 대기
+
         gameObject.layer = LayerMask.NameToLayer("Default"); // 3초가 지나면 Default로 돌아오기
         spriteRenderer.color = Color.white;     // 색상도 다시 완전 불투명으로 복구
+        //anim.SetTrigger("ToNormal");  // animator에게 ToNormal이라는 트리거를 발동시킴
     }
 }
