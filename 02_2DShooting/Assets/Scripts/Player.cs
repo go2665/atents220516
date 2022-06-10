@@ -30,13 +30,18 @@ public class Player : MonoBehaviour
 
     private Rigidbody2D rigid = null;           // 계속 사용할 컴포넌트는 한번만 찾는게 좋다.
     private Animator anim = null;
+    private SpriteRenderer spriteRenderer = null;   // 비행기 이미지의 색상 alpha값을 변경하기 위해 필요.
+
+    int layerIndex = 0;         // 플레이어가 다른적과 충돌하지 않기 위해 변경시킬 Border의 레이어 인덱스(Border와 Enemy는 서로 충돌하지 않도록 설정되어있음)
+    float timeElapsed = 0.0f;   // 알파값이 주기적으로 0~1로 변경되게 하도록 사용하는 Cos 함수에 들어갈 값
 
 
     private void Awake()        // 게임 오브젝트가 만들어진 직후에 호출
     {
         rigid = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
-
+        spriteRenderer = GetComponent<SpriteRenderer>();    // GetComponent는 느리기 때문에 한번만 찾도록 캐싱해 놓은 것
+        layerIndex = LayerMask.NameToLayer("Border");       // 미리 찾아놓은 것
         // Unity는 안 움직이는 Collider는 하나로 합친 후 움직이는 Collider와 충돌처리를 계산한다.
         // Unity는 Rigidbody가 있은 오브젝트만 움직인 오브젝트로 판단한다.
         // Rigidbody가 없는 Collider가 움직이게 되면 다음 프레임에 다시 Collider를 합치기 때문에
@@ -103,6 +108,13 @@ public class Player : MonoBehaviour
 
         //----------------------------------------------------------------------------------------------------
         
+        if(gameObject.layer == layerIndex)      // 지금 충돌한 상황인지 확인(충돌을 했으면 플레이어의 레이어가 Border로 바뀜)
+        {
+            timeElapsed += Time.deltaTime * 30.0f;  // timeElapsed에 시간 누적
+            //MathF.Cos(timeElepsed) 1 ~ -1 ~ 1
+            float alpha = (MathF.Cos(timeElapsed) + 1.0f) * 0.5f;   // cos의 결과를 timeElapsed를 이용해 얻은 후 0~1사이의 값이 되게 정규화
+            spriteRenderer.color = new Color(1, 1, 1, alpha);   // 위에서 계산한 alpha를 적용
+        }
     }
 
     private void FixedUpdate()
@@ -232,9 +244,20 @@ public class Player : MonoBehaviour
     {
         if( collision.gameObject.CompareTag("Enemy") )  //Enemy 태그가 붙은 적과 충돌했을 때
         {
-            life -= 1;  // 생명 1감소
+            life -= 1;          // 생명 1감소
             onHit?.Invoke();    // 델리게이트 실행
             //Debug.Log($"Life : {life}");
+
+            gameObject.layer = LayerMask.NameToLayer("Border");     // 플레이어의 레이어를 Border로 변경해서 적과 안 부딪치게 만들기
+            timeElapsed = 0.0f;             // timeElapsed 초기화
+            StartCoroutine(Restart());      // 3초 뒤에 다시 정상이 되도록 코루틴 실행
         }    
+    }
+
+    IEnumerator Restart()
+    {
+        yield return new WaitForSeconds(3.0f);  // 3초 대기
+        gameObject.layer = LayerMask.NameToLayer("Default"); // 3초가 지나면 Default로 돌아오기
+        spriteRenderer.color = Color.white;     // 색상도 다시 완전 불투명으로 복구
     }
 }
