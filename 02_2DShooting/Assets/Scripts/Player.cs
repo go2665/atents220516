@@ -267,7 +267,7 @@ public class Player : MonoBehaviour
             //onHit?.Invoke();    // 델리게이트 실행(UI 갱신)
             Life -= 1;
 
-            if (life > 10)
+            if (life > 0)
             {
                 //Debug.Log($"Life : {life}");
                 StartCoroutine(OnHitProcess());      // 3초 뒤에 다시 정상이 되도록 코루틴 실행
