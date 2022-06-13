@@ -37,17 +37,27 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
+        Move();
+        Rotate();        
+    }
+
+    void Move()
+    {
         // inputDir의 y값을 이용하여 이 오브젝트의 앞쪽 방향(transform.forward)으로 이동
         // inputSide를 이용해서 이 오브젝트의 오른쪽 방향(transform.right)으로 이동
-        rigid.MovePosition(rigid.position 
+        rigid.MovePosition(rigid.position
             + moveSpeed * Time.fixedDeltaTime * (inputDir.y * transform.forward + inputSide * transform.right));
+    }
 
+    void Rotate()
+    {
+        // inputDir.x를 이용하여 우회전(d,+1)인지 좌회전(a,-1)인지 결정. 회전의 중심축
         rigid.MoveRotation(rigid.rotation * Quaternion.AngleAxis(inputDir.x * turnSpeed * Time.fixedDeltaTime, transform.up));
     }
 
     private void OnMoveInput(InputAction.CallbackContext context)
     {
-        //Debug.Log(context.ReadValue<Vector2>());
+        //Debug.Log(context.ReadValue<Vector3>());
         inputDir = context.ReadValue<Vector2>();    // Vector2.x = a키(-1) d키(+1),  Vector2.y = w키(+1) s키(-1)
     }
 
