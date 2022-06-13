@@ -10,11 +10,13 @@ public class Player : MonoBehaviour
     float inputSide = 0.0f;
 
     Rigidbody rigid = null;
+    Animator anim = null;
 
     private void Awake()
     {
         actions = new PlayerInputActions();
         rigid = GetComponent<Rigidbody>();
+        anim = GetComponent<Animator>();
     }
 
     private void OnEnable()
@@ -59,11 +61,15 @@ public class Player : MonoBehaviour
     {
         //Debug.Log(context.ReadValue<Vector3>());
         inputDir = context.ReadValue<Vector2>();    // Vector2.x = a키(-1) d키(+1),  Vector2.y = w키(+1) s키(-1)
+        
+        anim.SetBool("IsMove", !context.canceled);
     }
 
     private void OnSideMoveInput(InputAction.CallbackContext context)
     {
         //Debug.Log(context.ReadValue<float>());
         inputSide = context.ReadValue<float>();
+
+        anim.SetBool("IsMove", !context.canceled);
     }
 }
