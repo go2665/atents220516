@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -5,6 +6,9 @@ public class Player : MonoBehaviour
 {
     public float moveSpeed = 5.0f;
     public float turnSpeed = 180.0f;
+    public float jumpPower = 3.0f;
+
+    bool isJumping = false;
     PlayerInputActions actions = null;
     Vector3 inputDir = Vector3.zero;
     float inputSide = 0.0f;
@@ -26,10 +30,12 @@ public class Player : MonoBehaviour
         actions.Player.Move.canceled += OnMoveInput;
         actions.Player.SideMove.performed += OnSideMoveInput;
         actions.Player.SideMove.canceled += OnSideMoveInput;
+        actions.Player.Jump.performed += OnJumpInput;
     }    
 
     private void OnDisable()
     {
+        actions.Player.Jump.performed -= OnJumpInput;
         actions.Player.SideMove.canceled -= OnSideMoveInput;
         actions.Player.SideMove.performed -= OnSideMoveInput;
         actions.Player.Move.canceled -= OnMoveInput;
@@ -40,7 +46,7 @@ public class Player : MonoBehaviour
     private void FixedUpdate()
     {
         Move();
-        Rotate();        
+        Rotate();               
     }
 
     void Move()
@@ -57,6 +63,31 @@ public class Player : MonoBehaviour
         rigid.MoveRotation(rigid.rotation * Quaternion.AngleAxis(inputDir.x * turnSpeed * Time.fixedDeltaTime, transform.up));
     }
 
+    void Jump()
+    {
+        //if (isJumping == false)
+        if (!isJumping)
+        {
+            rigid.AddForce(transform.up * jumpPower, ForceMode.Impulse);
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            isJumping = false;
+        }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            isJumping = true;
+        }
+    }
+
     private void OnMoveInput(InputAction.CallbackContext context)
     {
         //Debug.Log(context.ReadValue<Vector3>());
@@ -71,5 +102,10 @@ public class Player : MonoBehaviour
         inputSide = context.ReadValue<float>();
 
         anim.SetBool("IsMove", !context.canceled);
+    }
+
+    private void OnJumpInput(InputAction.CallbackContext context)
+    {
+        Jump();
     }
 }
