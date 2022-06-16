@@ -1,0 +1,15 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: DoorHingedController
+  m_Controller: {fileID: 9100000, guid: e019ad05f77805c489fb722979ae7dd3, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: b1009b2c2d2f59f4b88075c7c545699e, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: a51ae7518dfe73f4082c7ebf95750e8f, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 4fcf0ab676f1e3440a4dbe1b2be42ba8, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 4fcf0ab676f1e3440a4dbe1b2be42ba8, type: 2}

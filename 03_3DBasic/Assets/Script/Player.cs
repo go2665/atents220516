@@ -31,10 +31,12 @@ public class Player : MonoBehaviour
         actions.Player.SideMove.performed += OnSideMoveInput;
         actions.Player.SideMove.canceled += OnSideMoveInput;
         actions.Player.Jump.performed += OnJumpInput;
+        actions.Player.Use.performed += OnUseInput;
     }    
 
     private void OnDisable()
     {
+        actions.Player.Use.performed -= OnUseInput;
         actions.Player.Jump.performed -= OnJumpInput;
         actions.Player.SideMove.canceled -= OnSideMoveInput;
         actions.Player.SideMove.performed -= OnSideMoveInput;
@@ -72,6 +74,13 @@ public class Player : MonoBehaviour
         }
     }
 
+    void Use()
+    {
+        anim.SetTrigger("Use");
+        // 트리거를 어떻게 사용하면 될 것인가?
+        // 이게 실행된 타이밍에 앞에 있는 오브젝트를 알 수 있을 것인가?
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Ground"))
@@ -107,5 +116,10 @@ public class Player : MonoBehaviour
     private void OnJumpInput(InputAction.CallbackContext context)
     {
         Jump();
+    }
+
+    private void OnUseInput(InputAction.CallbackContext context)
+    {
+        Use();
     }
 }
