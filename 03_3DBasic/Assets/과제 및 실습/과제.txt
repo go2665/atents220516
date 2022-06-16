@@ -8,3 +8,6 @@
   1.6. e : 오른쪽으로 이동
   https://learn.unity.com/project/roll-a-ball?uv=2019.4
 
+
+6/16
+1. Player.cs의 80, 81에 대한 대답을 생각해보기
