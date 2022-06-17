@@ -13,8 +13,8 @@ public class Switch : MonoBehaviour, IUseable
     {
         anim = GetComponent<Animator>();
 
-        // 자식 중 이름이 "Door_Switch"인 게임 오브젝트를 찾아 Door 컴포넌트 가져오기
-        door = transform.Find("Door_Switch2")?.GetComponent<Door>();  
+        // 내 부모의 자식 중 이름이 "Door_Switch"인 게임 오브젝트를 찾아 Door 컴포넌트 가져오기
+        door = transform.parent.transform.Find("Door_Switch")?.GetComponent<Door>();  
     }
 
     public void Use()
