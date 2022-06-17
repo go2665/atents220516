@@ -80,17 +80,23 @@ public class Player : MonoBehaviour
         anim.SetTrigger("Use"); // 애니메이션 재생 결과로 Sphere 트리거가 활성화되면서 OnTriggerEnter가 실행될 수 있도록 한다.
     }
 
+    // OnTriggerEnter : 트리거에 컬라이더가 들어왔을 때
     private void OnTriggerEnter(Collider other)
     {
         //Debug.Log($"{other.name} : 무엇인가가 들어았다.");
         // 사용이 가능한지 아닌지 물어보기(useable이 null이 아니라면 IUseable인터페이스를 상속 받았기에 사용할 수 있는 오브젝트다)
-        IUseable useable = other.gameObject.GetComponent<IUseable>();       
-        if (useable == null)
-        {
-            useable = other.gameObject.GetComponentInParent<IUseable>();
-        }
 
-        if(useable != null)
+        // other : 플레이어가 가진 트리거 안에 들어온 컬라이더들
+        //DoorManual door = other.GetComponentInParent<DoorManual>();       // 98~102라인과 기능이 같다. 대신 한정된 상황에서만 사용가능
+        //if( door != null)
+        //{
+        //    door.Use();
+        //}    
+
+        // other는 DoorManual인데 DoorManual은 Door 클래스와 IUseable인터페이스를 상속 받았다.
+        // 그래서 DoorManual 컴포넌트를 가져 올 때 IUseable 변수나 Door 변수로 저장할 수 있다.
+        IUseable useable = other.GetComponentInParent<IUseable>();  
+        if (useable != null)
         {
             useable.Use();  // 사용할 수 있는 오브젝트라면 사용한다.
         }
