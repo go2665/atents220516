@@ -76,10 +76,30 @@ public class Player : MonoBehaviour
 
     void Use()
     {
-        anim.SetTrigger("Use");
-        // 트리거를 어떻게 사용하면 될 것인가?
-        // 이게 실행된 타이밍에 앞에 있는 오브젝트를 알 수 있을 것인가?
+        // 단순 애니메이션 재생만 한다.
+        anim.SetTrigger("Use"); // 애니메이션 재생 결과로 Sphere 트리거가 활성화되면서 OnTriggerEnter가 실행될 수 있도록 한다.
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        //Debug.Log($"{other.name} : 무엇인가가 들어았다.");
+        // 사용이 가능한지 아닌지 물어보기(useable이 null이 아니라면 IUseable인터페이스를 상속 받았기에 사용할 수 있는 오브젝트다)
+        IUseable useable = other.gameObject.GetComponent<IUseable>();       
+        if (useable == null)
+        {
+            useable = other.gameObject.GetComponentInParent<IUseable>();
+        }
+
+        if(useable != null)
+        {
+            useable.Use();  // 사용할 수 있는 오브젝트라면 사용한다.
+        }
+    }
+
+    //private void OnTriggerExit(Collider other)
+    //{
+    //    Debug.Log($"{other.name} : 무엇인가가 나갔다.");
+    //}
 
     private void OnCollisionEnter(Collision collision)
     {

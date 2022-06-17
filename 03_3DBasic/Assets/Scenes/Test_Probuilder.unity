@@ -1392,7 +1392,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-21672
+  m_Name: pb_Mesh-1762
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -7985,7 +7985,7 @@ SphereCollider:
   m_GameObject: {fileID: 1093962832}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Radius: 1
   m_Center: {x: 0, y: 1.5, z: 1}
@@ -47491,7 +47491,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-21686
+  m_Name: pb_Mesh-1776
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -48223,5 +48223,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Door_Hinged_Manual
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2404001877478214014, guid: 5e25a9b90fd7d7245bd8c1f265a263fd, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 5e25a9b90fd7d7245bd8c1f265a263fd, type: 3}
