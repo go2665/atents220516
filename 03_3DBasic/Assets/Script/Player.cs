@@ -12,6 +12,7 @@ public class Player : MonoBehaviour
     PlayerInputActions actions = null;
     Vector3 inputDir = Vector3.zero;
     float inputSide = 0.0f;
+    bool tryUse = false;
 
     Rigidbody rigid = null;
     Animator anim = null;
@@ -73,11 +74,17 @@ public class Player : MonoBehaviour
             rigid.AddForce(transform.up * jumpPower, ForceMode.Impulse);
         }
     }
-
+        
     void Use()
     {
         // 단순 애니메이션 재생만 한다.
         anim.SetTrigger("Use"); // 애니메이션 재생 결과로 Sphere 트리거가 활성화되면서 OnTriggerEnter가 실행될 수 있도록 한다.
+        tryUse = true;
+    }
+
+    public void UseEnd()
+    {
+        tryUse = false;     // 헛손질 한 후 뒤에 사용되는 것을 방지(애니메이션 끝날 때 자동으로 처리)
     }
 
     // OnTriggerEnter : 트리거에 컬라이더가 들어왔을 때
@@ -92,13 +99,17 @@ public class Player : MonoBehaviour
         //{
         //    door.Use();
         //}    
-
-        // other는 DoorManual인데 DoorManual은 Door 클래스와 IUseable인터페이스를 상속 받았다.
-        // 그래서 DoorManual 컴포넌트를 가져 올 때 IUseable 변수나 Door 변수로 저장할 수 있다.
-        IUseable useable = other.GetComponentInParent<IUseable>();  
-        if (useable != null)
+                
+        if (tryUse)     // 내가 사용을 시도했을 때만 대상을 사용하도록 if
         {
-            useable.Use();  // 사용할 수 있는 오브젝트라면 사용한다.
+            // other는 DoorManual인데 DoorManual은 Door 클래스와 IUseable인터페이스를 상속 받았다.
+            // 그래서 DoorManual 컴포넌트를 가져 올 때 IUseable 변수나 Door 변수로 저장할 수 있다.
+            IUseable useable = other.GetComponentInParent<IUseable>();
+            if (useable != null)
+            {
+                useable.Use();  // 사용할 수 있는 오브젝트라면 사용한다.
+                tryUse = false; // 1회용으로 변수 사용하기 위해 
+            }
         }
     }
 

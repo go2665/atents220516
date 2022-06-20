@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Key : MonoBehaviour
 {
-    public Action onKeyPickup = null;
+    public event Action onKeyPickup = null;
 
     private void OnTriggerEnter(Collider other)
     {

@@ -9,7 +9,7 @@ public class DoorKey : Door
 
     private void Start()
     {
-        key.onKeyPickup = OpenAndClose; // 열쇠가 사라질 때 실행될 델리게이트에 함수 연결
+        key.onKeyPickup += OpenAndClose; // 열쇠가 사라질 때 실행될 델리게이트에 함수 연결
     }
 
     void OpenAndClose()
