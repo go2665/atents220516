@@ -16,6 +16,8 @@ public class TrapSpike : MonoBehaviour
         if( other.CompareTag("Player"))
         {
             anim.SetTrigger("Activate");
+            IDead dead = other.GetComponent<IDead>();
+            dead?.Die();
         }
     }
 }

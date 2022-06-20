@@ -1,8 +1,7 @@
-using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IDead
 {
     public float moveSpeed = 5.0f;
     public float turnSpeed = 180.0f;
@@ -158,5 +157,13 @@ public class Player : MonoBehaviour
     private void OnUseInput(InputAction.CallbackContext context)
     {
         Use();
+    }
+
+    public void Die()
+    {
+        actions.Player.Disable();
+        rigid.constraints = RigidbodyConstraints.None;
+        rigid.AddForce(Random.insideUnitSphere * 10.0f);
+        anim.SetTrigger("Die");
     }
 }
