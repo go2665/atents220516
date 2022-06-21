@@ -8,10 +8,10 @@ public class JumpPad : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.gameObject.CompareTag("Player"))
+        if(collision.gameObject.CompareTag("Player"))   // 플레이이면 
         {
-            Rigidbody rigid = collision.gameObject.GetComponent<Rigidbody>();
-            rigid.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
+            Rigidbody rigid = collision.gameObject.GetComponent<Rigidbody>();   // 리지드바디 가져와서
+            rigid.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);          // 위쪽으로 급격하게 힘을 가해라.
         }
     }
 }
