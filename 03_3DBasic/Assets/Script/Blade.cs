@@ -9,7 +9,7 @@ public class Blade : MonoBehaviour, IWaypointUser   // IWaypointUser를 상속�
     public float moveSpeed = 2.0f;      // 이동 속도
     
     Transform target = null;            // 이동할 곳
-    Vector3 dir;                        // 이동 방향(내부 계산용으로 사용)
+    Vector3 dir;                        // 이동 방향(칼날이 회전하기 때문에 월드 좌표로 가지고 있어야 함)
 
     private void FixedUpdate()
     {
