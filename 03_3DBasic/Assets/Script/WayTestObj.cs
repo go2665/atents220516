@@ -6,7 +6,7 @@ public class WayTestObj : MonoBehaviour, IWaypointUser
 {
     void Update()
     {
-        transform.Translate(transform.forward * 2.0f * Time.deltaTime, Space.World);
+        transform.Translate(transform.forward * 2.0f * Time.deltaTime, Space.World);        
     }
 
     public void SetNextWayPoint(Transform newTarget)
