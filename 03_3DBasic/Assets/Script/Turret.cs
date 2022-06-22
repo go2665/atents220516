@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class Turret : MonoBehaviour
 {
-    public Transform target = null;
-    public GameObject bullet = null;
-    public float range = 5.0f;
-    public float angle = 15.0f;
-    public float fireInterval = 1.0f;
+    public Transform target = null;     // 추적 대상
+    public GameObject bullet = null;    // 총알 프리팹
+    public float range = 5.0f;          // 인식 사정거리
+    public float angle = 15.0f;         // 발사각
+    public float fireInterval = 1.0f;   // 총알 발사 간격
         
-    Transform turretHead = null;
-    Transform firePostion = null;
-    float lookSpeed = 2.0f;
-    float halfAngle = 0.0f;
-    float fireCooltime = 0.0f;
+    Transform turretHead = null;        // 터랫 해드
+    Transform firePostion = null;       // 총알 발사 지점
+    float lookSpeed = 2.0f;             // 회전 속도(1/lookSpeed초)
+    float halfAngle = 0.0f;             // 미리 계산해 놓는 용도
+    float fireCooltime = 0.0f;          // 발사까지 남은 쿨타임
 
     private void Awake()
     {
