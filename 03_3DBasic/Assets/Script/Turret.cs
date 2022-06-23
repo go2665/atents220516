@@ -30,7 +30,7 @@ public class Turret : MonoBehaviour
         //dir의 길이 = root(dir.x*dir.x + dir.y*dir.y + dir.z*dir.z)
         //dir의 길이 = dir.magnitude;
 
-        fireCooltime -= Time.deltaTime;     // 항상 쿨타임 감소
+        fireCooltime -= Time.deltaTime;     // 항상 쿨타임값을 감소시킨다.
 
         if ( dir.sqrMagnitude < range * range )
         {
