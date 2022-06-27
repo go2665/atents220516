@@ -167,12 +167,12 @@ public class Player : MonoBehaviour, IDead
         rigid.constraints = RigidbodyConstraints.None;
         rigid.AddForce(Random.insideUnitSphere * 10.0f);
         anim.SetTrigger("Die");
-        StartCoroutine(Restart());
+        StartCoroutine(Restart());  // 죽을 때 씬 재시작 코루틴 실행
     }
 
     IEnumerator Restart()
     {
-        yield return new WaitForSeconds(5.0f);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        yield return new WaitForSeconds(5.0f);  // 5초 기다리기
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);   // 현재 씬 다시 불러오기
     }
 }

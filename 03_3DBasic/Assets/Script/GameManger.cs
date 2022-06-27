@@ -22,10 +22,12 @@ public class GameManger : MonoBehaviour
     // 싱글톤 vs Static
     //  1. 싱글톤은 상속이 된다.(static은 상속이 안됨)
 
-    public float timer = 0.0f;
-    TextMeshProUGUI timerText;
-    ClearTime clearTime;
+    float timer = 0.0f;         // 누적해서 보여 줄 시간
+    TextMeshProUGUI timerText;  // 시간을 글자로 표현할 UI
+    ClearTime clearTime;        // 클리어 시간을 표시할 UI
+    int oldSceneIndex = 0;      // 이전에 불려진 씬의 인덱스
 
+    // 싱글톤 관련 코드 ----------------------------------------------------------------------------
     static GameManger instance = null;
     public static GameManger Inst { get => instance; }
 
@@ -49,19 +51,33 @@ public class GameManger : MonoBehaviour
 
     void Initialize()
     {
-        SceneManager.sceneLoaded += OnStageStart;
+        SceneManager.sceneLoaded += OnStageStart;   // 씬의 로딩이 끝났을 때 실행될 델리게이트에 OnStageStart 등록
     }
+    //---------------------------------------------------------------------------------------------
 
+    
+    /// <summary>
+    /// 씬 로딩이 끝나면 실행될 함수
+    /// </summary>
+    /// <param name="arg0">씬 정보</param>
+    /// <param name="arg1">씬 로딩 방식</param>
     private void OnStageStart(Scene arg0, LoadSceneMode arg1)
     {
+        // UI찾기
         timerText = GameObject.Find("Timer").GetComponent<TextMeshProUGUI>();
         clearTime = FindObjectOfType<ClearTime>();
-        clearTime.gameObject.SetActive(false);
-        ResetTimer();
+        clearTime.gameObject.SetActive(false);  // ClearTime은 끝날 때만 보이면 되니까 시작할 때는 꺼놓기
+
+        if (oldSceneIndex != arg0.buildIndex)   // 이전에 열린 씬의 인덱스와 지금 열린 씬의 인덱스를 비교(재시작인지 다음 스테이지 시작인지 확인)
+        {
+            oldSceneIndex = arg0.buildIndex;    // 옛날 씬 인덱스를 지금 씬 인덱스로 변경
+            ResetTimer();                       // 다음 스테이지 시작이면 타이머 리셋
+        }
     }
 
     private void Update()
     {
+        // 시간 누적 시키면서 UI 갱신
         timer += Time.deltaTime;
         timerText.text = $"{timer:f2}"; // 가비지가 무지막지하게 생성된다. => 메모리 가용량이 줄 수도 있다.
 
@@ -69,12 +85,18 @@ public class GameManger : MonoBehaviour
         //  1. 수정 불가능한 타입이다. -> 항상 새로 만들어진다.
     }
 
+    /// <summary>
+    /// 시간 리셋
+    /// </summary>
     void ResetTimer()
     {
         timer = 0.0f;
         timerText.text = $"{timer:f2}";
     }
 
+    /// <summary>
+    /// ClearTime UI에 시간 지정하고 보여주기
+    /// </summary>
     public void ShowClearTime()
     {
         clearTime.SetTime(timer);
