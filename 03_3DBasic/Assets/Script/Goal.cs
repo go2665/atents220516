@@ -20,6 +20,7 @@ public class Goal : MonoBehaviour
     {
         // 트리거 안에 들어가면 캔버스에 있는 애니메이션 실행
         fadeInOut.StartFadeOut();
+        GameManger.Inst.ShowClearTime();
     }
 
     /// <summary>
