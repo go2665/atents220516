@@ -42,5 +42,5 @@ public class CanvasFadeInOut : MonoBehaviour
     {
         // 페이드 아웃이 종료될 때 델리게이트 실행
         OnFadeOutEnd?.Invoke();
-    }
+    }   
 }

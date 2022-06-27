@@ -1,5 +1,7 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour, IDead
 {
@@ -165,5 +167,12 @@ public class Player : MonoBehaviour, IDead
         rigid.constraints = RigidbodyConstraints.None;
         rigid.AddForce(Random.insideUnitSphere * 10.0f);
         anim.SetTrigger("Die");
+        StartCoroutine(Restart());
+    }
+
+    IEnumerator Restart()
+    {
+        yield return new WaitForSeconds(5.0f);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }
