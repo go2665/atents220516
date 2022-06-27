@@ -1,0 +1,4 @@
+6/27
+1. PlayerBird의 FixedUpdate안에서 rigid.velocity.y의 최소값과 최대값을 출력하라
+  1.1. 현재까지 확인된 값중에 최대와 최소
+  시간 : 7시 35분까지
