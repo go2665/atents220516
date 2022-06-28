@@ -22,6 +22,8 @@ public class PipeRotator : MonoBehaviour
     /// </summary>
     const float X_RANGE_OUT = -10.0f;
 
+    const float X_START = 10.0f;
+
     /// <summary>
     /// PipeRotator가 가지고 있는 파이프들
     /// </summary>
@@ -33,8 +35,7 @@ public class PipeRotator : MonoBehaviour
         for (int i = 0; i < transform.childCount; i++)
         {
             children[i] = transform.GetChild(i).GetComponent<Pipe>();   // 파이프 가져와서 저장하고
-            children[i].Move(width * i * Vector2.right);    // 초기 위치 설정
-            children[i].ResetHeight();                      // 높이도 초기화
+            children[i].Set((width * i + X_START) * Vector2.right);     // 초기 위치 설정
         }
     }
 

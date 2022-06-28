@@ -55,4 +55,13 @@ public class Pipe : MonoBehaviour
                                                             // 높이는 항상 randomHeight에 설정된 높이로.
         rigid.MovePosition(pos + moveDelta);    // MovePosition으로 이동시키기
     }
+
+    /// <summary>
+    /// 파이프의 위치를 설정하는 함수
+    /// </summary>
+    /// <param name="pos">이동시킬 위치</param>
+    public void Set(Vector2 pos)
+    {
+        rigid.position = pos;   // 위치 설정
+    }
 }
