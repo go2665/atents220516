@@ -44,6 +44,12 @@ TagManager:
   - name: Background
     uniqueID: 2001754777
     locked: 0
+  - name: Pipe
+    uniqueID: 3245230409
+    locked: 0
+  - name: Gound
+    uniqueID: 3037884893
+    locked: 0
   - name: Bird
     uniqueID: 4037411187
     locked: 0

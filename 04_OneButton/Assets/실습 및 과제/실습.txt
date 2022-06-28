@@ -2,3 +2,9 @@
 1. PlayerBird의 FixedUpdate안에서 rigid.velocity.y의 최소값과 최대값을 출력하라
   1.1. 현재까지 확인된 값중에 최대와 최소
   시간 : 7시 35분까지
+
+
+6/28
+1. PipeRotator를 수정해서 파이프가 계속 나오게 만들기
+   (BackgroundScrolling 참조)
+   시간 : 5시까지
