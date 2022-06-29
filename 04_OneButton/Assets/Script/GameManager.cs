@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    TextMeshProUGUI scoreText;
+    //TextMeshProUGUI scoreText;
     ImageNumber imageNumber;
 
     // static 맴버 변수 : 주소가 고정이다. => 이 클래스의 모든 인스턴스는 같은 값을 가진다.
@@ -52,17 +52,18 @@ public class GameManager : MonoBehaviour
         if( currentScore < Score )
         {
             currentScore += (Time.deltaTime * 20.0f);
-            scoreText.text = ((int)currentScore).ToString();
+            //scoreText.text = ((int)currentScore).ToString();
+            imageNumber.Number = (int)currentScore;
         }
     }
 
     private void Initialize()
     {
-        scoreText = GameObject.Find("ScoreText").GetComponent<TextMeshProUGUI>();
+        //scoreText = GameObject.Find("ScoreText").GetComponent<TextMeshProUGUI>();
+        //scoreText.text = "0";
         Score = 0;
-        scoreText.text = "0";
 
         imageNumber = FindObjectOfType<ImageNumber>();
-        imageNumber.Number = 568;
+        //imageNumber.Number = 0;
     }
 }

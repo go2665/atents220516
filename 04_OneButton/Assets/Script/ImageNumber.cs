@@ -15,14 +15,23 @@ public class ImageNumber : MonoBehaviour
         set
         {
             number = value;
-            number = Mathf.Clamp(number, 0, 9999);
+            number = Mathf.Clamp(number, 0, 9999);      // 4자리까지만 표현 가능하니까 최대값은 9999로 설정
 
             int tempNum = number;
-            for( int i=0;i<digitImage.Length; i++)
+            for( int i=0;i<digitImage.Length; i++)      // 각 자리수별로 처리
             {
-                int rest = tempNum % 10;
-                digitImage[i].sprite = numberImages[rest];
-                tempNum /= 10;      // tempNum = tempNum / 10;
+                if (tempNum > 0)
+                {
+                    int rest = tempNum % 10;                    // rest를 구해서 해당 자리수를 구함
+                    digitImage[i].sprite = numberImages[rest];  // 해당 자리수에 맞는 이미지 설정
+                    digitImage[i].color = Color.white;          // 보이게 만들기
+                    tempNum /= 10;      // tempNum = tempNum / 10;  // 10분의 1로 줄이기(자리수 한칸 줄이기)
+                }
+                else
+                {
+                    // 더 이상 나누어도 의미가 없음
+                    digitImage[i].color = Color.clear;  // 투명하게 보이도록 처리
+                }
             }
         }
     }
