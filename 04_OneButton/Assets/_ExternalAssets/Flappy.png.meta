@@ -1154,7 +1154,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Flappy_64
+      name: TestBird
       rect:
         serializedVersion: 2
         x: 115
@@ -1558,6 +1558,7 @@ TextureImporter:
       Flappy_79: -750745493
       Flappy_59: -2050008731
       Flappy_23: -73890430
+      TestBird: 1474757597
       Flappy_21: 2029215884
       Flappy_9: -1311054401
       Flappy_43: 171658515
@@ -1583,11 +1584,10 @@ TextureImporter:
       Flappy_25: 1328575282
       Flappy_52: 1609619512
       Flappy_37: 2113042256
-      Flappy_64: 1474757597
+      Flappy_77: 1385099937
       Flappy_44: -30853496
       Flappy_46: -990859708
       Flappy_51: -159810582
-      Flappy_77: 1385099937
       Flappy_32: 1169443413
       Flappy_78: 1492107784
       Flappy_5: -1174494850
