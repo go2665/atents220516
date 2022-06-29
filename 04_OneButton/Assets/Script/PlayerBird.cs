@@ -64,6 +64,14 @@ public class PlayerBird : MonoBehaviour
         Die(collision);
     }
 
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if( !isDead )
+        {
+            GameManager.Inst.Score += GameManager.Inst.point;
+        }
+    }
+
     void Die(Collision2D collision)
     {
         isDead = true;  // 죽었다고 표시
