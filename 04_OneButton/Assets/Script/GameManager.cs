@@ -2,10 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System.IO;
 
 public class GameManager : MonoBehaviour
 {
     public int point = 10;  // 한 칸 넘을 때마다 얻는 점수
+
+    int highScore = 0;
 
     float currentScore = 0.0f;
     int score = 0;
@@ -65,5 +68,40 @@ public class GameManager : MonoBehaviour
 
         imageNumber = FindObjectOfType<ImageNumber>();
         //imageNumber.Number = 0;
+
+        //SaveGameData();
+        LoadGameData();
+    }
+
+    public void SaveGameData()
+    {
+        SaveData saveData = new();
+        saveData.highScore = highScore;
+
+        string json = JsonUtility.ToJson(saveData);
+
+        string path = $"{Application.dataPath}/Save/";
+        if( !Directory.Exists(path) )
+        {
+            // path 폴더가 없다.
+            Directory.CreateDirectory(path);
+        }
+
+        string fullPath = $"{path}Save.json";
+        File.WriteAllText(fullPath, json);
+    }
+
+    public void LoadGameData()
+    {
+        string path = $"{Application.dataPath}/Save/";
+        string fullPath = $"{path}Save.json";
+
+        if( Directory.Exists(path) && File.Exists(fullPath) )
+        {
+            string json = File.ReadAllText(fullPath);
+            SaveData saveData = JsonUtility.FromJson<SaveData>(json);
+            highScore = saveData.highScore;
+            Debug.Log($"High Score : {saveData.highScore}");
+        }
     }
 }
