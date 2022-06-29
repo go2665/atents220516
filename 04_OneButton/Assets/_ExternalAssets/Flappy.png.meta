@@ -356,15 +356,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Flappy_14
+      name: Big0
       rect:
         serializedVersion: 2
         x: 496
         y: 434
         width: 12
         height: 18
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 8
+      pivot: {x: 1, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -524,15 +524,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Flappy_34
+      name: Big2
       rect:
         serializedVersion: 2
         x: 292
         y: 334
         width: 12
         height: 18
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 8
+      pivot: {x: 1, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -545,15 +545,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Flappy_35
+      name: Big3
       rect:
         serializedVersion: 2
         x: 306
         y: 334
         width: 12
         height: 18
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 8
+      pivot: {x: 1, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -566,15 +566,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Flappy_36
+      name: Big4
       rect:
         serializedVersion: 2
         x: 320
         y: 334
         width: 12
         height: 18
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 8
+      pivot: {x: 1, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -587,15 +587,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Flappy_37
+      name: Big5
       rect:
         serializedVersion: 2
         x: 334
         y: 334
         width: 12
         height: 18
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 8
+      pivot: {x: 1, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -608,15 +608,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Flappy_38
+      name: Big6
       rect:
         serializedVersion: 2
         x: 292
         y: 310
         width: 12
         height: 18
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 8
+      pivot: {x: 1, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -629,15 +629,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Flappy_39
+      name: Big7
       rect:
         serializedVersion: 2
         x: 306
         y: 310
         width: 12
         height: 18
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 8
+      pivot: {x: 1, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -650,15 +650,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Flappy_40
+      name: Big8
       rect:
         serializedVersion: 2
         x: 320
         y: 310
         width: 12
         height: 18
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 8
+      pivot: {x: 1, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -671,15 +671,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Flappy_41
+      name: Big9
       rect:
         serializedVersion: 2
         x: 334
         y: 310
         width: 12
         height: 18
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 8
+      pivot: {x: 1, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1301,15 +1301,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Flappy_71
+      name: Big1
       rect:
         serializedVersion: 2
         x: 136
         y: 39
         width: 8
         height: 18
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 8
+      pivot: {x: 1, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1546,11 +1546,12 @@ TextureImporter:
       Flappy_69: -641152745
       Flappy_60: -1538276989
       Flappy_67: 2104856506
+      Big8: -274430176
+      Big5: 2113042256
       Flappy_16: 773266048
       Flappy_73: 1715311663
       Flappy_17: 1852464124
       Flappy_22: -2057773582
-      Flappy_40: -274430176
       Flappy_11: -461676016
       Flappy_6: -1203494351
       Bird1_2: 530755394
@@ -1559,7 +1560,9 @@ TextureImporter:
       Flappy_59: -2050008731
       Flappy_23: -73890430
       TestBird: 1474757597
+      Big9: 898191341
       Flappy_21: 2029215884
+      Big2: 801014086
       Flappy_9: -1311054401
       Flappy_43: 171658515
       Flappy_61: 299053481
@@ -1568,38 +1571,37 @@ TextureImporter:
       Background_Ground: 829066493
       Flappy_15: -1829942430
       Flappy_70: -1796841338
+      Big3: -837759800
       Flappy_57: -977624389
       Flappy_47: -595926100
+      Big0: 733930034
       Flappy_12: -663207338
-      Flappy_14: 733930034
       Flappy_7: -1968724218
       Flappy_50: 1353166879
+      Flappy_51: -159810582
       Flappy_30: -2017067014
-      Flappy_38: -335677960
       Flappy_13: -1280290884
       Flappy_29: 892965919
       Flappy_31: -1317113312
       Flappy_48: -2021034913
       Flappy_24: 270826741
       Flappy_25: 1328575282
+      Big6: -335677960
       Flappy_52: 1609619512
-      Flappy_37: 2113042256
       Flappy_77: 1385099937
       Flappy_44: -30853496
       Flappy_46: -990859708
-      Flappy_51: -159810582
-      Flappy_32: 1169443413
+      Big1: -554177932
       Flappy_78: 1492107784
+      Flappy_32: 1169443413
+      Big4: -1060876305
       Flappy_5: -1174494850
-      Flappy_41: 898191341
-      Flappy_39: 1133629068
+      Big7: 1133629068
       Flappy_26: -791760346
       Pipe_Bottom: 1668446273
       Flappy_18: 1817340174
-      Flappy_36: -1060876305
       Flappy_10: -1039298974
       Bird1_1: -1631977776
-      Flappy_71: -554177932
       Flappy_8: -1855025632
       Flappy_20: 161499384
       Flappy_55: -2134836487
@@ -1609,9 +1611,7 @@ TextureImporter:
       Flappy_63: 1331658684
       Flappy_4: 671809620
       Flappy_68: -273655424
-      Flappy_34: 801014086
       Flappy_66: 1526173436
-      Flappy_35: -837759800
       Flappy_49: -274182506
       Flappy_3: -389636256
       Flappy_19: 1099509111
