@@ -6,5 +6,5 @@ using UnityEngine;
 [Serializable]
 public class SaveData
 {
-    public int highScore;
+    public int[] highScore;
 }

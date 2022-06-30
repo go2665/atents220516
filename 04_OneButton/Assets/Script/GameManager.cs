@@ -10,7 +10,8 @@ public class GameManager : MonoBehaviour
 {
     public int point = 10;  // 한 칸 넘을 때마다 얻는 점수
 
-    int highScore = 0;
+    const int rankCount = 5;
+    int[] highScore = new int[rankCount];   // 0번째가 가장 높음, 4번째가 강 낮음
 
     float currentScore = 0.0f;
     int score = 0;
@@ -26,12 +27,13 @@ public class GameManager : MonoBehaviour
     }
     public int HighScore
     {
-        get => highScore;
+        get => highScore[0];
     }
 
     //TextMeshProUGUI scoreText;
     ImageNumber imageNumber;
     ScoreBoard scoreBoard;
+    HighScoreBoard highScoreBoard;
 
     // static 맴버 변수 : 주소가 고정이다. => 이 클래스의 모든 인스턴스는 같은 값을 가진다.
     static GameManager instance = null;
@@ -82,6 +84,7 @@ public class GameManager : MonoBehaviour
 
         imageNumber = GameObject.Find("MainScore_ImageNumber").GetComponent<ImageNumber>();
         scoreBoard = FindObjectOfType<ScoreBoard>();
+        highScoreBoard = FindObjectOfType<HighScoreBoard>();
 
         LoadGameData();
     }
@@ -109,7 +112,7 @@ public class GameManager : MonoBehaviour
         string path = $"{Application.dataPath}/Save/";          // 저장된 폴더 이름 만들기
         string fullPath = $"{path}Save.json";                   // 전체경로 만들기
 
-        if( Directory.Exists(path) && File.Exists(fullPath) )   // 경로와 파일 둘 다 존재하는지 확인
+        if (Directory.Exists(path) && File.Exists(fullPath))   // 경로와 파일 둘 다 존재하는지 확인
         {
             string json = File.ReadAllText(fullPath);           // 실제로 파일에 써있는 문자열 읽기
             SaveData saveData = JsonUtility.FromJson<SaveData>(json);   // 특정 클래스(SaveData) 규격에 맞게 파싱하기
@@ -120,12 +123,28 @@ public class GameManager : MonoBehaviour
 
     public void OnGameOver()
     {
-        bool isHighScore = score > highScore;
-        if ( isHighScore )
+        bool isBestScore = false;
+        for (int i=0; i< rankCount; i++)    // 순위 개수만큼 확인
         {
-            highScore = score;
-            SaveGameData();            
+            if( highScore[i] < score )      // highScore에 저장된 값과 score를 비교해서 score가 더 크면 그 순위에 끼워넣기
+            {
+                isBestScore = (i == 0);     // 0번째보다 크면 최고 점수
+                for (int j = rankCount-1; j>i; j--)   // 맨 아래쪽부터 한 칸씩 아래로 내리기
+                {
+                    highScore[j] = highScore[j-1];
+                }
+                highScore[i] = score;       // 마지막으로 score에 넣기
+                SaveGameData();             // 다 넣고 나면 저장
+                break;
+            }
         }
-        scoreBoard.Open(isHighScore);
+        //bool isHighScore = score > highScore;
+        //if ( isHighScore )
+        //{
+        //    highScore = score;
+        //    SaveGameData();            
+        //}
+        scoreBoard.Open(isBestScore);
+        highScoreBoard.Open(score);
     }
 }
