@@ -104,4 +104,13 @@ public class GameManager : MonoBehaviour
             //Debug.Log($"High Score : {saveData.highScore}");
         }
     }
+
+    public void OnGameOver()
+    {
+        if( score > highScore )
+        {
+            highScore = score;
+            SaveGameData();
+        }
+    }
 }

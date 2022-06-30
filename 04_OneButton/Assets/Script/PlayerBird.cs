@@ -74,18 +74,20 @@ public class PlayerBird : MonoBehaviour
 
     void Die(Collision2D collision)
     {
-        isDead = true;  // 죽었다고 표시
-               
-        birdInputActions.Player.Disable();  // 입력 막기
-
         ContactPoint2D contact = collision.GetContact(0);       // 충돌 지점 받아오기
-        //contact.normal; // 노멀벡터 : 평면에 수직인 벡터(법선벡터)
+                                                                //contact.normal; // 노멀벡터 : 평면에 수직인 벡터(법선벡터)
 
         Vector2 dir = (contact.point - (Vector2)transform.position).normalized; // 새의 위치에서 부딪친 위치로 가는 방향 벡터의 정규화된 벡터
-        // dir이 contact.normal를 노멀로 가지는 평면에 부딪쳐서 반사된 벡터
+                                                                                // dir이 contact.normal를 노멀로 가지는 평면에 부딪쳐서 반사된 벡터
         Vector2 reflect = Vector2.Reflect(dir, contact.normal);
         rigid.velocity = reflect * 10.5f + Vector2.left * 5.0f; // 반사벡터 + 왼쪽으로 튕겨내기
-
         rigid.angularVelocity = 1000.0f;    // 회전 시키기(1초에 1000도)
+
+        if (!isDead)
+        {
+            birdInputActions.Player.Disable();  // 입력 막기
+            GameManager.Inst.OnGameOver();
+            isDead = true;
+        }
     }
 }
