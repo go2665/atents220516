@@ -32,7 +32,7 @@ public class ScoreBoard : MonoBehaviour
     private void OnEnable()
     {
         score.Number = GameManager.Inst.Score;
-        highScore.Number = GameManager.Inst.HighScore;
+        highScore.Number = GameManager.Inst.BestScore;
     }
 
     public void Open(bool isHighScore)

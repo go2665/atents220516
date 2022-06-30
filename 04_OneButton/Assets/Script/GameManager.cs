@@ -11,7 +11,8 @@ public class GameManager : MonoBehaviour
     public int point = 10;  // 한 칸 넘을 때마다 얻는 점수
 
     const int rankCount = 5;
-    int[] highScore = new int[rankCount];   // 0번째가 가장 높음, 4번째가 강 낮음
+    int[] highScore = new int[rankCount];       // 0번째가 가장 높음, 4번째가 강 낮음
+    string[] highName = new string[rankCount];  // highScore 기록을 낸 사람 이름
 
     float currentScore = 0.0f;
     int score = 0;
@@ -25,9 +26,13 @@ public class GameManager : MonoBehaviour
             //scoreText.text = score.ToString();
         }
     }
-    public int HighScore
+    public int BestScore
     {
         get => highScore[0];
+    }
+    public int[] HighScore
+    {
+        get => highScore;
     }
 
     //TextMeshProUGUI scoreText;
@@ -93,6 +98,7 @@ public class GameManager : MonoBehaviour
     {
         SaveData saveData = new();          // json 저장용 클래스 인스턴스화
         saveData.highScore = highScore;     // json 저장용 클래스에 값을 넣기
+        saveData.highName = highName;
 
         string json = JsonUtility.ToJson(saveData);     // json 저장용 클래스의 내용을 json포맷의 문자열로 변경
 
@@ -117,6 +123,7 @@ public class GameManager : MonoBehaviour
             string json = File.ReadAllText(fullPath);           // 실제로 파일에 써있는 문자열 읽기
             SaveData saveData = JsonUtility.FromJson<SaveData>(json);   // 특정 클래스(SaveData) 규격에 맞게 파싱하기
             highScore = saveData.highScore;                     // json 데이터를 불러온 클래스에서 원하는 값 가져오기
+            highName = saveData.highName;
             //Debug.Log($"High Score : {saveData.highScore}");
         }
     }
@@ -138,13 +145,8 @@ public class GameManager : MonoBehaviour
                 break;
             }
         }
-        //bool isHighScore = score > highScore;
-        //if ( isHighScore )
-        //{
-        //    highScore = score;
-        //    SaveGameData();            
-        //}
+
         scoreBoard.Open(isBestScore);
-        highScoreBoard.Open(score);
+        highScoreBoard.Open();
     }
 }
