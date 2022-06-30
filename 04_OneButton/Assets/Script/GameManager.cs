@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using TMPro;
 using System.IO;
+using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -45,6 +47,7 @@ public class GameManager : MonoBehaviour
             instance = this;
             instance.Initialize();
             DontDestroyOnLoad(this.gameObject);
+            SceneManager.sceneLoaded += OnSceneLoaded;
         }
         else
         {
@@ -53,6 +56,11 @@ public class GameManager : MonoBehaviour
                 Destroy(this.gameObject);
             }
         }
+    }
+
+    private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
+    {
+        Initialize();
     }
 
     private void Update()
@@ -70,6 +78,7 @@ public class GameManager : MonoBehaviour
         //scoreText = GameObject.Find("ScoreText").GetComponent<TextMeshProUGUI>();
         //scoreText.text = "0";
         Score = 0;
+        currentScore = 0;
 
         imageNumber = GameObject.Find("MainScore_ImageNumber").GetComponent<ImageNumber>();
         scoreBoard = FindObjectOfType<ScoreBoard>();
@@ -111,12 +120,12 @@ public class GameManager : MonoBehaviour
 
     public void OnGameOver()
     {
-        if( score > highScore )
+        bool isHighScore = score > highScore;
+        if ( isHighScore )
         {
             highScore = score;
-
             SaveGameData();            
         }
-        scoreBoard.Open();
+        scoreBoard.Open(isHighScore);
     }
 }

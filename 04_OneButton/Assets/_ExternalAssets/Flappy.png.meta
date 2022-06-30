@@ -440,7 +440,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Flappy_30
+      name: Button
       rect:
         serializedVersion: 2
         x: 354
@@ -797,7 +797,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Flappy_47
+      name: Medal_Platinum
       rect:
         serializedVersion: 2
         x: 121
@@ -818,7 +818,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Flappy_48
+      name: Medal_Gold
       rect:
         serializedVersion: 2
         x: 121
@@ -1280,7 +1280,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Flappy_70
+      name: Medal_Silver
       rect:
         serializedVersion: 2
         x: 112
@@ -1322,7 +1322,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Flappy_72
+      name: Medal_Bronze
       rect:
         serializedVersion: 2
         x: 112
@@ -1542,19 +1542,18 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Background0: 1220338656
-      Small2: 607008373
+      Pipe_Top: -1834859069
       Flappy_60: -1538276989
       Flappy_67: 2104856506
       Middle7: -1311054401
       Middle0: 1353166879
       Flappy_16: 773266048
-      Flappy_72: 1077381046
       Flappy_17: 1852464124
       Flappy_22: -2057773582
       Middle9: 171658515
       Flappy_11: -461676016
       Small7: 1526173436
+      Middle3: 1705856569
       Flappy_6: -1203494351
       Bird1_2: 530755394
       Middle2: 1492107784
@@ -1562,26 +1561,25 @@ TextureImporter:
       TestBird: 1474757597
       Middle5: -1174494850
       Big9: 898191341
+      Medal_Platinum: -595926100
       Flappy_21: 2029215884
       Big2: 801014086
       Background_Ground: 829066493
       Small6: 731273772
       Flappy_15: -1829942430
-      Flappy_70: -1796841338
       Big3: -837759800
       Small8: -273655424
       Flappy_57: -977624389
-      Flappy_47: -595926100
+      Medal_Silver: -1796841338
+      Medal_Gold: -2021034913
       Big0: 733930034
+      Small0: -601950659
       Middle4: 671809620
       Small4: 299053481
-      Small0: -601950659
-      Flappy_30: -2017067014
       Flappy_51: -159810582
       Flappy_13: -1280290884
       Flappy_29: 892965919
       Flappy_31: -1317113312
-      Flappy_48: -2021034913
       Flappy_24: 270826741
       Flappy_25: 1328575282
       Big6: -335677960
@@ -1612,17 +1610,19 @@ TextureImporter:
       Flappy_42: -973986537
       Flappy_33: -929651786
       Flappy_63: 1331658684
-      Flappy_49: -274182506
-      Pipe_Top: -1834859069
-      Big5: 2113042256
-      Flappy_27: -2143738633
-      Flappy_3: -389636256
-      Flappy_28: -41006012
-      Middle3: 1705856569
-      Flappy_19: 1099509111
-      Bird1_3: -517494550
-      Backround1: 36190018
+      Medal_Bronze: 1077381046
+      Button: -2017067014
       Big8: -274430176
+      Big5: 2113042256
+      Flappy_3: -389636256
+      Flappy_49: -274182506
+      Flappy_19: 1099509111
+      Flappy_28: -41006012
+      Flappy_27: -2143738633
+      Background0: 1220338656
+      Bird1_3: -517494550
+      Small2: 607008373
+      Backround1: 36190018
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
