@@ -22,9 +22,14 @@ public class GameManager : MonoBehaviour
             //scoreText.text = score.ToString();
         }
     }
+    public int HighScore
+    {
+        get => highScore;
+    }
 
     //TextMeshProUGUI scoreText;
     ImageNumber imageNumber;
+    ScoreBoard scoreBoard;
 
     // static 맴버 변수 : 주소가 고정이다. => 이 클래스의 모든 인스턴스는 같은 값을 가진다.
     static GameManager instance = null;
@@ -66,10 +71,9 @@ public class GameManager : MonoBehaviour
         //scoreText.text = "0";
         Score = 0;
 
-        imageNumber = FindObjectOfType<ImageNumber>();
-        //imageNumber.Number = 0;
+        imageNumber = GameObject.Find("MainScore_ImageNumber").GetComponent<ImageNumber>();
+        scoreBoard = FindObjectOfType<ScoreBoard>();
 
-        //SaveGameData();
         LoadGameData();
     }
 
@@ -110,7 +114,9 @@ public class GameManager : MonoBehaviour
         if( score > highScore )
         {
             highScore = score;
-            SaveGameData();
+
+            SaveGameData();            
         }
+        scoreBoard.Open();
     }
 }
