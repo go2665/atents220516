@@ -58,7 +58,6 @@ public class GameManager : MonoBehaviour
         if( instance == null )
         {
             instance = this;
-            instance.Initialize();
             DontDestroyOnLoad(this.gameObject);
             SceneManager.sceneLoaded += OnSceneLoaded;
         }
