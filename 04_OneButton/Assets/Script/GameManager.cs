@@ -11,6 +11,8 @@ public class GameManager : MonoBehaviour
     public int point = 10;  // 한 칸 넘을 때마다 얻는 점수
 
     const int rankCount = 5;
+    public const int INVALID_RANK = -1;
+
     int[] highScore = new int[rankCount];       // 0번째가 가장 높음, 4번째가 강 낮음
     string[] highName = new string[rankCount];  // highScore 기록을 낸 사람 이름
 
@@ -33,6 +35,10 @@ public class GameManager : MonoBehaviour
     public int[] HighScore
     {
         get => highScore;
+    }
+    public string[] HighName
+    {
+        get => highName;
     }
 
     //TextMeshProUGUI scoreText;
@@ -131,6 +137,7 @@ public class GameManager : MonoBehaviour
     public void OnGameOver()
     {
         bool isBestScore = false;
+        int rank = INVALID_RANK;
         for (int i=0; i< rankCount; i++)    // 순위 개수만큼 확인
         {
             if( highScore[i] < score )      // highScore에 저장된 값과 score를 비교해서 score가 더 크면 그 순위에 끼워넣기
@@ -141,12 +148,12 @@ public class GameManager : MonoBehaviour
                     highScore[j] = highScore[j-1];
                 }
                 highScore[i] = score;       // 마지막으로 score에 넣기
+                rank = i;
                 SaveGameData();             // 다 넣고 나면 저장
                 break;
             }
         }
-
         scoreBoard.Open(isBestScore);
-        highScoreBoard.Open();
+        highScoreBoard.Open(rank);
     }
 }
