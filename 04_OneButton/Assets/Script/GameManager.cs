@@ -137,7 +137,7 @@ public class GameManager : MonoBehaviour
     public void OnGameOver()
     {
         bool isBestScore = false;
-        int rank = INVALID_RANK;
+        int rank = INVALID_RANK;            // 초기화
         for (int i=0; i< rankCount; i++)    // 순위 개수만큼 확인
         {
             if( highScore[i] < score )      // highScore에 저장된 값과 score를 비교해서 score가 더 크면 그 순위에 끼워넣기
@@ -146,14 +146,25 @@ public class GameManager : MonoBehaviour
                 for (int j = rankCount-1; j>i; j--)   // 맨 아래쪽부터 한 칸씩 아래로 내리기
                 {
                     highScore[j] = highScore[j-1];
+                    highName[j] = highName[j - 1];
                 }
                 highScore[i] = score;       // 마지막으로 score에 넣기
-                rank = i;
-                SaveGameData();             // 다 넣고 나면 저장
+                rank = i;                   // 랭크 설정                
                 break;
             }
         }
         scoreBoard.Open(isBestScore);
         highScoreBoard.Open(rank);
+    }
+
+    /// <summary>
+    /// HighName을 변경하고 파일에 저장. 함부로 호출하지 말것
+    /// </summary>
+    /// <param name="rank">이름을 변경할 랭크</param>
+    /// <param name="newName">새 이름</param>
+    public void SetHighName(int rank, string newName)
+    {
+        highName[rank] = newName;
+        SaveGameData();                // 변경하고 나면 저장
     }
 }
