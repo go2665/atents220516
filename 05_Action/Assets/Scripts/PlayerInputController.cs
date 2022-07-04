@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+
 
 /// <summary>
 /// 입력에 따른 플레이어의 행동을 처리할 클래스
@@ -12,6 +14,24 @@ public class PlayerInputController : MonoBehaviour
     /// 달릴때 속도
     /// </summary>
     public float runSpeed = 6.0f;
+
+    /// <summary>
+    /// 걸을때 속도
+    /// </summary>
+    public float walkSpeed = 3.0f;
+
+    /// <summary>
+    /// 이동 모드 지정용 enum
+    /// </summary>
+    enum MoveMode
+    {
+        Walk = 0,
+        Run
+    }
+    /// <summary>
+    /// 기본 이동모드로 Run 선택
+    /// </summary>
+    MoveMode moveMode = MoveMode.Run;
 
     /// <summary>
     /// 회전할 때 속도. 1/turnSpeed초에 걸쳐 회전
@@ -27,6 +47,11 @@ public class PlayerInputController : MonoBehaviour
     /// kinematic으로 사용하는 리지드바디보다 가벼운 이동용 컴포넌트
     /// </summary>
     CharacterController controller;
+
+    /// <summary>
+    /// 애니메이터 컴포넌트
+    /// </summary>
+    Animator anim;
     
     /// <summary>
     /// 입력 받은 방향을 가공하여 최종적으로 움직일 방향
@@ -45,6 +70,7 @@ public class PlayerInputController : MonoBehaviour
     {
         actions = new();    // 액션맵 객체 생성
         controller = GetComponent<CharacterController>();   //캐릭터 컨트롤러 컴포넌트 가져오기
+        anim = GetComponent<Animator>();
     }
 
     /// <summary>
@@ -55,6 +81,7 @@ public class PlayerInputController : MonoBehaviour
         actions.Player.Enable();                    // "Player" 액션맵 켜기
         actions.Player.Move.performed += OnMove;    // "Player" 액션맵에 함수 등록
         actions.Player.Move.canceled += OnMove;
+        actions.Player.MoveModeChange.performed += OnMoveModeChage;
     }
 
     /// <summary>
@@ -62,9 +89,25 @@ public class PlayerInputController : MonoBehaviour
     /// </summary>
     private void OnDisable()
     {
+        actions.Player.MoveModeChange.performed -= OnMoveModeChage;
         actions.Player.Move.canceled -= OnMove;
         actions.Player.Move.performed -= OnMove;    // 등록해 놓았던 함수 해제
         actions.Player.Disable();                   // "Player" 액션맵 끄기
+    }
+
+    /// <summary>
+    /// 키 입력 들어오면 모드 변경 (Run <=> Walk)
+    /// </summary>    
+    private void OnMoveModeChage(InputAction.CallbackContext _)
+    {
+        if( moveMode == MoveMode.Walk )
+        {
+            moveMode = MoveMode.Run;
+        }
+        else
+        {
+            moveMode = MoveMode.Walk;
+        }
     }
 
     /// <summary>
@@ -98,10 +141,33 @@ public class PlayerInputController : MonoBehaviour
     /// </summary>
     private void Update()
     {
-        // 캐릭터 이동
-        controller.Move(runSpeed * Time.deltaTime * inputDir);
+        // 이동 입력 확인
+        if (inputDir.sqrMagnitude > 0.0f)
+        {
+            float speed = 1.0f;
+            if( moveMode == MoveMode.Run )
+            {
+                // 런 모드면 달리는 애니메이션과 6의 이동 속도 설정
+                anim.SetFloat("Speed", 1.0f);
+                speed = runSpeed;
+            }
+            else if( moveMode == MoveMode.Walk)
+            {
+                // 걷기 모드면 걷는 애니메이션과 3의 이동 속도 설정
+                anim.SetFloat("Speed", 0.3f);
+                speed = walkSpeed;
+            }
 
-        // 목표지점을 바라보도록 회전하며 보간
-        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, turnSpeed * Time.deltaTime);
+            // 설정한 이동속도에 맞춰 캐릭터 이동
+            controller.Move(speed * Time.deltaTime * inputDir);
+
+            // 목표지점을 바라보도록 회전하며 보간
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, turnSpeed * Time.deltaTime);
+        }
+        else
+        {
+            // 입력이 없으면 idle 애니메이션으로 변경
+            anim.SetFloat("Speed", 0.0f);
+        }
     }
 }
