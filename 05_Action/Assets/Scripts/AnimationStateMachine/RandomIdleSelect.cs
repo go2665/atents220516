@@ -8,8 +8,9 @@ public class RandomIdleSelect : StateMachineBehaviour
 
     //override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     //{
-    //    //Debug.Log("StateEnter - 애니메이션이 재생될 때마다 실행");
+    //    //    //Debug.Log("StateEnter - 애니메이션이 재생될 때마다 실행");
     //    //Test();
+    //    //animator.SetInteger("IdleSelect", RandomSelect());
     //}
 
     //override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -24,7 +25,7 @@ public class RandomIdleSelect : StateMachineBehaviour
         if (waitTimes < 0)
         {
             animator.SetInteger("IdleSelect", RandomSelect());
-            //waitTimes = Random.Range(1, 4);
+            //waitTimes = Random.Range(2, 5);
             waitTimes = 0;
             //Debug.Log(waitTimes);
         }
