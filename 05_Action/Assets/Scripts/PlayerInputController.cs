@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -82,6 +81,7 @@ public class PlayerInputController : MonoBehaviour
         actions.Player.Move.performed += OnMove;    // "Player" 액션맵에 함수 등록
         actions.Player.Move.canceled += OnMove;
         actions.Player.MoveModeChange.performed += OnMoveModeChage;
+        actions.Player.Attack.performed += OnAttack;
     }
 
     /// <summary>
@@ -89,10 +89,17 @@ public class PlayerInputController : MonoBehaviour
     /// </summary>
     private void OnDisable()
     {
+        actions.Player.Attack.performed -= OnAttack;
         actions.Player.MoveModeChange.performed -= OnMoveModeChage;
         actions.Player.Move.canceled -= OnMove;
         actions.Player.Move.performed -= OnMove;    // 등록해 놓았던 함수 해제
         actions.Player.Disable();                   // "Player" 액션맵 끄기
+    }
+
+    private void OnAttack(InputAction.CallbackContext _)
+    {
+        anim.SetFloat("ComboState", Mathf.Repeat(anim.GetCurrentAnimatorStateInfo(0).normalizedTime, 1.0f));
+        anim.SetTrigger("Attack");
     }
 
     /// <summary>
