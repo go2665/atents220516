@@ -140,7 +140,6 @@ public class Enemy : MonoBehaviour
 
     void AttackUpdate()
     {
-
     }
 
     void ChangeState( EnemyState newState )
