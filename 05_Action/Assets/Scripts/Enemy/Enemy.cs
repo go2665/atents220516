@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEditor;
 
 public class Enemy : MonoBehaviour
 {
@@ -15,10 +16,17 @@ public class Enemy : MonoBehaviour
     float waitTime = 3.0f;
     float timeCountDown = 3.0f;
 
-    //---------------------------------------------------------------------------------------------
+    //Patrol 용 ------------------------------------------------------------------------------------
 
     int childCount = 0; // patrolRoute의 자식 개수
     int index = 0;      // 다음 목표인 patrolRoute의 자식
+
+
+    //추적용------------------------------------------------------------------------------------------
+    float sightRange = 10.0f;
+    Vector3 targetPosition = new();
+    WaitForSeconds oneSecond = new WaitForSeconds(1.0f);
+    IEnumerator repeatChase = null;
 
     //---------------------------------------------------------------------------------------------
 
@@ -65,15 +73,28 @@ public class Enemy : MonoBehaviour
 
     void IdleUpdate()
     {
+        if (SearchPlayer())
+        {
+            ChangeState(EnemyState.Chase);
+            return;
+        }
+
         timeCountDown -= Time.deltaTime;
         if(timeCountDown < 0)
         {
             ChangeState(EnemyState.Patrol);
+            return;
         }
     }
 
     void PatrolUpdate()
     {
+        if(SearchPlayer())
+        {
+            ChangeState(EnemyState.Chase);
+            return;
+        }
+
         if (agent.remainingDistance <= agent.stoppingDistance)  // 도착하면
         {
             Debug.Log("도착");
@@ -81,12 +102,40 @@ public class Enemy : MonoBehaviour
             index %= childCount;    // index = index % childCount;
             
             ChangeState(EnemyState.Idle);
+            return;
         }
+    }
+
+    bool SearchPlayer()
+    {
+        bool result = false;
+        Collider[] colliders = Physics.OverlapSphere(transform.position, sightRange, LayerMask.GetMask("Player"));
+        if(colliders.Length > 0)
+        {
+            targetPosition = colliders[0].transform.position;
+            result = true;
+        }
+
+        return result;
     }
 
     void ChaseUpdate()
     {
+        if(!SearchPlayer())
+        {
+            ChangeState(EnemyState.Patrol);
+            return;
+        }
+        
+    }
 
+    IEnumerator RepeatChase()
+    {
+        while (true)
+        {
+            yield return oneSecond;
+            agent.SetDestination(targetPosition);
+        }
     }
 
     void AttackUpdate()
@@ -100,15 +149,20 @@ public class Enemy : MonoBehaviour
         switch (state)
         {
             case EnemyState.Idle:
+                agent.isStopped = true;
                 break;
             case EnemyState.Patrol:
                 agent.isStopped = true;
                 break;
             case EnemyState.Chase:
+                agent.isStopped = true;
+                StopCoroutine(repeatChase);
                 break;
             case EnemyState.Attack:
+                agent.isStopped = true;
                 break;
             case EnemyState.Dead:
+                agent.isStopped = true;
                 break;
             default:
                 break;
@@ -118,17 +172,24 @@ public class Enemy : MonoBehaviour
         switch (newState)
         {
             case EnemyState.Idle:
+                agent.isStopped = true;
                 timeCountDown = waitTime;
                 break;
             case EnemyState.Patrol:
-                agent.isStopped = false;
+                agent.isStopped = false;                
                 agent.SetDestination(patrolRoute.GetChild(index).position); // 다음 인덱스로 이동
                 break;
             case EnemyState.Chase:
+                agent.isStopped = false;
+                agent.SetDestination(targetPosition);
+                repeatChase = RepeatChase();
+                StartCoroutine(repeatChase);
                 break;
             case EnemyState.Attack:
+                agent.isStopped = true;
                 break;
             case EnemyState.Dead:
+                agent.isStopped = true;
                 break;
             default:
                 break;
@@ -136,5 +197,13 @@ public class Enemy : MonoBehaviour
 
         state = newState;
         anim.SetInteger("EnemyState", (int)state);
+    }
+
+    private void OnDrawGizmos()
+    {
+        //Gizmos.color = Color.blue;
+        //Gizmos.DrawWireSphere(transform.position, sightRange);
+        Handles.color = Color.blue;
+        Handles.DrawWireDisc(transform.position, transform.up, sightRange);
     }
 }
