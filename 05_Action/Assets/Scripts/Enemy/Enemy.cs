@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
-    public Transform target;
+    public Transform patrolRoute;
     NavMeshAgent agent;
 
     private void Awake()
@@ -15,9 +15,21 @@ public class Enemy : MonoBehaviour
 
     private void Start()
     {
-        if(target!=null)
+        if(patrolRoute)
         {
-            agent.SetDestination(target.position);
+            agent.SetDestination( patrolRoute.GetChild(0).position );
         }
+    }
+
+    private void Update()
+    {
+        //if(patrolRoute!=null)
+        //{
+        //    agent.SetDestination(patrolRoute.position);  // 길찾기는 연산량이 많은 작업. SetDestination을 자주하면 안된다.
+        //}
+        if(agent.remainingDistance <= agent.stoppingDistance)
+        {            
+            Debug.Log("도착");
+        }    
     }
 }
