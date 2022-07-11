@@ -113,8 +113,15 @@ public class Enemy : MonoBehaviour
         Collider[] colliders = Physics.OverlapSphere(transform.position, sightRange, LayerMask.GetMask("Player"));
         if(colliders.Length > 0)
         {
-            targetPosition = colliders[0].transform.position;
-            result = true;
+            Vector3 pos = colliders[0].transform.position;
+            if (InSightAngle(pos))
+            {
+                if (!BlockByWall(pos))
+                {
+                    targetPosition = pos;
+                    result = true;
+                }
+            }
         }
 
         return result;
@@ -210,24 +217,48 @@ public class Enemy : MonoBehaviour
         Handles.color = Color.green;
         if( state == EnemyState.Chase || state == EnemyState.Attack )
         {
-            Handles.color = Color.red;
+            Handles.color = Color.red;  // 추적이나 공격 중일 때만 빨간색
         }
 
         Vector3 forward = transform.forward * sightRange;
         Quaternion q1 = Quaternion.Euler(0.5f * sightAngle * transform.up);
         Quaternion q2 = Quaternion.Euler(-0.5f * sightAngle * transform.up);
-        Handles.DrawLine(transform.position, transform.position + q1 * forward);
-        Handles.DrawLine(transform.position, transform.position + q2 * forward);
+        Handles.DrawLine(transform.position, transform.position + q1 * forward);    // 시야각 오른쪽 끝
+        Handles.DrawLine(transform.position, transform.position + q2 * forward);    // 시야각 왼쪽 끝
 
-        Handles.DrawWireArc(transform.position, transform.up, q2 * transform.forward, sightAngle, sightRange, 5.0f);
+        Handles.DrawWireArc(transform.position, transform.up, q2 * transform.forward, sightAngle, sightRange, 5.0f);// 전체 시야범위
     }
 
     /// <summary>
     /// 플레이어가 시야각도(sightAngle) 안에 있으면 true를 리턴
     /// </summary>
     /// <returns></returns>
-    bool InSightAngle()
+    bool InSightAngle(Vector3 targetPosition)
     {
-        return false;
+        // 두 백터의 사이각
+        float angle = Vector3.Angle(transform.forward, targetPosition - transform.position);
+        // 몬스터의 시야범위 각도사이에 있는지 없는지
+        return (sightAngle * 0.5f) > angle;
+    }
+
+    /// <summary>
+    /// 벽에 대상이 숨어서 안보이는지 확인하는 함수
+    /// </summary>
+    /// <param name="targetPosition">확인할 대상의 위치</param>
+    /// <returns>true면 벽에 가려져 있는 것. false면 가려져 있지않다.</returns>
+    bool BlockByWall(Vector3 targetPosition)
+    {
+        bool result = true;
+        Ray ray = new(transform.position, targetPosition - transform.position); // 레이 만들기(시작점, 방향)
+        ray.origin += Vector3.up * 0.5f;    // 몬스터의 눈높이로 레이 시작점을 높임
+        if (Physics.Raycast(ray, out RaycastHit hit, sightRange))
+        {
+            if( hit.collider.CompareTag("Player") )     // 레이에 무언가가 걸렸는데 "Player"태그를 가지고 있으면
+            {
+                result = false; // 바로 보인 것이니 벽이 가리고 있지 않다.
+            }
+        }
+
+        return result;  // true면 벽이 가렸거나 아무것도 충돌하지 않았거나
     }
 }
