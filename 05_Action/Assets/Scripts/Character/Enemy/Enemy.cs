@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEditor;
 
-public class Enemy : MonoBehaviour
+public class Enemy : MonoBehaviour, IHealth, IBattle
 {
     public Transform patrolRoute;
     NavMeshAgent agent;
@@ -27,7 +27,38 @@ public class Enemy : MonoBehaviour
     Vector3 targetPosition = new();
     WaitForSeconds oneSecond = new WaitForSeconds(1.0f);
     IEnumerator repeatChase = null;
-    float sightAngle = 90.0f;   //-45 ~ +45 범위
+    float sightAngle = 150.0f;   //-45 ~ +45 범위
+
+    //공격용 -----------------------------------------------------------------------------------------
+    float attackCoolTime = 1.0f;
+    float attackSpeed = 1.0f;
+
+    //IHealth -------------------------------------------------------------------------------------
+    public float hp = 100.0f;
+    float maxHP = 100.0f;
+    public float HP
+    {
+        get => hp;
+        set
+        {
+            hp = value;
+            onHealthChange?.Invoke();
+        }
+    }
+
+    public float MaxHP { get => maxHP; }
+
+    public System.Action onHealthChange { get; set; }
+
+
+    //IBattle -------------------------------------------------------------------------------------
+    public float attackPower = 10.0f;
+    public float defencePower = 10.0f;
+    float criticalRate = 0.1f;
+
+    public float AttackPower { get => attackPower; }        
+
+    public float DefencePower { get => defencePower; }
 
     //---------------------------------------------------------------------------------------------
 
@@ -134,7 +165,6 @@ public class Enemy : MonoBehaviour
             ChangeState(EnemyState.Patrol);
             return;
         }
-        
     }
 
     IEnumerator RepeatChase()
@@ -148,6 +178,30 @@ public class Enemy : MonoBehaviour
 
     void AttackUpdate()
     {
+        attackCoolTime -= Time.deltaTime;
+        if( attackCoolTime < 0.0f)
+        {
+            anim.SetTrigger("Attack");
+            attackCoolTime = attackSpeed;
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.gameObject == GameManager.Inst.MainPlayer.gameObject)
+        {
+            ChangeState(EnemyState.Attack);
+            return;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject == GameManager.Inst.MainPlayer.gameObject)
+        {
+            ChangeState(EnemyState.Chase);
+            return;
+        }
     }
 
     void ChangeState( EnemyState newState )
@@ -194,9 +248,13 @@ public class Enemy : MonoBehaviour
                 break;
             case EnemyState.Attack:
                 agent.isStopped = true;
+                attackCoolTime = attackSpeed;
                 break;
             case EnemyState.Dead:
                 agent.isStopped = true;
+                agent.velocity = Vector3.zero;
+                HP = 0;
+                anim.SetTrigger("Die");
                 break;
             default:
                 break;
@@ -260,5 +318,45 @@ public class Enemy : MonoBehaviour
         }
 
         return result;  // true면 벽이 가렸거나 아무것도 충돌하지 않았거나
+    }
+
+    public void Attack(IBattle target)
+    {
+        if(target != null)
+        {
+            float damage = AttackPower;
+            if(Random.Range(0.0f,1.0f) < criticalRate)
+            {
+                damage *= 2.0f;
+            }
+            target.TakeDamage(damage);
+        }
+    }
+
+    public void TakeDamage(float damage)
+    {
+        float finalDamage = damage - defencePower;
+        if(finalDamage < 1.0f)
+        {
+            finalDamage = 1.0f;
+        }
+        HP -= finalDamage;
+
+        if( HP > 0.0f)
+        {
+            //살아있다.
+            anim.SetTrigger("Hit");
+            attackCoolTime = attackSpeed;
+        }
+        else
+        {
+            //죽었다.
+            Die();
+        }
+    }
+
+    void Die()
+    {
+        ChangeState(EnemyState.Dead);
     }
 }
