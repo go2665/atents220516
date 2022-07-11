@@ -27,6 +27,7 @@ public class Enemy : MonoBehaviour
     Vector3 targetPosition = new();
     WaitForSeconds oneSecond = new WaitForSeconds(1.0f);
     IEnumerator repeatChase = null;
+    float sightAngle = 90.0f;   //-45 ~ +45 범위
 
     //---------------------------------------------------------------------------------------------
 
@@ -204,5 +205,29 @@ public class Enemy : MonoBehaviour
         //Gizmos.DrawWireSphere(transform.position, sightRange);
         Handles.color = Color.blue;
         Handles.DrawWireDisc(transform.position, transform.up, sightRange);
+
+
+        Handles.color = Color.green;
+        if( state == EnemyState.Chase || state == EnemyState.Attack )
+        {
+            Handles.color = Color.red;
+        }
+
+        Vector3 forward = transform.forward * sightRange;
+        Quaternion q1 = Quaternion.Euler(0.5f * sightAngle * transform.up);
+        Quaternion q2 = Quaternion.Euler(-0.5f * sightAngle * transform.up);
+        Handles.DrawLine(transform.position, transform.position + q1 * forward);
+        Handles.DrawLine(transform.position, transform.position + q2 * forward);
+
+        Handles.DrawWireArc(transform.position, transform.up, q2 * transform.forward, sightAngle, sightRange, 5.0f);
+    }
+
+    /// <summary>
+    /// 플레이어가 시야각도(sightAngle) 안에 있으면 true를 리턴
+    /// </summary>
+    /// <returns></returns>
+    bool InSightAngle()
+    {
+        return false;
     }
 }
