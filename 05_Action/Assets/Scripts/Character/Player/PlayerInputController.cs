@@ -62,6 +62,8 @@ public class PlayerInputController : MonoBehaviour
     /// </summary>
     Quaternion targetRotation = Quaternion.identity;
 
+
+
     /// <summary>
     /// 오브젝트의 생성 직후 호출
     /// </summary>

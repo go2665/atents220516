@@ -389,8 +389,8 @@ Rigidbody:
   m_GameObject: {fileID: 529584588}
   serializedVersion: 2
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_Drag: Infinity
+  m_AngularDrag: Infinity
   m_UseGravity: 1
   m_IsKinematic: 1
   m_Interpolate: 0
@@ -401,6 +401,39 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4023215848608658, guid: 55776efecb0cd134ea5f418c2f97a705, type: 3}
   m_PrefabInstance: {fileID: 529584587}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &593713269 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8278526585344176702, guid: ca24a5625752e994c9532a83ca208a5e, type: 3}
+  m_PrefabInstance: {fileID: 1083507556}
+  m_PrefabAsset: {fileID: 0}
+--- !u!54 &593713276
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 593713269}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &593713277
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 593713269}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2e4bc30128eea84cb5c86ee96444cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &656499489
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -652,6 +685,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 128832844699368319, guid: ca24a5625752e994c9532a83ca208a5e, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 128832844699368319, guid: ca24a5625752e994c9532a83ca208a5e, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2645890804386416727, guid: ca24a5625752e994c9532a83ca208a5e, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6129593136881704460, guid: ca24a5625752e994c9532a83ca208a5e, type: 3}
       propertyPath: m_Name
       value: Player

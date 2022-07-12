@@ -35,4 +35,13 @@ public class Player : MonoBehaviour
         }
     }
 
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    Debug.Log("OnTriggerEnter : " + other.name);
+    //}
+
+    //private void OnCollisionEnter(Collision collision)
+    //{
+    //    Debug.Log("OnCollisionEnter : " + collision.gameObject.name);
+    //}
 }
