@@ -11,7 +11,7 @@ public class Test_Monster : MonoBehaviour
     {
         if( Keyboard.current.digit1Key.wasPressedThisFrame )
         {
-            enemy.TakeDamage(20);
+            enemy.TakeDamage(30);
         }
     }
 }

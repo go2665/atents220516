@@ -33,6 +33,9 @@ public class Enemy : MonoBehaviour, IHealth, IBattle
     float attackCoolTime = 1.0f;
     float attackSpeed = 1.0f;
 
+    //사망용 -----------------------------------------------------------------------------------------
+    bool isDead = false;
+
     //IHealth -------------------------------------------------------------------------------------
     public float hp = 100.0f;
     float maxHP = 100.0f;
@@ -41,7 +44,7 @@ public class Enemy : MonoBehaviour, IHealth, IBattle
         get => hp;
         set
         {
-            hp = value;
+            hp = Mathf.Clamp(value, 0.0f, maxHP);
             onHealthChange?.Invoke();
         }
     }
@@ -224,6 +227,7 @@ public class Enemy : MonoBehaviour, IHealth, IBattle
                 break;
             case EnemyState.Dead:
                 agent.isStopped = true;
+                isDead = false;
                 break;
             default:
                 break;
@@ -251,6 +255,7 @@ public class Enemy : MonoBehaviour, IHealth, IBattle
                 attackCoolTime = attackSpeed;
                 break;
             case EnemyState.Dead:
+                isDead = true;
                 agent.isStopped = true;
                 agent.velocity = Vector3.zero;
                 HP = 0;
@@ -357,6 +362,9 @@ public class Enemy : MonoBehaviour, IHealth, IBattle
 
     void Die()
     {
-        ChangeState(EnemyState.Dead);
+        if (isDead == false)
+        {
+            ChangeState(EnemyState.Dead);
+        }
     }
 }

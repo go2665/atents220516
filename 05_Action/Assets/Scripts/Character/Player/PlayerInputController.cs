@@ -141,6 +141,8 @@ public class PlayerInputController : MonoBehaviour
             inputDir = Quaternion.Euler(0, Camera.main.transform.rotation.eulerAngles.y, 0) * inputDir;
             // 이동하는 방향을 바라보는 회전을 생성
             targetRotation = Quaternion.LookRotation(inputDir);
+            // 항상 바닥에 붙도록 처리
+            inputDir.y = -2f;
         }
     }
 

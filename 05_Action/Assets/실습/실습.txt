@@ -39,3 +39,8 @@
   5시 20분까지
 
   Physics.Raycast
+
+
+7/12
+1. EnemyHP_Bar를 빌보드로 만들기
+  시간 : 4시 55분까지
