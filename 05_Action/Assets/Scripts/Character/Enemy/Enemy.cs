@@ -32,6 +32,7 @@ public class Enemy : MonoBehaviour, IHealth, IBattle
     //공격용 -----------------------------------------------------------------------------------------
     float attackCoolTime = 1.0f;
     float attackSpeed = 1.0f;
+    IBattle attackTarget;
 
     //사망용 -----------------------------------------------------------------------------------------
     bool isDead = false;
@@ -185,6 +186,7 @@ public class Enemy : MonoBehaviour, IHealth, IBattle
         if( attackCoolTime < 0.0f)
         {
             anim.SetTrigger("Attack");
+            Attack(attackTarget);
             attackCoolTime = attackSpeed;
         }
     }
@@ -193,6 +195,7 @@ public class Enemy : MonoBehaviour, IHealth, IBattle
     {
         if(other.gameObject == GameManager.Inst.MainPlayer.gameObject)
         {
+            attackTarget = other.GetComponent<IBattle>();
             ChangeState(EnemyState.Attack);
             return;
         }
@@ -224,6 +227,7 @@ public class Enemy : MonoBehaviour, IHealth, IBattle
                 break;
             case EnemyState.Attack:
                 agent.isStopped = true;
+                attackTarget = null;
                 break;
             case EnemyState.Dead:
                 agent.isStopped = true;
