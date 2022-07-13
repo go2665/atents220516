@@ -42,6 +42,11 @@ public class Player : MonoBehaviour, IHealth, IBattle
 
     public float DefencePower { get => defencePower; }
 
+    // 락온 용 ---------------------------------------------------------------------------------------
+    public GameObject lockOnEffect;
+    Transform lockOnTarget;
+    float lockOnRange = 5.0f;
+
     private void Awake()
     {
         anim = GetComponent<Animator>();
@@ -104,13 +109,34 @@ public class Player : MonoBehaviour, IHealth, IBattle
         }
     }
 
-    //private void OnTriggerEnter(Collider other)
-    //{
-    //    Debug.Log("OnTriggerEnter : " + other.name);
-    //}
+    public void LockOnToggle()
+    {
+        if(lockOnTarget == null)
+        {
+            // 락온 시도
+            LockOn();
+        }
+        else
+        {
+            // 락온 풀기
+            LockOff();
+        }
+    }
 
-    //private void OnCollisionEnter(Collision collision)
-    //{
-    //    Debug.Log("OnCollisionEnter : " + collision.gameObject.name);
-    //}
+    void LockOn()
+    {
+        Collider[] cols = Physics.OverlapSphere(transform.position, lockOnRange, LayerMask.GetMask("Enemy"));
+
+        // 가장 가까운 컬라이더를 찾기
+        Collider nearest = null;
+
+
+        lockOnTarget = nearest.transform;
+
+    }
+
+    void LockOff()
+    {
+
+    }
 }

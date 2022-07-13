@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -63,6 +64,11 @@ public class PlayerInputController : MonoBehaviour
     Quaternion targetRotation = Quaternion.identity;
 
 
+    /// <summary>
+    /// 같은 오브젝트에 들어있는 Player 컴포넌트
+    /// </summary>
+    Player player;
+
 
     /// <summary>
     /// 오브젝트의 생성 직후 호출
@@ -72,6 +78,7 @@ public class PlayerInputController : MonoBehaviour
         actions = new();    // 액션맵 객체 생성
         controller = GetComponent<CharacterController>();   //캐릭터 컨트롤러 컴포넌트 가져오기
         anim = GetComponent<Animator>();
+        player = GetComponent<Player>();
     }
 
     /// <summary>
@@ -84,6 +91,7 @@ public class PlayerInputController : MonoBehaviour
         actions.Player.Move.canceled += OnMove;
         actions.Player.MoveModeChange.performed += OnMoveModeChage;
         actions.Player.Attack.performed += OnAttack;
+        actions.Player.LockOn.performed += OnLockOn;
     }
 
     /// <summary>
@@ -91,6 +99,7 @@ public class PlayerInputController : MonoBehaviour
     /// </summary>
     private void OnDisable()
     {
+        actions.Player.LockOn.performed -= OnLockOn;
         actions.Player.Attack.performed -= OnAttack;
         actions.Player.MoveModeChange.performed -= OnMoveModeChage;
         actions.Player.Move.canceled -= OnMove;
@@ -181,5 +190,14 @@ public class PlayerInputController : MonoBehaviour
             // 입력이 없으면 idle 애니메이션으로 변경
             anim.SetFloat("Speed", 0.0f);
         }
+    }
+
+    /// <summary>
+    /// 락온 버튼이 눌러졌을 때 실행될 함수
+    /// </summary>
+    /// <param name="_"></param>
+    private void OnLockOn(InputAction.CallbackContext _)
+    {
+        player.LockOnToggle();
     }
 }
