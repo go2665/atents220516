@@ -35,9 +35,9 @@ public class Player : MonoBehaviour, IHealth, IBattle
     public System.Action onHealthChange { get; set; }
 
     // IBattle ------------------------------------------------------------------------------------
-    float attackPower = 30.0f;
-    float defencePower = 10.0f;
-    float criticalRate = 0.3f;
+    public float attackPower = 30.0f;
+    public float defencePower = 10.0f;
+    public float criticalRate = 0.3f;
     public float AttackPower { get => attackPower; }
 
     public float DefencePower { get => defencePower; }

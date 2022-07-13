@@ -12,8 +12,8 @@ public class Weapon : MonoBehaviour
             IBattle battle = other.GetComponent<IBattle>();
             if(battle!=null)
             {
-                //GameManager.Inst.MainPlayer
-                battle.TakeDamage(30.0f);
+                GameManager.Inst.MainPlayer.Attack(battle);
+                //battle.TakeDamage(30.0f);
             }
         }
     }
