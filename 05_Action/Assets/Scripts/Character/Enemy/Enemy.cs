@@ -210,8 +210,13 @@ public class Enemy : MonoBehaviour, IHealth, IBattle
         }
     }
 
-    void ChangeState( EnemyState newState )
+    void ChangeState(EnemyState newState)
     {
+        if (isDead)
+        {
+            return;
+        }
+
         // 이전 상태를 나가면서 해야할 일들
         switch (state)
         {
@@ -265,6 +270,7 @@ public class Enemy : MonoBehaviour, IHealth, IBattle
                 agent.isStopped = true;
                 agent.velocity = Vector3.zero;
                 HP = 0;
+                StartCoroutine(DeadEffect());
                 break;
             default:
                 break;
@@ -272,6 +278,28 @@ public class Enemy : MonoBehaviour, IHealth, IBattle
 
         state = newState;
         anim.SetInteger("EnemyState", (int)state);
+    }
+
+    IEnumerator DeadEffect()
+    {
+        ParticleSystem ps = GetComponentInChildren<ParticleSystem>();
+        ps.Play();
+        ps.gameObject.transform.parent = null;
+
+        EnemyHP_Bar hpBar = GetComponentInChildren<EnemyHP_Bar>();
+        hpBar.gameObject.SetActive(false);
+
+        yield return new WaitForSeconds(3.0f);
+        Collider[] colliders = GetComponents<Collider>();
+        foreach(var col in colliders)
+        {
+            col.enabled = false;
+        }
+        agent.enabled = false;
+        Rigidbody rigid = GetComponent<Rigidbody>();
+        rigid.isKinematic = false;
+        rigid.drag = 20.0f;
+        
     }
 
     private void OnDrawGizmos()
