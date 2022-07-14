@@ -121,13 +121,19 @@ public class Player : MonoBehaviour, IHealth, IBattle
         }
         else
         {
-            // 락온 풀기
-            LockOff();
+            // 락온된 타겟이 있음
+            if (!LockOn())  // 다시 락온을 시도
+            {
+                // 새롭게 락온이 안되면 락온 풀기
+                LockOff();
+            }
         }
     }
 
-    void LockOn()
+    bool LockOn()
     {
+        bool result = false;
+
         // transform.position지점에서 반경 lockOnRange 범위 안에 있는 Enemy레이어를 가진 컬라이더를 전부 찾기
         Collider[] cols = Physics.OverlapSphere(transform.position, lockOnRange, LayerMask.GetMask("Enemy"));
 
@@ -155,7 +161,11 @@ public class Player : MonoBehaviour, IHealth, IBattle
             lockOnEffect.transform.position = lockOnTarget.position;    // 락온 이팩트를 락온 대상의 위치로 이동
             lockOnEffect.transform.parent = lockOnTarget;               // 락온 이팩트의 부모를 락온 대상으로 설정
             lockOnEffect.SetActive(true);                               // 락온 이팩트 보여주기
+
+            result = true;
         }
+
+        return result;
     }
 
     void LockOff()

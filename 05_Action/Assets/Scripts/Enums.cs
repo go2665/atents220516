@@ -10,3 +10,10 @@ public enum EnemyState
     Attack,
     Dead
 }
+
+public enum ItemIDCode
+{
+    Coin_Copper = 0,
+    Coin_Silver,
+    Coin_Gold
+}
