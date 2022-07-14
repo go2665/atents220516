@@ -131,26 +131,28 @@ public class Player : MonoBehaviour, IHealth, IBattle
         // transform.position지점에서 반경 lockOnRange 범위 안에 있는 Enemy레이어를 가진 컬라이더를 전부 찾기
         Collider[] cols = Physics.OverlapSphere(transform.position, lockOnRange, LayerMask.GetMask("Enemy"));
 
-        // 가장 가까운 컬라이더를 찾기
-        Collider nearest = null;
-        float nearestDistance = float.MaxValue;
-        foreach(Collider col in cols)
+        if (cols.Length > 0)
         {
-            float distanceSqr = (col.transform.position - transform.position).sqrMagnitude;
-            if( distanceSqr < nearestDistance )
+            // 가장 가까운 컬라이더를 찾기
+            Collider nearest = null;
+            float nearestDistance = float.MaxValue;
+            foreach (Collider col in cols)
             {
-                nearestDistance = distanceSqr;
-                nearest = col;
+                float distanceSqr = (col.transform.position - transform.position).sqrMagnitude;
+                if (distanceSqr < nearestDistance)
+                {
+                    nearestDistance = distanceSqr;
+                    nearest = col;
+                }
             }
+
+            lockOnTarget = nearest.transform;
+            Debug.Log($"Lock on : {lockOnTarget.name}");
+
+            lockOnEffect.transform.position = lockOnTarget.position;
+            lockOnEffect.transform.parent = lockOnTarget;
+            lockOnEffect.SetActive(true);
         }
-
-        lockOnTarget = nearest.transform;
-        Debug.Log($"Lock on : {lockOnTarget.name}");
-
-        lockOnEffect.transform.position = lockOnTarget.position;
-        lockOnEffect.transform.parent = lockOnTarget;
-        lockOnEffect.SetActive(true);
-
     }
 
     void LockOff()
