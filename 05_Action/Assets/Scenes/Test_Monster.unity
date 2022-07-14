@@ -1730,6 +1730,10 @@ PrefabInstance:
       value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 9093517148249634114, guid: eaa1dd22efd74464387cb6daed7e636b, type: 3}
+      propertyPath: attackPower
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9093517148249634114, guid: eaa1dd22efd74464387cb6daed7e636b, type: 3}
       propertyPath: patrolRoute
       value: 
       objectReference: {fileID: 2051516575}

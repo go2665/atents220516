@@ -24,7 +24,7 @@ public class Enemy : MonoBehaviour, IHealth, IBattle
 
     //추적용------------------------------------------------------------------------------------------
     float sightRange = 10.0f;
-    float closeSightRange = 2.0f;
+    float closeSightRange = 2.5f;
     Vector3 targetPosition = new();
     WaitForSeconds oneSecond = new WaitForSeconds(1.0f);
     IEnumerator repeatChase = null;
