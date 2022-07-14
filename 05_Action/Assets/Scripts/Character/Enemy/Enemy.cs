@@ -24,6 +24,7 @@ public class Enemy : MonoBehaviour, IHealth, IBattle
 
     //추적용------------------------------------------------------------------------------------------
     float sightRange = 10.0f;
+    float closeSightRange = 2.0f;
     Vector3 targetPosition = new();
     WaitForSeconds oneSecond = new WaitForSeconds(1.0f);
     IEnumerator repeatChase = null;
@@ -146,16 +147,21 @@ public class Enemy : MonoBehaviour, IHealth, IBattle
     {
         bool result = false;
         Collider[] colliders = Physics.OverlapSphere(transform.position, sightRange, LayerMask.GetMask("Player"));
-        if(colliders.Length > 0)
+        if(colliders.Length > 0)    // 시야 범위 안에 있는가?
         {
             Vector3 pos = colliders[0].transform.position;
-            if (InSightAngle(pos))
+            if (InSightAngle(pos))  // 시야 각도 안에 있는가?
             {
-                if (!BlockByWall(pos))
+                if (!BlockByWall(pos))  // 벽에 가렸는가?
                 {
                     targetPosition = pos;
                     result = true;
                 }
+            }
+            if(!result && (pos-transform.position).sqrMagnitude < closeSightRange * closeSightRange )
+            {
+                targetPosition = pos;
+                result = true;
             }
         }
 
@@ -183,7 +189,9 @@ public class Enemy : MonoBehaviour, IHealth, IBattle
     void AttackUpdate()
     {
         attackCoolTime -= Time.deltaTime;
-        if( attackCoolTime < 0.0f)
+        transform.rotation = Quaternion.Slerp(transform.rotation,
+                Quaternion.LookRotation(attackTarget.transform.position - transform.position), 0.1f);
+        if ( attackCoolTime < 0.0f)
         {
             anim.SetTrigger("Attack");
             Attack(attackTarget);
@@ -315,6 +323,7 @@ public class Enemy : MonoBehaviour, IHealth, IBattle
         {
             Handles.color = Color.red;  // 추적이나 공격 중일 때만 빨간색
         }
+        Handles.DrawWireDisc(transform.position, transform.up, closeSightRange); // 근접 시야 범위
 
         Vector3 forward = transform.forward * sightRange;
         Quaternion q1 = Quaternion.Euler(0.5f * sightAngle * transform.up);

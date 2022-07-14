@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 public class Player : MonoBehaviour, IHealth, IBattle
 {
@@ -125,18 +126,35 @@ public class Player : MonoBehaviour, IHealth, IBattle
 
     void LockOn()
     {
+        // transform.position지점에서 반경 lockOnRange 범위 안에 있는 Enemy레이어를 가진 컬라이더를 전부 찾기
         Collider[] cols = Physics.OverlapSphere(transform.position, lockOnRange, LayerMask.GetMask("Enemy"));
 
         // 가장 가까운 컬라이더를 찾기
         Collider nearest = null;
-
+        float nearestDistance = float.MaxValue;
+        foreach(Collider col in cols)
+        {
+            float distanceSqr = (col.transform.position - transform.position).sqrMagnitude;
+            if( distanceSqr < nearestDistance )
+            {
+                nearestDistance = distanceSqr;
+                nearest = col;
+            }
+        }
 
         lockOnTarget = nearest.transform;
+        Debug.Log(lockOnTarget.name);
 
     }
 
     void LockOff()
     {
 
+    }
+
+    private void OnDrawGizmos()
+    {
+        Handles.color = Color.white;
+        Handles.DrawWireDisc(transform.position, transform.up, lockOnRange);
     }
 }

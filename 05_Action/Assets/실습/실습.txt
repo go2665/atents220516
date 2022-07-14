@@ -49,3 +49,9 @@
 7/13
 1. PlayerHpBar를 Player의 HP와 연동하기
   시간 : 6시 10분까지
+
+
+7/14
+1. Player의 lockOnRange를 OnDrawGizmos를 통해 출력하라
+  1.1. Handles도 괜찮음
+  시간 : 4시 20분까지
