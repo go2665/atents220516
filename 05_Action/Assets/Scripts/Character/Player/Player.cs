@@ -47,6 +47,8 @@ public class Player : MonoBehaviour, IHealth, IBattle
     public GameObject lockOnEffect;
     Transform lockOnTarget;
     float lockOnRange = 5.0f;
+    public Transform LockOnTarget { get => lockOnTarget; }
+
 
     private void Awake()
     {
@@ -143,13 +145,19 @@ public class Player : MonoBehaviour, IHealth, IBattle
         }
 
         lockOnTarget = nearest.transform;
-        Debug.Log(lockOnTarget.name);
+        Debug.Log($"Lock on : {lockOnTarget.name}");
+
+        lockOnEffect.transform.position = lockOnTarget.position;
+        lockOnEffect.transform.parent = lockOnTarget;
+        lockOnEffect.SetActive(true);
 
     }
 
     void LockOff()
     {
-
+        lockOnTarget = null;
+        lockOnEffect.transform.parent = null;
+        lockOnEffect.SetActive(false);
     }
 
     private void OnDrawGizmos()

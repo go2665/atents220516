@@ -162,6 +162,11 @@ public class PlayerInputController : MonoBehaviour
     /// </summary>
     private void Update()
     {
+        if( player.LockOnTarget != null )
+        {
+            targetRotation = Quaternion.LookRotation(player.LockOnTarget.position - transform.position);            
+        }
+
         // 이동 입력 확인
         if (inputDir.sqrMagnitude > 0.0f)
         {
@@ -181,15 +186,14 @@ public class PlayerInputController : MonoBehaviour
 
             // 설정한 이동속도에 맞춰 캐릭터 이동
             controller.Move(speed * Time.deltaTime * inputDir);
-
-            // 목표지점을 바라보도록 회전하며 보간
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, turnSpeed * Time.deltaTime);
         }
         else
         {
             // 입력이 없으면 idle 애니메이션으로 변경
             anim.SetFloat("Speed", 0.0f);
         }
+        // 목표지점을 바라보도록 회전하며 보간
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, turnSpeed * Time.deltaTime);
     }
 
     /// <summary>

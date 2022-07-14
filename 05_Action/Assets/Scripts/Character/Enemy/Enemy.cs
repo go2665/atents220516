@@ -134,7 +134,7 @@ public class Enemy : MonoBehaviour, IHealth, IBattle
 
         if (agent.remainingDistance <= agent.stoppingDistance)  // 도착하면
         {
-            Debug.Log("도착");
+            //Debug.Log("도착");
             index++;                // 다음 인덱스 계산해서
             index %= childCount;    // index = index % childCount;
             
