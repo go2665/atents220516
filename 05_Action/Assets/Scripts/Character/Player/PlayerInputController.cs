@@ -162,9 +162,11 @@ public class PlayerInputController : MonoBehaviour
     /// </summary>
     private void Update()
     {
+        // 지금 플레이어가 락온 중이면
         if( player.LockOnTarget != null )
         {
-            targetRotation = Quaternion.LookRotation(player.LockOnTarget.position - transform.position);            
+            // 락온 대상을 바라보게 목표 회전 설정
+            targetRotation = Quaternion.LookRotation(player.LockOnTarget.position - transform.position);    
         }
 
         // 이동 입력 확인

@@ -12,6 +12,8 @@ public class Enemy : MonoBehaviour, IHealth, IBattle
 
     EnemyState state = EnemyState.Idle;
 
+    public System.Action OnDead;
+
     //Idle 용 --------------------------------------------------------------------------------------
     float waitTime = 3.0f;
     float timeCountDown = 3.0f;
@@ -272,6 +274,8 @@ public class Enemy : MonoBehaviour, IHealth, IBattle
                 attackCoolTime = attackSpeed;
                 break;
             case EnemyState.Dead:
+                gameObject.layer = LayerMask.NameToLayer("Default");    // 죽었을 때 락온이 다시 되지 않게 하기 위해 설정
+                OnDead?.Invoke();               // 죽었을 때 실행되는 델리게이트(락온 해제)
                 anim.SetBool("Dead", true);
                 anim.SetTrigger("Die");
                 isDead = true;
@@ -307,7 +311,7 @@ public class Enemy : MonoBehaviour, IHealth, IBattle
         Rigidbody rigid = GetComponent<Rigidbody>();
         rigid.isKinematic = false;
         rigid.drag = 20.0f;
-        
+        Destroy(this.gameObject, 5.0f);
     }
 
     private void OnDrawGizmos()
