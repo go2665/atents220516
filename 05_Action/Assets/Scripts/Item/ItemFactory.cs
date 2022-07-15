@@ -16,7 +16,7 @@ public class ItemFactory
     /// <returns>생성한 게임오브젝트</returns>
     public static GameObject MakeItem(ItemIDCode code)
     {
-        GameObject obj = new GameObject();              // 빈 오브젝트 만들고
+        GameObject obj = new GameObject();              // 빈 오브젝트 만들고 ((0,0,0)에 생성됨)
         Item item = obj.AddComponent<Item>();           // Item 컴포넌트 추가
 
         item.data = GameManager.Inst.ItemData[code];    // ItemData 설정
@@ -25,5 +25,19 @@ public class ItemFactory
         itemCount++;    // 생성할 때마다 값을 증가시켜서 중복이 없도록 처리
 
         return obj;     // 생성완료된 것 리턴
+    }
+
+    public static GameObject MakeItem(ItemIDCode code, Vector3 position, bool randomNoise = false)
+    {
+        GameObject obj = MakeItem(code);
+        if(randomNoise)
+        {
+            Vector2 noise = Random.insideUnitCircle * 0.5f;
+            position.x += noise.x;
+            position.z += noise.y;
+        }
+        obj.transform.position = position;
+        
+        return obj;
     }
 }

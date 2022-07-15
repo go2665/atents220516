@@ -274,15 +274,7 @@ public class Enemy : MonoBehaviour, IHealth, IBattle
                 attackCoolTime = attackSpeed;
                 break;
             case EnemyState.Dead:
-                gameObject.layer = LayerMask.NameToLayer("Default");    // 죽었을 때 락온이 다시 되지 않게 하기 위해 설정
-                OnDead?.Invoke();               // 죽었을 때 실행되는 델리게이트(락온 해제)
-                anim.SetBool("Dead", true);
-                anim.SetTrigger("Die");
-                isDead = true;
-                agent.isStopped = true;
-                agent.velocity = Vector3.zero;
-                HP = 0;
-                StartCoroutine(DeadEffect());
+                DiePresent();
                 break;
             default:
                 break;
@@ -290,6 +282,39 @@ public class Enemy : MonoBehaviour, IHealth, IBattle
 
         state = newState;
         anim.SetInteger("EnemyState", (int)state);
+    }
+
+    void DiePresent()
+    {
+        gameObject.layer = LayerMask.NameToLayer("Default");    // 죽었을 때 락온이 다시 되지 않게 하기 위해 설정
+        OnDead?.Invoke();               // 죽었을 때 실행되는 델리게이트(락온 해제)
+        anim.SetBool("Dead", true);
+        anim.SetTrigger("Die");
+        isDead = true;
+        agent.isStopped = true;
+        agent.velocity = Vector3.zero;
+        HP = 0;
+        ItemDrop();
+        StartCoroutine(DeadEffect());
+    }
+
+    void ItemDrop()
+    {
+        float randomSelect = Random.Range(0.0f, 1.0f);
+        if( randomSelect < 0.1f )
+        {
+            ItemFactory.MakeItem(ItemIDCode.Coin_Gold, transform.position, true);            
+        }
+        else if( randomSelect < 0.3f )
+        {
+            ItemFactory.MakeItem(ItemIDCode.Coin_Silver, transform.position, true);
+        }
+        else
+        {
+            ItemFactory.MakeItem(ItemIDCode.Coin_Copper, transform.position, true);
+        }
+
+
     }
 
     IEnumerator DeadEffect()

@@ -154,7 +154,7 @@ public class Player : MonoBehaviour, IHealth, IBattle
             }
 
             lockOnTarget = nearest.transform;   // 가장 가까이 있는 대상을 락온 대상으로 설정
-            Debug.Log($"Lock on : {lockOnTarget.name}");
+            //Debug.Log($"Lock on : {lockOnTarget.name}");
 
             lockOnTarget.gameObject.GetComponent<Enemy>().OnDead += LockOff;
 
