@@ -9,9 +9,13 @@ public class Test_Monster : MonoBehaviour
 
     private void Update()
     {
-        if( Keyboard.current.digit1Key.wasPressedThisFrame )
+        if (Keyboard.current.digit1Key.wasPressedThisFrame)
         {
             enemy.TakeDamage(30);
+        }
+        if (Keyboard.current.digit2Key.wasPressedThisFrame)
+        {
+            ItemFactory.MakeItem(ItemIDCode.Coin_Silver);
         }
     }
 }

@@ -11,6 +11,9 @@ public enum EnemyState
     Dead
 }
 
+/// <summary>
+/// 아이템 종류별 ID
+/// </summary>
 public enum ItemIDCode
 {
     Coin_Copper = 0,

@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a44cc4226bc3f5545aa2f6371457df46, type: 3}
   m_Name: 1_CoinSilver
   m_EditorClassIdentifier: 
-  id: 0
-  itemName: "\uC544\uC774\uD15C"
-  prefab: {fileID: 0}
+  id: 1
+  itemName: "\uC740\uD654"
+  prefab: {fileID: 1419077572623367931, guid: 809f6113c87478943b1494dadce06467, type: 3}
