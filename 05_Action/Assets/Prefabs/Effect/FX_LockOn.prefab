@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 694965868111392437}
   - component: {fileID: 694965868111392439}
   - component: {fileID: 694965868111392438}
-  m_Layer: 0
+  m_Layer: 1
   m_Name: Trails
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -28,6 +28,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0.01, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2412586242081842664}
   m_RootOrder: 4
@@ -4744,6 +4745,7 @@ ParticleSystemRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 2
   m_RenderMode: 0
+  m_MeshDistribution: 0
   m_SortMode: 0
   m_MinParticleSize: 0
   m_MaxParticleSize: 2
@@ -4767,6 +4769,10 @@ ParticleSystemRenderer:
   m_Mesh1: {fileID: 0}
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
+  m_MeshWeighting: 1
+  m_MeshWeighting1: 1
+  m_MeshWeighting2: 1
+  m_MeshWeighting3: 1
   m_MaskInteraction: 0
 --- !u!1 &1400291154168941958
 GameObject:
@@ -4779,7 +4785,7 @@ GameObject:
   - component: {fileID: 1400291154168941959}
   - component: {fileID: 1400291154168941977}
   - component: {fileID: 1400291154168941976}
-  m_Layer: 0
+  m_Layer: 1
   m_Name: Glow_AA
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4796,6 +4802,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0.01, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2412586242081842664}
   m_RootOrder: 3
@@ -9629,6 +9636,7 @@ ParticleSystemRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 3
   m_RenderMode: 2
+  m_MeshDistribution: 0
   m_SortMode: 0
   m_MinParticleSize: 0
   m_MaxParticleSize: 2
@@ -9652,6 +9660,10 @@ ParticleSystemRenderer:
   m_Mesh1: {fileID: 0}
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
+  m_MeshWeighting: 1
+  m_MeshWeighting1: 1
+  m_MeshWeighting2: 1
+  m_MeshWeighting3: 1
   m_MaskInteraction: 0
 --- !u!1 &2412586242081842667
 GameObject:
@@ -9664,7 +9676,7 @@ GameObject:
   - component: {fileID: 2412586242081842664}
   - component: {fileID: 2412586242081842665}
   - component: {fileID: 2412586242081842666}
-  m_Layer: 0
+  m_Layer: 1
   m_Name: FX_LockOn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9681,6 +9693,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6596383475106619649}
   - {fileID: 4148167121123600499}
@@ -14452,6 +14465,7 @@ ParticleSystemRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_RenderMode: 0
+  m_MeshDistribution: 0
   m_SortMode: 0
   m_MinParticleSize: 0
   m_MaxParticleSize: 0.5
@@ -14475,6 +14489,10 @@ ParticleSystemRenderer:
   m_Mesh1: {fileID: 0}
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
+  m_MeshWeighting: 1
+  m_MeshWeighting1: 1
+  m_MeshWeighting2: 1
+  m_MeshWeighting3: 1
   m_MaskInteraction: 0
 --- !u!1 &4148167121123378397
 GameObject:
@@ -14487,7 +14505,7 @@ GameObject:
   - component: {fileID: 4148167121123600499}
   - component: {fileID: 4148167121109495895}
   - component: {fileID: 4148167121109615693}
-  m_Layer: 0
+  m_Layer: 1
   m_Name: CircleMovement
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14504,6 +14522,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0.01, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2412586242081842664}
   m_RootOrder: 1
@@ -19220,6 +19239,7 @@ ParticleSystemRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_RenderMode: 2
+  m_MeshDistribution: 0
   m_SortMode: 0
   m_MinParticleSize: 0
   m_MaxParticleSize: 3
@@ -19243,6 +19263,10 @@ ParticleSystemRenderer:
   m_Mesh1: {fileID: 0}
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
+  m_MeshWeighting: 1
+  m_MeshWeighting1: 1
+  m_MeshWeighting2: 1
+  m_MeshWeighting3: 1
   m_MaskInteraction: 0
 --- !u!1 &6596383475106434479
 GameObject:
@@ -19255,7 +19279,7 @@ GameObject:
   - component: {fileID: 6596383475106619649}
   - component: {fileID: 6596383475087309093}
   - component: {fileID: 6596383475086642495}
-  m_Layer: 0
+  m_Layer: 1
   m_Name: CircleStatic
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19272,6 +19296,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0.01, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2412586242081842664}
   m_RootOrder: 0
@@ -23988,6 +24013,7 @@ ParticleSystemRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_RenderMode: 2
+  m_MeshDistribution: 0
   m_SortMode: 0
   m_MinParticleSize: 0
   m_MaxParticleSize: 1
@@ -24011,6 +24037,10 @@ ParticleSystemRenderer:
   m_Mesh1: {fileID: 0}
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
+  m_MeshWeighting: 1
+  m_MeshWeighting1: 1
+  m_MeshWeighting2: 1
+  m_MeshWeighting3: 1
   m_MaskInteraction: 0
 --- !u!1 &7291649276542812147
 GameObject:
@@ -24023,7 +24053,7 @@ GameObject:
   - component: {fileID: 7291649276542812146}
   - component: {fileID: 7291649276542812140}
   - component: {fileID: 7291649276542812141}
-  m_Layer: 0
+  m_Layer: 1
   m_Name: Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24040,6 +24070,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0.01, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2412586242081842664}
   m_RootOrder: 2
@@ -28873,6 +28904,7 @@ ParticleSystemRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_RenderMode: 2
+  m_MeshDistribution: 0
   m_SortMode: 0
   m_MinParticleSize: 0
   m_MaxParticleSize: 2
@@ -28896,4 +28928,8 @@ ParticleSystemRenderer:
   m_Mesh1: {fileID: 0}
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
+  m_MeshWeighting: 1
+  m_MeshWeighting1: 1
+  m_MeshWeighting2: 1
+  m_MeshWeighting3: 1
   m_MaskInteraction: 0

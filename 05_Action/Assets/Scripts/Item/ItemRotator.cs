@@ -4,15 +4,23 @@ using UnityEngine;
 
 public class ItemRotator : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public float spinSpeed = 360.0f;
+    public float moveDistance = 1.0f;
+
+    float timeElapsed = 0;
+    Vector3 startPosition;
+    float moveHalf;
+
+    private void Start()
     {
-        
+        startPosition = transform.position;
+        moveHalf = moveDistance * 0.5f;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
+        timeElapsed += Time.deltaTime;
+        transform.position = startPosition + moveHalf * new Vector3(0, (1-Mathf.Cos(timeElapsed)), 0);
+        transform.Rotate(spinSpeed * Time.deltaTime * Vector3.up);
     }
 }
