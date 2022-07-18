@@ -11,4 +11,5 @@ public class ItemData : ScriptableObject    // 내가 원하는 데이터를 저
     public uint id = 0;                     // 아이템 ID
     public string itemName = "아이템";       // 아이템 이름
     public GameObject prefab;               // 아이템의 프리팹
+    public uint value;                      // 아이템의 가치
 }

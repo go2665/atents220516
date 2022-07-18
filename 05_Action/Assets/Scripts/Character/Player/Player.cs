@@ -49,6 +49,15 @@ public class Player : MonoBehaviour, IHealth, IBattle
     float lockOnRange = 5.0f;
     public Transform LockOnTarget { get => lockOnTarget; }  // 락온 대상의 트랜스폼. 읽기 전용 프로퍼티 추가
 
+    // 아이템 용 ---------------------------------------------------------------------------------------
+    int money = 0;      // 플레이어의 소지 금액
+    public int Money
+    {
+        get => money;
+    }        
+
+    float itemPickupRange = 2.0f;   // 아이템을 줍는 범위(반지름)
+
 
     private void Awake()
     {
@@ -173,6 +182,20 @@ public class Player : MonoBehaviour, IHealth, IBattle
         lockOnTarget = null;                    // 락온 대상 null
         lockOnEffect.transform.parent = null;   // 락온 이팩트의 부모 제거
         lockOnEffect.SetActive(false);          // 락온 이팩트 보이지 않게 하기
+    }
+
+    public void ItemPickup()
+    {
+        // 주변에 Item레이어에 있는 컬라이더 전부 가져오기
+        Collider[] cols = Physics.OverlapSphere(transform.position, itemPickupRange, LayerMask.GetMask("Item"));
+        foreach(var col in cols)
+        {
+            Item item = col.GetComponent<Item>();
+            money += (int)item.data.value;  // 종류별로 돈 더하기
+            Destroy(col.gameObject);
+        }
+
+        //Debug.Log($"플레이어의 돈 : {money}");
     }
 
     private void OnDrawGizmos()

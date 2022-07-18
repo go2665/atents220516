@@ -92,6 +92,7 @@ public class PlayerInputController : MonoBehaviour
         actions.Player.MoveModeChange.performed += OnMoveModeChage;
         actions.Player.Attack.performed += OnAttack;
         actions.Player.LockOn.performed += OnLockOn;
+        actions.Player.Pickup.performed += OnPickup;
     }
 
     /// <summary>
@@ -99,6 +100,7 @@ public class PlayerInputController : MonoBehaviour
     /// </summary>
     private void OnDisable()
     {
+        actions.Player.Pickup.performed -= OnPickup;
         actions.Player.LockOn.performed -= OnLockOn;
         actions.Player.Attack.performed -= OnAttack;
         actions.Player.MoveModeChange.performed -= OnMoveModeChage;
@@ -106,7 +108,7 @@ public class PlayerInputController : MonoBehaviour
         actions.Player.Move.performed -= OnMove;    // 등록해 놓았던 함수 해제
         actions.Player.Disable();                   // "Player" 액션맵 끄기
     }
-
+        
     private void OnAttack(InputAction.CallbackContext _)
     {
         anim.SetFloat("ComboState", Mathf.Repeat(anim.GetCurrentAnimatorStateInfo(0).normalizedTime, 1.0f));
@@ -205,5 +207,14 @@ public class PlayerInputController : MonoBehaviour
     private void OnLockOn(InputAction.CallbackContext _)
     {
         player.LockOnToggle();
+    }
+
+    /// <summary>
+    /// 아이템 줍기 버튼이 눌러졌을 때 실행될 함수
+    /// </summary>
+    /// <param name="obj"></param>
+    private void OnPickup(InputAction.CallbackContext _)
+    {
+        player.ItemPickup();
     }
 }

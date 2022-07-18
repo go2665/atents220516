@@ -22,7 +22,12 @@ public class ItemFactory
         item.data = GameManager.Inst.ItemData[code];    // ItemData 설정
         string[] itemName = item.data.name.Split("_");  // 내가 생성하는 종류에 맞게 이름 변경
         obj.name = $"{itemName[1]}_{itemCount}";        // 고유 아이디도 추가
+        obj.layer = LayerMask.NameToLayer("Item");      // 레이어 설정
+        SphereCollider col = obj.AddComponent<SphereCollider>();    // 코드로 컬라이더 추가
+        col.radius = 0.5f;
+        col.isTrigger = true;
         itemCount++;    // 생성할 때마다 값을 증가시켜서 중복이 없도록 처리
+        
 
         return obj;     // 생성완료된 것 리턴
     }
