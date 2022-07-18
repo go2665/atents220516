@@ -54,9 +54,17 @@ public class Player : MonoBehaviour, IHealth, IBattle
     public int Money
     {
         get => money;
-    }        
-
+        private set
+        {
+            if (money != value)
+            {
+                money = value;
+                OnMoneyChange?.Invoke(money);
+            }
+        }
+    }
     float itemPickupRange = 2.0f;   // 아이템을 줍는 범위(반지름)
+    public System.Action<int> OnMoneyChange;
 
 
     private void Awake()
@@ -191,7 +199,7 @@ public class Player : MonoBehaviour, IHealth, IBattle
         foreach(var col in cols)
         {
             Item item = col.GetComponent<Item>();
-            money += (int)item.data.value;  // 종류별로 돈 더하기
+            Money += (int)item.data.value;  // 종류별로 돈 더하기
             Destroy(col.gameObject);
         }
 

@@ -15,4 +15,4 @@ MonoBehaviour:
   id: 0
   itemName: "\uAD6C\uB9AC \uB3D9\uC804"
   prefab: {fileID: 36415106250372669, guid: 879acdf021bc2b342815246272d1d5c9, type: 3}
-  value: 1
+  value: 1234567
