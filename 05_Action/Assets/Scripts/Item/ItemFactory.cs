@@ -27,6 +27,10 @@ public class ItemFactory
         col.radius = 0.5f;
         col.isTrigger = true;
         itemCount++;    // 생성할 때마다 값을 증가시켜서 중복이 없도록 처리
+
+        GameObject indicator = Resources.Load<GameObject>("MinimapItemIndicator_Item");
+        GameObject.Instantiate(indicator, 
+            obj.transform.position, obj.transform.rotation * Quaternion.Euler(90, 0, 0), obj.transform);
         
 
         return obj;     // 생성완료된 것 리턴

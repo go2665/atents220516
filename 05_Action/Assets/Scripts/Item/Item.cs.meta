@@ -3,7 +3,9 @@ guid: e531cbf988d57c84a9d2c7e80ca63e0b
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - data: {instanceID: 0}
+  - minimapIndicator: {fileID: 5800303771651437546, guid: 2ef2e41a001a59747b8244b972bcddfb, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
