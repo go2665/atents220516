@@ -11,23 +11,23 @@ public class InventoryUI : MonoBehaviour
     Player player;
 
     // 돈 UI --------------------------------------------------------------------------------------
-    TextMeshProUGUI goldText;
+    TextMeshProUGUI goldText;   // 돈 표시할 text
 
     // --------------------------------------------------------------------------------------------
 
     private void Awake()
     {
-        goldText = transform.Find("Gold").Find("GoldText").GetComponent<TextMeshProUGUI>();
+        goldText = transform.Find("Gold").Find("GoldText").GetComponent<TextMeshProUGUI>(); // 그냥 찾기
     }
 
     private void Start()
     {
         player = GameManager.Inst.MainPlayer;
-        player.OnMoneyChange += RefreshMoney;
+        player.OnMoneyChange += RefreshMoney;   // 플레이어의 Money가 변경되는 실행되는 델리게이트에 함수 등록
     }
 
     private void RefreshMoney(int money)
     {
-        goldText.text = $"{money:N0}";
+        goldText.text = $"{money:N0}";  // Money가 변경될 때 실행될 함수
     }
 }

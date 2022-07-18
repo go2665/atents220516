@@ -56,15 +56,15 @@ public class Player : MonoBehaviour, IHealth, IBattle
         get => money;
         private set
         {
-            if (money != value)
+            if (money != value) // 실제로 금액이 변경되었을 때만 실행
             {
                 money = value;
-                OnMoneyChange?.Invoke(money);
+                OnMoneyChange?.Invoke(money);   // 돈이 변경되면 실행되는 델리게이트
             }
         }
     }
-    float itemPickupRange = 2.0f;   // 아이템을 줍는 범위(반지름)
-    public System.Action<int> OnMoneyChange;
+    float itemPickupRange = 2.0f;           // 아이템을 줍는 범위(반지름)
+    public System.Action<int> OnMoneyChange;// 돈이 변경되면 실행되는 델리게이트
 
 
     private void Awake()
