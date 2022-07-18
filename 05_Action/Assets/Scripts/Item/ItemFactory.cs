@@ -28,13 +28,13 @@ public class ItemFactory
         col.isTrigger = true;
         itemCount++;    // 생성할 때마다 값을 증가시켜서 중복이 없도록 처리
 
-        GameObject indicator = Resources.Load<GameObject>("MinimapItemIndicator_Item");
-        if (indicator != null)
+        GameObject indicator = Resources.Load<GameObject>("MinimapItemIndicator_Item"); // 리소시스 폴더에서 동적으로 로딩
+        if (indicator != null)  // 로딩이 안되었을 때를 대비해서 추가
         {
+            // 쿼드를 눕히기 위해 90도 회전
             GameObject.Instantiate(indicator,
-                obj.transform.position, obj.transform.rotation * Quaternion.Euler(90, 0, 0), obj.transform);
-        }
-        
+                obj.transform.position, obj.transform.rotation * Quaternion.Euler(90, 0, 0), obj.transform);    
+        }        
 
         return obj;     // 생성완료된 것 리턴
     }
