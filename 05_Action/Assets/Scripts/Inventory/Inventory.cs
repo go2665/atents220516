@@ -66,14 +66,35 @@ public class Inventory
         else
         {
             // 모든 슬롯에 아이템이 들어있다.(인벤토리가 가득찼다.)
-            Debug.Log($"인벤토리가 가득차 실패했습니다.");
+            Debug.Log($"실패 : 인벤토리가 가득찼습니다.");
+        }
+
+        return result;
+    }
+
+    // 아이템 버리기(인벤토리 비우기)
+    public bool RemoveItem(uint slotIndex)
+    {
+        bool result = false;
+
+        Debug.Log($"인벤토리에서 {slotIndex} 슬롯을 비웁니다.");
+        if (IsValidSlotIndex(slotIndex))        
+        {
+            ItemSlot slot = slots[slotIndex];
+            Debug.Log($"{slot.SlotItemData.itemName}을 삭제합니다.");
+            slot.ClearSlotItem();
+            Debug.Log($"삭제에 성공했습니다.");
+            result = true;
+        }
+        else
+        {
+            Debug.Log($"실패 : 잘못된 인덱스입니다.");
         }
 
         return result;
     }
 
 
-    // 아이템 버리기(인벤토리 비우기)
     // 아이템 이동하기
     // 아이템 나누기
     // 아이템 사용하기
@@ -100,6 +121,17 @@ public class Inventory
         }
 
         return result;
+    }
+
+    private bool IsValidSlotIndex(uint index)
+    {
+        return index < SlotCount;
+    }
+
+    public void PrintInventory()
+    {
+        // 현재 인벤토리 내용을 콘솔창에 출력하는 함수
+        // ex) [달걀,달걀,달걀,,뼈다귀,뼈다귀]
     }
 }
 
