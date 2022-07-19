@@ -125,6 +125,14 @@ public class Inventory
         return result;
     }
 
+    public void ClearInventory()
+    {
+        Debug.Log("인벤토리 클리어");
+        foreach(var slot in slots)
+        {
+            slot.ClearSlotItem();
+        }
+    }
 
     // 아이템 이동하기
     // 아이템 나누기
@@ -178,7 +186,7 @@ public class Inventory
             printText += ",";
         }
         ItemSlot slot = slots[SlotCount - 1];   // 마지막 슬롯만 따로 처리
-        if (slot != null)
+        if (!slot.IsEmpty())
         {
             printText += $"{slot.SlotItemData.itemName}]";
         }

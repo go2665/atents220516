@@ -24,5 +24,8 @@ public class Test_Inventory : MonoBehaviour
         inven.AddItem(ItemIDCode.Bone, 3);
         inven.PrintInventory();
 
+        inven.ClearInventory();
+        inven.PrintInventory();
+
     }
 }
