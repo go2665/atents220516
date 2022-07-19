@@ -72,6 +72,37 @@ public class Inventory
         return result;
     }
 
+    public bool AddItem(uint id, uint index)
+    {
+        return AddItem(GameManager.Inst.ItemData[id], index);
+    }
+
+    public bool AddItem(ItemIDCode code, uint index)
+    {
+        return AddItem(GameManager.Inst.ItemData[code], index);
+    }
+
+    public bool AddItem(ItemData data, uint index)
+    {
+        bool result = false;
+
+        Debug.Log($"인벤토리의 {index} 슬롯에  {data.itemName}을 추가합니다");
+        ItemSlot slot = slots[index];
+        if(slot.IsEmpty())
+        {
+            slot.AssignSlotItem(data);
+            result = true;
+            Debug.Log($"추가에 성공했습니다.");
+        }
+        else
+        {
+            Debug.Log($"실패 : {index} 슬롯에는 다른 아이템이 들어있습니다.");
+        }
+
+        return result;
+    }
+
+
     // 아이템 버리기(인벤토리 비우기)
     public bool RemoveItem(uint slotIndex)
     {
@@ -131,7 +162,31 @@ public class Inventory
     public void PrintInventory()
     {
         // 현재 인벤토리 내용을 콘솔창에 출력하는 함수
-        // ex) [달걀,달걀,달걀,,뼈다귀,뼈다귀]
+        // ex) [달걀,달걀,달걀,(빈칸),뼈다귀,뼈다귀]
+
+        string printText = "[";
+        for(int i=0; i<SlotCount-1;i++)         // 슬롯이 전체6개일 경우 0~4까지만 일단 추가(5개추가)
+        {
+            if (slots[i].SlotItemData != null)
+            {
+                printText += slots[i].SlotItemData.itemName;
+            }
+            else
+            {
+                printText += "(빈칸)";
+            }
+            printText += ",";
+        }
+        ItemSlot slot = slots[SlotCount - 1];   // 마지막 슬롯만 따로 처리
+        if (slot != null)
+        {
+            printText += $"{slot.SlotItemData.itemName}]";
+        }
+        else
+        {
+            printText += "]";
+        }
+        Debug.Log(printText);
     }
 }
 

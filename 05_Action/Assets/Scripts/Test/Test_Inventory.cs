@@ -17,5 +17,12 @@ public class Test_Inventory : MonoBehaviour
 
         inven.RemoveItem(3);
         inven.RemoveItem(10);
+
+        inven.PrintInventory(); //[달걀,달걀,달걀,,뼈다귀,뼈다귀]
+
+        inven.AddItem(ItemIDCode.Egg, 3);
+        inven.AddItem(ItemIDCode.Bone, 3);
+        inven.PrintInventory();
+
     }
 }
