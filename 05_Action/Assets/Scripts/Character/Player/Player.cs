@@ -79,7 +79,10 @@ public class Player : MonoBehaviour, IHealth, IBattle
 
     void Start()
     {
-        lockOnEffect = GameObject.Find("LockOnEffect");
+        if (lockOnEffect == null)
+        {
+            lockOnEffect = GameObject.Find("LockOnEffect");
+        }
     }
 
     public void ShowWeapons(bool isShow)

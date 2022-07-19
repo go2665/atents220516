@@ -12,7 +12,7 @@ public class ItemDataManager : MonoBehaviour
     /// </summary>
     public ItemData[] itemDatas;    
 
-    public ItemData this[int i]     // 인덱서. 
+    public ItemData this[uint i]     // 인덱서. 
     {
         get => itemDatas[i];
     }
