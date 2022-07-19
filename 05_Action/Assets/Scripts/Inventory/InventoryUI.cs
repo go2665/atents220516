@@ -24,6 +24,7 @@ public class InventoryUI : MonoBehaviour
     {
         player = GameManager.Inst.MainPlayer;
         player.OnMoneyChange += RefreshMoney;   // 플레이어의 Money가 변경되는 실행되는 델리게이트에 함수 등록
+        RefreshMoney(player.Money);
     }
 
     private void RefreshMoney(int money)

@@ -77,6 +77,11 @@ public class Player : MonoBehaviour, IHealth, IBattle
         ps = weapon.GetComponentInChildren<ParticleSystem>();
     }
 
+    void Start()
+    {
+        lockOnEffect = GameObject.Find("LockOnEffect");
+    }
+
     public void ShowWeapons(bool isShow)
     {
         weapon.SetActive(isShow);
