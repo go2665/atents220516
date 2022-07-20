@@ -11,7 +11,10 @@ public class ItemSlot
     //uint itemCount = 0;
 
     // 프로퍼티 ------------------------------------------------------------------------------------
-    // 슬롯에 있는 아이템(ItemData)
+
+    /// <summary>
+    /// 슬롯에 있는 아이템(ItemData)
+    /// </summary>
     public ItemData SlotItemData
     {
         get => slotItemData;
@@ -21,13 +24,19 @@ public class ItemSlot
 
 
     // 함수 ---------------------------------------------------------------------------------------
-    // 슬롯에 아이템을 설정하는 기능
+    
+    /// <summary>
+    /// 슬롯에 아이템을 설정하는 함수 
+    /// </summary>
+    /// <param name="itemData">슬롯에 설정할 ItemData</param>
     public void AssignSlotItem(ItemData itemData)
     {
         slotItemData = itemData;
     }
 
-    // 슬롯을 비우는 기능
+    /// <summary>
+    /// 슬롯을 비우는 함수
+    /// </summary>
     public void ClearSlotItem()
     {
         slotItemData = null;

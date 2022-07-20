@@ -16,18 +16,25 @@ public class Inventory
     // 인벤토리의 크기
     public int SlotCount { get => slots.Length; }
 
-    // 함수(주요기능) ------------------------------------------------------------------------------
+    // 함수(주요기능) ------------------------------------------------------------------------------    
+
+    /// <summary>
+    /// 인벤토리 생성자
+    /// </summary>
+    /// <param name="size">인벤토리의 슬롯 수. 기본 값으로 Default_Inventory_Size(6) 사용 </param>
     public Inventory(int size = Default_Inventory_Size)
     {
-        slots = new ItemSlot[size];
+        slots = new ItemSlot[size];     // 입력받은 갯수로 슬롯만들기
         for(int i=0;i<size;i++)
         {
             slots[i] = new ItemSlot();
         }
     }
 
+    // AddItem은 함수 오버로딩(Overloading)을 통해 이름은 같지만 다양한 종류의 파라메터를 입력 받을 수 있게 했다.
+
     /// <summary>
-    /// 아이템 추가하기 
+    /// 아이템 추가하기 (적절한 빈칸에 넣기)
     /// </summary>
     /// <param name="id">추가할 아이템의 아이디</param>
     /// <returns>아이템 추가 성공 여부(true면 인벤토리에 아이템이 추가됨)</returns>
@@ -37,7 +44,7 @@ public class Inventory
     }
 
     /// <summary>
-    /// 아이템 추가하기 
+    /// 아이템 추가하기 (적절한 빈칸에 넣기)
     /// </summary>
     /// <param name="code">추가할 아이템의 코드</param>
     /// <returns>아이템 추가 성공 여부(true면 인벤토리에 아이템이 추가됨)</returns>
@@ -47,7 +54,7 @@ public class Inventory
     }
 
     /// <summary>
-    /// 아이템 추가하기 
+    /// 아이템 추가하기 (적절한 빈칸에 넣기)
     /// </summary>
     /// <param name="data">추가할 아이템의 아이템 데이터</param>
     /// <returns>아이템 추가 성공 여부(true면 인벤토리에 아이템이 추가됨)</returns>
@@ -56,10 +63,10 @@ public class Inventory
         bool result = false;
 
         Debug.Log($"인벤토리에 {data.itemName}을 추가합니다");
-        ItemSlot slot = FindEmptySlot();
+        ItemSlot slot = FindEmptySlot();    // 적절한 빈 슬롯 찾기
         if (slot != null)
         {
-            slot.AssignSlotItem(data);
+            slot.AssignSlotItem(data);      // 아이템 할당
             result = true;
             Debug.Log($"추가에 성공했습니다.");
         }
@@ -72,25 +79,43 @@ public class Inventory
         return result;
     }
 
+    /// <summary>
+    /// 아이템 추가하기 (특정한 슬롯에 넣기)
+    /// </summary>
+    /// <param name="id">추가할 아이템의 아이디</param>
+    /// <param name="index">아이템을 추가할 슬롯의 인덱스</param>
+    /// <returns>아이템을 추가하는데 성공하면 true. 아니면 false</returns>
     public bool AddItem(uint id, uint index)
     {
         return AddItem(GameManager.Inst.ItemData[id], index);
     }
 
+    /// <summary>
+    /// 아이템 추가하기 (특정한 슬롯에 넣기)
+    /// </summary>
+    /// <param name="code">추가할 아이템의 아이템코드</param>
+    /// <param name="index">아이템을 추가할 슬롯의 인덱스</param>
+    /// <returns>아이템을 추가하는데 성공하면 true. 아니면 false</returns>
     public bool AddItem(ItemIDCode code, uint index)
     {
         return AddItem(GameManager.Inst.ItemData[code], index);
     }
 
+    /// <summary>
+    /// 아이템 추가하기 (특정한 슬롯에 넣기)
+    /// </summary>
+    /// <param name="data">추가할 아이템의 아이템 데이터</param>
+    /// <param name="index">아이템을 추가할 슬롯의 인덱스</param>
+    /// <returns>아이템을 추가하는데 성공하면 true. 아니면 false</returns>
     public bool AddItem(ItemData data, uint index)
     {
         bool result = false;
 
         Debug.Log($"인벤토리의 {index} 슬롯에  {data.itemName}을 추가합니다");
-        ItemSlot slot = slots[index];
-        if(slot.IsEmpty())
+        ItemSlot slot = slots[index];   // index번째의 슬롯 가져오기
+        if(slot.IsEmpty())              // 찾은 슬롯이 비었는지 확인
         {
-            slot.AssignSlotItem(data);
+            slot.AssignSlotItem(data);  // 비어있으면 아이템 추가
             result = true;
             Debug.Log($"추가에 성공했습니다.");
         }
@@ -103,17 +128,21 @@ public class Inventory
     }
 
 
-    // 아이템 버리기(인벤토리 비우기)
+    /// <summary>
+    /// 특정 슬롯의 아이템을 버리는 함수
+    /// </summary>
+    /// <param name="slotIndex">아이템을 버릴 슬롯의 인덱스</param>
+    /// <returns>버리는데 성공하면 true, 아니면 false</returns>
     public bool RemoveItem(uint slotIndex)
     {
         bool result = false;
 
         Debug.Log($"인벤토리에서 {slotIndex} 슬롯을 비웁니다.");
-        if (IsValidSlotIndex(slotIndex))        
+        if (IsValidSlotIndex(slotIndex))        // slotIndex가 적절한 범위인지 확인
         {
-            ItemSlot slot = slots[slotIndex];
+            ItemSlot slot = slots[slotIndex];   
             Debug.Log($"{slot.SlotItemData.itemName}을 삭제합니다.");
-            slot.ClearSlotItem();
+            slot.ClearSlotItem();               // 적절한 슬롯이면 삭제 처리
             Debug.Log($"삭제에 성공했습니다.");
             result = true;
         }
@@ -125,12 +154,15 @@ public class Inventory
         return result;
     }
 
+    /// <summary>
+    /// 모든 아이템 슬롯을 비우는 함수
+    /// </summary>
     public void ClearInventory()
     {
         Debug.Log("인벤토리 클리어");
         foreach(var slot in slots)
         {
-            slot.ClearSlotItem();
+            slot.ClearSlotItem();   // 전체 슬롯들을 돌면서 하나씩 삭제
         }
     }
 
@@ -146,6 +178,10 @@ public class Inventory
     //  보유하고 있는 칸 수에 맞는 인덱스인지 확인하는 변수
     // 특정 종류의 아이템이 들어있는 슬롯을 찾아주는 함수
 
+    /// <summary>
+    /// 빈 슬롯을 찾아주는 함수
+    /// </summary>
+    /// <returns>빈 슬롯</returns>
     private ItemSlot FindEmptySlot()
     {
         ItemSlot result = null;
@@ -162,11 +198,20 @@ public class Inventory
         return result;
     }
 
-    private bool IsValidSlotIndex(uint index)
-    {
-        return index < SlotCount;
-    }
+    /// <summary>
+    /// index값이 적절한 범위인지 확인해주는 함수
+    /// </summary>
+    /// <param name="index">확인할 인덱스</param>
+    /// <returns>true면 적절한 범위. 아니면 false</returns>
+    private bool IsValidSlotIndex(uint index) => index < SlotCount;
+    //{
+    //    return index < SlotCount;
+    //}
 
+
+    /// <summary>
+    /// 인벤토리 내용을 콘솔창에 출력해주는 함수
+    /// </summary>
     public void PrintInventory()
     {
         // 현재 인벤토리 내용을 콘솔창에 출력하는 함수
@@ -192,8 +237,10 @@ public class Inventory
         }
         else
         {
-            printText += "]";
+            printText += "(빈칸)]";
         }
+
+        //string.Join(',', 문자열 배열);
         Debug.Log(printText);
     }
 }
