@@ -11,7 +11,7 @@ public class Inventory
 
     // 상수 ---------------------------------------------------------------------------------------
     // 인벤토리 기본 크기
-    const int Default_Inventory_Size = 6;
+    public const int Default_Inventory_Size = 6;
 
     // 프로퍼티  -----------------------------------------------------------------------------------
     // 인벤토리의 크기
@@ -190,7 +190,7 @@ public class Inventory
         else
         {
             // from이 valid하지 않거나 비어있다 또는 to가 valid하지 않다.
-            Debug.Log($"{from}에서 {to}로 아이템을 옮길 수 없습니다.");
+            Debug.Log($"실패 : {from}에서 {to}로 아이템을 옮길 수 없습니다.");
         }
     }
 
