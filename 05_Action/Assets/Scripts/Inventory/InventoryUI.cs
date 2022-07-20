@@ -62,7 +62,16 @@ public class InventoryUI : MonoBehaviour
             {
                 slotUIs[i].Initialize(i, inven[i]);
             }
-        }        
+        }
+        RefreshAllSlots();
+    }
+
+    private void RefreshAllSlots()
+    {
+        foreach(var slotUI in slotUIs)
+        {
+            slotUI.Refresh();
+        }
     }
 
     private void RefreshMoney(int money)

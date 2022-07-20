@@ -42,7 +42,7 @@ public class ItemSlot
     /// <param name="itemData">슬롯에 설정할 ItemData</param>
     public void AssignSlotItem(ItemData itemData)
     {
-        slotItemData = itemData;
+        SlotItemData = itemData;
     }
 
     /// <summary>
@@ -50,7 +50,7 @@ public class ItemSlot
     /// </summary>
     public void ClearSlotItem()
     {
-        slotItemData = null;
+        SlotItemData = null;
     }
 
 

@@ -29,7 +29,7 @@ public class ItemSlotUI : MonoBehaviour
         itemSlot.onSlotItemChage = Refresh;
     }
 
-    void Refresh()
+    public void Refresh()
     {
         if( itemSlot.SlotItemData != null )
         {

@@ -11,8 +11,10 @@ public class Test_Inventory : MonoBehaviour
         Inventory inven = new Inventory();
         inven.AddItem(ItemIDCode.Egg);
         inven.AddItem(ItemIDCode.Bone);
+
         InventoryUI invenUI = FindObjectOfType<InventoryUI>();
         invenUI.InitializeInventory(inven);
+        
 
         int i = 0;
     }
