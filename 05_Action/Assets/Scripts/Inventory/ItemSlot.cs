@@ -18,9 +18,20 @@ public class ItemSlot
     public ItemData SlotItemData
     {
         get => slotItemData;
+        private set
+        {
+            if( slotItemData != value )
+            {
+                slotItemData = value;
+                onSlotItemChage?.Invoke();
+            }
+        }
     }
 
     // 아이템 갯수(int)
+
+    // 델리게이트 ----------------------------------------------------------------------------------
+    public System.Action onSlotItemChage;
 
 
     // 함수 ---------------------------------------------------------------------------------------

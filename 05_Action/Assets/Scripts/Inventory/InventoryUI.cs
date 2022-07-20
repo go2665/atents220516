@@ -6,10 +6,12 @@ using TMPro;
 
 public class InventoryUI : MonoBehaviour
 {
+    // public -------------------------------------------------------------------------------------
+    public GameObject slotPrefab;
+
     // 기본 데이터 ---------------------------------------------------------------------------------
     Player player;
     Inventory inven;
-    public GameObject slotPrefab;
     Transform slotParent;
     ItemSlotUI[] slotUIs;
 
@@ -50,13 +52,17 @@ public class InventoryUI : MonoBehaviour
                 GameObject obj = Instantiate(slotPrefab, slotParent);
                 obj.name = $"{slotPrefab.name}_{i}";
                 slotUIs[i] = obj.GetComponent<ItemSlotUI>();
+                slotUIs[i].Initialize(i, inven[i]);
             }
         }
         else
         {
             slotUIs = GetComponentsInChildren<ItemSlotUI>();
-        }
-        
+            for (int i = 0; i < inven.SlotCount; i++)
+            {
+                slotUIs[i].Initialize(i, inven[i]);
+            }
+        }        
     }
 
     private void RefreshMoney(int money)

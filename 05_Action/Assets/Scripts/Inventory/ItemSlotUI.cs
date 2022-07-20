@@ -1,18 +1,45 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ItemSlotUI : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    // 슬롯 번호
+    // 아이템슬롯(아이템 데이터(아이템 이미지))
+
+    int id;
+    ItemSlot itemSlot;  // inventory클래스가 가지고 있는 ItemSlot중 하나
+
+    Image itemImage;
+
+
+    public int ID { get => id; }
+    public ItemSlot ItemSlot { get => itemSlot; }
+
+    private void Awake()
     {
-        
+        itemImage = transform.GetChild(0).GetComponent<Image>();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Initialize(int newID, ItemSlot targetSlot)
     {
-        
+        id = newID;
+        itemSlot = targetSlot;
+        itemSlot.onSlotItemChage = Refresh;
+    }
+
+    void Refresh()
+    {
+        if( itemSlot.SlotItemData != null )
+        {
+            itemImage.sprite = itemSlot.SlotItemData.itemIcon;
+            itemImage.color = Color.white;
+        }
+        else
+        {
+            itemImage.sprite = null;
+            itemImage.color = Color.clear;
+        }
     }
 }

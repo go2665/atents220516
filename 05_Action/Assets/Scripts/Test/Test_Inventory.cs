@@ -13,6 +13,8 @@ public class Test_Inventory : MonoBehaviour
         inven.AddItem(ItemIDCode.Bone);
         InventoryUI invenUI = FindObjectOfType<InventoryUI>();
         invenUI.InitializeInventory(inven);
+
+        int i = 0;
     }
 
     private static void Test_AddRemoveMove()

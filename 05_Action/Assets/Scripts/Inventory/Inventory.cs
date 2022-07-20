@@ -15,7 +15,8 @@ public class Inventory
 
     // 프로퍼티  -----------------------------------------------------------------------------------
     // 인벤토리의 크기
-    public int SlotCount { get => slots.Length; }
+    public int SlotCount => slots.Length; 
+    public ItemSlot this[int index] => slots[index];
 
     // 함수(주요기능) ------------------------------------------------------------------------------    
 
