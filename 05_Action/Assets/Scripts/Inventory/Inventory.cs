@@ -5,8 +5,9 @@ using UnityEngine;
 public class Inventory
 {
     // 변수 ---------------------------------------------------------------------------------------    
-    // ItemSlot[] : 아이템 칸 어러개
+    // ItemSlot[] : 아이템 칸 여러개
     ItemSlot[] slots = null;
+    ItemSlot tempSlot = null;
 
     // 상수 ---------------------------------------------------------------------------------------
     // 인벤토리 기본 크기
@@ -29,9 +30,10 @@ public class Inventory
         {
             slots[i] = new ItemSlot();
         }
+        tempSlot = new ItemSlot();
     }
 
-    // AddItem은 함수 오버로딩(Overloading)을 통해 이름은 같지만 다양한 종류의 파라메터를 입력 받을 수 있게 했다.
+    // AddItem은 함수 오버로딩(Overloading)을 통해 이름과 리턴값은 같지만 다양한 종류의 파라메터를 입력 받을 수 있게 했다.
 
     /// <summary>
     /// 아이템 추가하기 (적절한 빈칸에 넣기)
@@ -167,6 +169,32 @@ public class Inventory
     }
 
     // 아이템 이동하기
+    public void MoveItem(uint from, uint to)
+    {
+        // from 시작을 한다. from에 아이템이 있을 수도 있고 없을 수도 있다.
+        // to 도착을 한다. to에도 아이템이 있을 수도 있고 없을 수도 있다.
+        // 발생 가능한 4가지 경우의 수
+            // from에 있고 to에 있고
+            // from에 있고 to에 없고
+            // from에 없고 to에 있고 -> 뭔가 실행되면 안된다.
+            // from에 없고 to에 없고 -> 뭔가 실행되면 안된다.
+        if (IsValidAndNotEmptySlot(from) && IsValidSlotIndex(to))
+        {
+            // from이 valid하고 비어있지 않다. 그리고 to가 valid하다
+            Debug.Log($"{from}에 있는 {slots[from].SlotItemData.itemName}이 {to}로 이동합니다.");
+            tempSlot.AssignSlotItem(slots[from].SlotItemData);
+            slots[from].AssignSlotItem(slots[to].SlotItemData);
+            slots[to].AssignSlotItem(tempSlot.SlotItemData);
+            tempSlot.ClearSlotItem();
+        }
+        else
+        {
+            // from이 valid하지 않거나 비어있다 또는 to가 valid하지 않다.
+            Debug.Log($"{from}에서 {to}로 아이템을 옮길 수 없습니다.");
+        }
+    }
+
+
     // 아이템 나누기
     // 아이템 사용하기
     // 아이템 장비하기
@@ -207,6 +235,8 @@ public class Inventory
     //{
     //    return index < SlotCount;
     //}
+
+    private bool IsValidAndNotEmptySlot(uint index) => (IsValidSlotIndex(index) && !slots[index].IsEmpty());
 
 
     /// <summary>
