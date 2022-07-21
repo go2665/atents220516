@@ -8,13 +8,13 @@ public class ItemSlotUI : MonoBehaviour
     // 슬롯 번호
     // 아이템슬롯(아이템 데이터(아이템 이미지))
 
-    int id;
+    uint id;
     ItemSlot itemSlot;  // inventory클래스가 가지고 있는 ItemSlot중 하나
 
     Image itemImage;
 
 
-    public int ID { get => id; }
+    public uint ID { get => id; }
     public ItemSlot ItemSlot { get => itemSlot; }
 
     private void Awake()
@@ -22,7 +22,7 @@ public class ItemSlotUI : MonoBehaviour
         itemImage = transform.GetChild(0).GetComponent<Image>();
     }
 
-    public void Initialize(int newID, ItemSlot targetSlot)
+    public void Initialize(uint newID, ItemSlot targetSlot)
     {
         id = newID;
         itemSlot = targetSlot;

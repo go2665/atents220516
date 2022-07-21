@@ -169,7 +169,11 @@ public class Inventory
         }
     }
 
-    // 아이템 이동하기
+    /// <summary>
+    /// 아이템 이동시키기
+    /// </summary>
+    /// <param name="from">시작 슬롯의 ID</param>
+    /// <param name="to">도착 슬롯의 ID</param>
     public void MoveItem(uint from, uint to)
     {
         // from 시작을 한다. from에 아이템이 있을 수도 있고 없을 수도 있다.

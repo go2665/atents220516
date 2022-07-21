@@ -87,3 +87,10 @@
 7/20
 1. MoveItem 함수 사용해보기
   시간 : 5시까지
+2. Git에 올라간 코드 확인하기
+  시간 : 8시 50분까지
+
+3. MoveItem를 UI를 통해 실행하려면 어떻게해야 하는가?
+  힌트 : 
+        using UnityEngine.EventSystems;
+        IDragHandler, IBeginDragHandler, IEndDragHandler

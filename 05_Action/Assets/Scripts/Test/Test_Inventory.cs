@@ -14,7 +14,10 @@ public class Test_Inventory : MonoBehaviour
 
         InventoryUI invenUI = FindObjectOfType<InventoryUI>();
         invenUI.InitializeInventory(inven);
-        
+
+        inven.RemoveItem(0);
+
+
 
         int i = 0;
     }
