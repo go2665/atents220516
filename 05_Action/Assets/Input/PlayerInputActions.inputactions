@@ -49,6 +49,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "InventoryOnOff",
+                    "type": "Button",
+                    "id": "6ae8ac68-438e-4ec6-b12c-906d0393e3fa",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -148,6 +157,17 @@
                     "processors": "",
                     "groups": "Keyboad_Mouse",
                     "action": "Pickup",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c3e7e9be-03d8-4b34-992b-e86021226de4",
+                    "path": "<Keyboard>/i",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboad_Mouse",
+                    "action": "InventoryOnOff",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

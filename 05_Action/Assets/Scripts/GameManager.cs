@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
 {
     Player player;
     ItemDataManager itemData;
+    InventoryUI inventoryUI;
 
     public Player MainPlayer
     {
@@ -19,6 +20,9 @@ public class GameManager : MonoBehaviour
     {
         get => itemData;
     }
+
+    public InventoryUI InvenUI => inventoryUI;
+    
 
     // static 맴버 변수 : 주소가 고정이다. => 이 클래스의 모든 인스턴스는 같은 값을 가진다.
     static GameManager instance = null;
@@ -54,5 +58,6 @@ public class GameManager : MonoBehaviour
         itemData = GetComponent<ItemDataManager>();
 
         player = FindObjectOfType<Player>();
+        inventoryUI = FindObjectOfType<InventoryUI>();
     }    
 }

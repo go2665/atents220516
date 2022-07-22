@@ -104,3 +104,6 @@
        (using UnityEngine.InputSystem; 
         Vector2 mousePos = Mouse.current.position.ReadValue();)
   시간 : 5시 20분까지
+
+2. 코드 읽기
+  시간 : 7시 50분까지

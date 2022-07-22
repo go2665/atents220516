@@ -71,6 +71,15 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""InventoryOnOff"",
+                    ""type"": ""Button"",
+                    ""id"": ""6ae8ac68-438e-4ec6-b12c-906d0393e3fa"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -172,6 +181,17 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""action"": ""Pickup"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c3e7e9be-03d8-4b34-992b-e86021226de4"",
+                    ""path"": ""<Keyboard>/i"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboad_Mouse"",
+                    ""action"": ""InventoryOnOff"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -202,6 +222,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
         m_Player_LockOn = m_Player.FindAction("LockOn", throwIfNotFound: true);
         m_Player_Pickup = m_Player.FindAction("Pickup", throwIfNotFound: true);
+        m_Player_InventoryOnOff = m_Player.FindAction("InventoryOnOff", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -266,6 +287,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Attack;
     private readonly InputAction m_Player_LockOn;
     private readonly InputAction m_Player_Pickup;
+    private readonly InputAction m_Player_InventoryOnOff;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -275,6 +297,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         public InputAction @Attack => m_Wrapper.m_Player_Attack;
         public InputAction @LockOn => m_Wrapper.m_Player_LockOn;
         public InputAction @Pickup => m_Wrapper.m_Player_Pickup;
+        public InputAction @InventoryOnOff => m_Wrapper.m_Player_InventoryOnOff;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -299,6 +322,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Pickup.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPickup;
                 @Pickup.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPickup;
                 @Pickup.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPickup;
+                @InventoryOnOff.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInventoryOnOff;
+                @InventoryOnOff.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInventoryOnOff;
+                @InventoryOnOff.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInventoryOnOff;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -318,6 +344,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Pickup.started += instance.OnPickup;
                 @Pickup.performed += instance.OnPickup;
                 @Pickup.canceled += instance.OnPickup;
+                @InventoryOnOff.started += instance.OnInventoryOnOff;
+                @InventoryOnOff.performed += instance.OnInventoryOnOff;
+                @InventoryOnOff.canceled += instance.OnInventoryOnOff;
             }
         }
     }
@@ -338,5 +367,6 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         void OnAttack(InputAction.CallbackContext context);
         void OnLockOn(InputAction.CallbackContext context);
         void OnPickup(InputAction.CallbackContext context);
+        void OnInventoryOnOff(InputAction.CallbackContext context);
     }
 }

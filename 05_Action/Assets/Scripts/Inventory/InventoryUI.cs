@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 using TMPro;
 
 public class InventoryUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler
@@ -35,6 +36,8 @@ public class InventoryUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndD
     /// </summary>
     ItemSlotUI[] slotUIs;
 
+    CanvasGroup canvasGroup;
+
 
     // Item관련  ----------------------------------------------------------------------------------    
     /// <summary>
@@ -59,10 +62,15 @@ public class InventoryUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndD
     private void Awake()
     {
         // 미리 찾아놓기
+        canvasGroup = GetComponent<CanvasGroup>();
         goldText = transform.Find("Gold").Find("GoldText").GetComponent<TextMeshProUGUI>(); 
         slotParent = transform.Find("ItemSlots");
         tempItemSlotUI = GetComponentInChildren<TempItemSlotUI>();
+
+        Button closeButton = transform.Find("CloseButton").GetComponent<Button>();
+        closeButton.onClick.AddListener(Close);
     }
+
 
     private void Start()
     {
@@ -133,6 +141,32 @@ public class InventoryUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndD
         goldText.text = $"{money:N0}";  // Money가 변경될 때 실행될 함수
     }
 
+    public void InventoryOnOffSwitch()
+    {
+        if(canvasGroup.blocksRaycasts)
+        {
+            Close();
+        }
+        else
+        {
+            Open();
+        }
+    }
+
+    void Open()
+    {
+        canvasGroup.alpha = 1;
+        canvasGroup.interactable = true;
+        canvasGroup.blocksRaycasts = true;
+    }
+
+    void Close()
+    {
+        canvasGroup.alpha = 0;
+        canvasGroup.interactable = false;
+        canvasGroup.blocksRaycasts = false;
+    }
+
     // 이벤트 시스템의 인터페이스 함수들 -------------------------------------------------------------
 
     /// <summary>
@@ -141,6 +175,8 @@ public class InventoryUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndD
     /// <param name="eventData"></param>
     public void OnDrag(PointerEventData eventData)
     {
+        // OnBeginDrag, OnEndDrag를 사용하려면 반드시 필요해서 넣은 것
+
         //if (eventData.button == PointerEventData.InputButton.Left)
         //{
         //    tempItemSlotUI.transform.position = eventData.position;

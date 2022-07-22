@@ -93,6 +93,7 @@ public class PlayerInputController : MonoBehaviour
         actions.Player.Attack.performed += OnAttack;
         actions.Player.LockOn.performed += OnLockOn;
         actions.Player.Pickup.performed += OnPickup;
+        actions.Player.InventoryOnOff.performed += OnInventoryShortcut;
     }
 
     /// <summary>
@@ -100,6 +101,7 @@ public class PlayerInputController : MonoBehaviour
     /// </summary>
     private void OnDisable()
     {
+        actions.Player.InventoryOnOff.performed -= OnInventoryShortcut;
         actions.Player.Pickup.performed -= OnPickup;
         actions.Player.LockOn.performed -= OnLockOn;
         actions.Player.Attack.performed -= OnAttack;
@@ -108,7 +110,13 @@ public class PlayerInputController : MonoBehaviour
         actions.Player.Move.performed -= OnMove;    // 등록해 놓았던 함수 해제
         actions.Player.Disable();                   // "Player" 액션맵 끄기
     }
-        
+
+    private void OnInventoryShortcut(InputAction.CallbackContext _)
+    {
+        GameManager.Inst.InvenUI.InventoryOnOffSwitch();
+
+    }
+
     private void OnAttack(InputAction.CallbackContext _)
     {
         anim.SetFloat("ComboState", Mathf.Repeat(anim.GetCurrentAnimatorStateInfo(0).normalizedTime, 1.0f));
