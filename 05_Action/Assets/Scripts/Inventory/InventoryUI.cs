@@ -137,10 +137,10 @@ public class InventoryUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndD
     /// <param name="eventData"></param>
     public void OnDrag(PointerEventData eventData)
     {
-        if (eventData.button == PointerEventData.InputButton.Left)
-        {
-
-        }
+        //if (eventData.button == PointerEventData.InputButton.Left)
+        //{
+        //    tempItemSlotUI.transform.position = eventData.position;
+        //}
     }
 
     /// <summary>
@@ -162,6 +162,7 @@ public class InventoryUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndD
                     // ItemSlotUI 컴포넌트가 있으면 ID 기록해 놓기
                     //Debug.Log($"Start SlotID : {slotUI.ID}");
                     dragStartID = slotUI.ID;
+                    tempItemSlotUI.Open();
                 }
             }
 
@@ -200,6 +201,7 @@ public class InventoryUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndD
                     inven.MoveItem(dragStartID, slotUI.ID);
                 }
             }
+            tempItemSlotUI.Close();
         }
     }
 }

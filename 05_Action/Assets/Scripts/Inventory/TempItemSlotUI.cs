@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class TempItemSlotUI : ItemSlotUI
@@ -12,7 +13,9 @@ public class TempItemSlotUI : ItemSlotUI
 
     public void Open()
     {
-        gameObject.SetActive(true);        
+        transform.position = Mouse.current.position.ReadValue();
+        itemImage.color = Color.white;
+        gameObject.SetActive(true);
     }
 
     public void Close()
@@ -22,6 +25,11 @@ public class TempItemSlotUI : ItemSlotUI
 
     public void SetTempSlot(ItemSlot slot)
     {
-        itemSlot = slot;
+        itemSlot = slot;        
+    }
+
+    private void Update()
+    {
+        transform.position = Mouse.current.position.ReadValue();
     }
 }
