@@ -37,7 +37,7 @@ public class ItemSlotUI : MonoBehaviour
     public ItemSlot ItemSlot { get => itemSlot; }
 
     // 함수들 --------------------------------------------------------------------------------------
-    protected virtual void Awake()
+    protected virtual void Awake()  // 오버라이드 가능하도록 virtual 추가
     {
         itemImage = transform.GetChild(0).GetComponent<Image>();    // 아이템 표시용 이미지 컴포넌트 찾아놓기
     }

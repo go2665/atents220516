@@ -41,6 +41,10 @@ public class InventoryUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndD
     /// 드래그가 시작된 슬롯의 ID
     /// </summary>
     uint dragStartID;
+
+    /// <summary>
+    /// 임시 슬롯(아이템 드래그나 아이템 분리할 때 사용)
+    /// </summary>
     TempItemSlotUI tempItemSlotUI;
 
 
@@ -98,14 +102,14 @@ public class InventoryUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndD
         else
         {
             // 크기가 같을 경우 슬롯UI들의 초기화만 진행
-            slotUIs = GetComponentsInChildren<ItemSlotUI>();
+            slotUIs = slotParent.GetComponentsInChildren<ItemSlotUI>();
             for (int i = 0; i < inven.SlotCount; i++)
             {
                 slotUIs[i].Initialize((uint)i, inven[i]);   
             }
         }
-        tempItemSlotUI.SetTempSlot(inven.TempSlot);
-        tempItemSlotUI.Close();
+        
+        tempItemSlotUI.Close(); // 닫은체로 시작하기
         RefreshAllSlots();  // 전체 슬롯UI 갱신
     }
 
@@ -162,7 +166,7 @@ public class InventoryUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndD
                     // ItemSlotUI 컴포넌트가 있으면 ID 기록해 놓기
                     //Debug.Log($"Start SlotID : {slotUI.ID}");
                     dragStartID = slotUI.ID;
-                    tempItemSlotUI.Open();
+                    tempItemSlotUI.Open(slotUI.ItemSlot);   // 드래그 시작할 때 열기
                 }
             }
 
@@ -201,7 +205,7 @@ public class InventoryUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndD
                     inven.MoveItem(dragStartID, slotUI.ID);
                 }
             }
-            tempItemSlotUI.Close();
+            tempItemSlotUI.Close(); // 어떤 형식이든 드래그가 끝나면 닫기
         }
     }
 }
