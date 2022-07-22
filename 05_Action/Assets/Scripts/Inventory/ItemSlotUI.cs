@@ -14,7 +14,7 @@ public class ItemSlotUI : MonoBehaviour
     /// <summary>
     /// 이 슬롯UI에서 가지고 있을 ItemSlot(inventory클래스가 가지고 있는 ItemSlot중 하나)
     /// </summary>
-    ItemSlot itemSlot;
+    protected ItemSlot itemSlot;
 
 
     // UI처리용 데이터 -----------------------------------------------------------------------------
@@ -22,7 +22,7 @@ public class ItemSlotUI : MonoBehaviour
     /// <summary>
     /// 아이템의 Icon을 표시할 이미지 컴포넌트
     /// </summary>
-    Image itemImage;
+    protected Image itemImage;
 
     // 프로퍼티들 ----------------------------------------------------------------------------------
 
@@ -37,7 +37,7 @@ public class ItemSlotUI : MonoBehaviour
     public ItemSlot ItemSlot { get => itemSlot; }
 
     // 함수들 --------------------------------------------------------------------------------------
-    private void Awake()
+    protected virtual void Awake()
     {
         itemImage = transform.GetChild(0).GetComponent<Image>();    // 아이템 표시용 이미지 컴포넌트 찾아놓기
     }

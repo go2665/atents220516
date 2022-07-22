@@ -41,6 +41,7 @@ public class InventoryUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndD
     /// 드래그가 시작된 슬롯의 ID
     /// </summary>
     uint dragStartID;
+    TempItemSlotUI tempItemSlotUI;
 
 
     // 돈 UI --------------------------------------------------------------------------------------
@@ -54,8 +55,9 @@ public class InventoryUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndD
     private void Awake()
     {
         // 미리 찾아놓기
-        slotParent = transform.Find("ItemSlots");
         goldText = transform.Find("Gold").Find("GoldText").GetComponent<TextMeshProUGUI>(); 
+        slotParent = transform.Find("ItemSlots");
+        tempItemSlotUI = GetComponentInChildren<TempItemSlotUI>();
     }
 
     private void Start()
@@ -102,6 +104,8 @@ public class InventoryUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndD
                 slotUIs[i].Initialize((uint)i, inven[i]);   
             }
         }
+        tempItemSlotUI.SetTempSlot(inven.TempSlot);
+        tempItemSlotUI.Close();
         RefreshAllSlots();  // 전체 슬롯UI 갱신
     }
 

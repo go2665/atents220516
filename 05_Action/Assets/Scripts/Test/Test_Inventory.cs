@@ -16,10 +16,12 @@ public class Test_Inventory : MonoBehaviour
         invenUI.InitializeInventory(inven);
 
         inven.RemoveItem(0);
+        inven.AddItem(ItemIDCode.Egg);
+        inven.AddItem(ItemIDCode.Egg);
 
 
 
-        int i = 0;
+        //int i = 0;
     }
 
     private static void Test_AddRemoveMove()

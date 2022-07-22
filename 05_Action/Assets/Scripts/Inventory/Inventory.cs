@@ -16,7 +16,8 @@ public class Inventory
     // 프로퍼티  -----------------------------------------------------------------------------------
     // 인벤토리의 크기
     public int SlotCount => slots.Length; 
-    public ItemSlot this[int index] => slots[index];
+    public ItemSlot this[int index] => slots[index];    // 인벤토리에서 항상 보이는 슬롯들
+    public ItemSlot TempSlot => tempSlot;               // 임시 목적의 슬롯
 
     // 함수(주요기능) ------------------------------------------------------------------------------    
 
