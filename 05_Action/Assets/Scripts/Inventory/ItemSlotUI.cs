@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
-public class ItemSlotUI : MonoBehaviour
+public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerMoveHandler
 {
     // 기본 데이터 ---------------------------------------------------------------------------------
     /// <summary>
@@ -16,6 +17,8 @@ public class ItemSlotUI : MonoBehaviour
     /// </summary>
     protected ItemSlot itemSlot;
 
+    InventoryUI invenUI;
+    DetailInfoUI detailUI;
 
     // UI처리용 데이터 -----------------------------------------------------------------------------
     
@@ -49,9 +52,12 @@ public class ItemSlotUI : MonoBehaviour
     /// <param name="targetSlot">이 슬롯이랑 연결된 ItemSlot</param>
     public void Initialize(uint newID, ItemSlot targetSlot)
     {
+        invenUI = GameManager.Inst.InvenUI;
+        detailUI = invenUI.Detail;
+
         id = newID;
         itemSlot = targetSlot;
-        itemSlot.onSlotItemChage = Refresh; // ItemSlot에 아이템이 변경될 경우 실행될 델리게이트에 함수 등록
+        itemSlot.onSlotItemChage = Refresh; // ItemSlot에 아이템이 변경될 경우 실행될 델리게이트에 함수 등록        
     }
 
     /// <summary>
@@ -71,5 +77,34 @@ public class ItemSlotUI : MonoBehaviour
             itemImage.sprite = null;        // 아이콘 이미지 제거하고
             itemImage.color = Color.clear;  // 투명하게 만들기
         }
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if (itemSlot.SlotItemData != null)
+        {
+            //Debug.Log($"마우스가 {gameObject.name}안으로 들어왔다.");
+            detailUI.Open(itemSlot.SlotItemData);
+        }
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        //Debug.Log($"마우스가 {gameObject.name}에서 나갔다.");
+        detailUI.Close();
+    }
+
+    public void OnPointerMove(PointerEventData eventData)
+    {
+        //Debug.Log($"마우스가 {gameObject.name}안에서 움직인다.");
+        Vector2 mousePos = eventData.position;
+
+        RectTransform rect = (RectTransform)detailUI.transform;
+        if( (mousePos.x + rect.sizeDelta.x) > Screen.width )
+        {
+            mousePos.x -= rect.sizeDelta.x;
+        }
+
+        detailUI.transform.position = mousePos;
     }
 }

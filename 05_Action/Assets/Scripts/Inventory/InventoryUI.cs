@@ -50,6 +50,9 @@ public class InventoryUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndD
     /// </summary>
     TempItemSlotUI tempItemSlotUI;
 
+    // 상세 정보 UI --------------------------------------------------------------------------------
+    DetailInfoUI detail;
+    public DetailInfoUI Detail => detail;
 
     // 돈 UI --------------------------------------------------------------------------------------
     /// <summary>
@@ -66,6 +69,7 @@ public class InventoryUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndD
         goldText = transform.Find("Gold").Find("GoldText").GetComponent<TextMeshProUGUI>(); 
         slotParent = transform.Find("ItemSlots");
         tempItemSlotUI = GetComponentInChildren<TempItemSlotUI>();
+        detail = transform.Find("Detail").GetComponent<DetailInfoUI>();
 
         Button closeButton = transform.Find("CloseButton").GetComponent<Button>();
         closeButton.onClick.AddListener(Close);
