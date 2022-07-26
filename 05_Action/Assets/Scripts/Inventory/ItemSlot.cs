@@ -31,6 +31,11 @@ public class ItemSlot
     public uint ItemCount
     {
         get => itemCount;
+        private set
+        {
+            itemCount = value;
+            onSlotItemChage?.Invoke();
+        }
     }
 
     // 델리게이트 ----------------------------------------------------------------------------------
@@ -48,8 +53,8 @@ public class ItemSlot
     /// <param name="itemData">슬롯에 설정할 ItemData</param>
     public void AssignSlotItem(ItemData itemData, uint count = 1)
     {
+        ItemCount = count;
         SlotItemData = itemData;
-        itemCount = count;
     }
 
     /// <summary>
@@ -59,17 +64,17 @@ public class ItemSlot
     /// <returns>최대치를 넘어선 갯수. 0이면 다 증가시킨 상황</returns>
     public uint IncreaseSlotItem(uint count = 1)
     {
-        uint newCount = itemCount + count;
+        uint newCount = ItemCount + count;
         int overCount = (int)newCount - (int)SlotItemData.maxStackCount;
         if(overCount > 0)
         {
             // 넘쳤다.
-            itemCount = SlotItemData.maxStackCount;
+            ItemCount = SlotItemData.maxStackCount;
         }
         else
         {
             // 충분히 추가 가능하다.
-            itemCount = newCount;
+            ItemCount = newCount;
             overCount = 0;
         }
         return (uint)overCount;

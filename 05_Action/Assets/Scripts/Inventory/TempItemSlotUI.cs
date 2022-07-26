@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using TMPro;
 
 /// <summary>
 /// 임시로 한번씩만 보이는 슬롯
@@ -15,6 +16,7 @@ public class TempItemSlotUI : ItemSlotUI
     protected override void Awake()
     {
         itemImage = GetComponent<Image>();  // 이미지 찾아오기
+        countText = GetComponentInChildren<TextMeshProUGUI>();
     }
 
     private void Update()

@@ -23,6 +23,16 @@ public class Test_Inventory : MonoBehaviour
         inven.AddItem(ItemIDCode.HealingPotion);
         inven.AddItem(ItemIDCode.HealingPotion);
         inven.AddItem(ItemIDCode.HealingPotion);
+        inven.PrintInventory(); //[달걀(1),뼈다귀(1),힐링포션(3),힐링포션(1),(빈칸),(빈칸)]
+        inven.AddItem(ItemIDCode.ManaPotion);
+        inven.AddItem(ItemIDCode.ManaPotion,5);        
+        inven.PrintInventory();
+        inven.AddItem(ItemIDCode.ManaPotion, 5);
+        inven.AddItem(ItemIDCode.ManaPotion, 5);
+        inven.AddItem(ItemIDCode.ManaPotion, 5);
+        inven.AddItem(ItemIDCode.ManaPotion, 5);
+        inven.AddItem(ItemIDCode.ManaPotion, 5);
+        inven.AddItem(ItemIDCode.ManaPotion);
         inven.PrintInventory();
 
         //int i = 0;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using TMPro;
 
 public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerMoveHandler
 {
@@ -27,6 +28,13 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     /// </summary>
     protected Image itemImage;
 
+    /// <summary>
+    /// 아이템의 갯수를 표시할 Text 컴포넌트
+    /// </summary>
+    protected TextMeshProUGUI countText;
+
+
+
     // 프로퍼티들 ----------------------------------------------------------------------------------
 
     /// <summary>
@@ -43,6 +51,7 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     protected virtual void Awake()  // 오버라이드 가능하도록 virtual 추가
     {
         itemImage = transform.GetChild(0).GetComponent<Image>();    // 아이템 표시용 이미지 컴포넌트 찾아놓기
+        countText = GetComponentInChildren<TextMeshProUGUI>();
     }
 
     /// <summary>
@@ -70,12 +79,14 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             // 이 슬롯에 아이템이 들어있을 때
             itemImage.sprite = itemSlot.SlotItemData.itemIcon;  // 아이콘 이미지 설정하고
             itemImage.color = Color.white;  // 불투명하게 만들기
+            countText.text = itemSlot.ItemCount.ToString();
         }
         else
         {
             // 이 슬롯에 아이템이 없을 때
             itemImage.sprite = null;        // 아이콘 이미지 제거하고
             itemImage.color = Color.clear;  // 투명하게 만들기
+            countText.text = "";
         }
     }
 

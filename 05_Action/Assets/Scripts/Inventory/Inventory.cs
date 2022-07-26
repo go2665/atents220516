@@ -129,6 +129,7 @@ public class Inventory
 
         Debug.Log($"인벤토리의 {index} 슬롯에  {data.itemName}을 추가합니다");
         ItemSlot slot = slots[index];   // index번째의 슬롯 가져오기
+
         if(slot.IsEmpty())              // 찾은 슬롯이 비었는지 확인
         {
             slot.AssignSlotItem(data);  // 비어있으면 아이템 추가
@@ -137,7 +138,22 @@ public class Inventory
         }
         else
         {
-            Debug.Log($"실패 : {index} 슬롯에는 다른 아이템이 들어있습니다.");
+            if (slot.SlotItemData == data)  // 같은 종류의 아이템인가?
+            {
+                if( slot.IncreaseSlotItem() == 0 )  // 들어갈 자리가 있는가?
+                {
+                    result = true;
+                    Debug.Log($"아이템 갯수 증가에 성공했습니다.");
+                }
+                else
+                {
+                    Debug.Log($"실패 : 슬롯이 가득 찼습니다.");
+                }
+            }
+            else
+            {
+                Debug.Log($"실패 : {index} 슬롯에는 다른 아이템이 들어있습니다.");
+            }
         }
 
         return result;
