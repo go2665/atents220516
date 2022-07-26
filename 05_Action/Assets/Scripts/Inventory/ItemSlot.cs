@@ -80,12 +80,27 @@ public class ItemSlot
         return (uint)overCount;
     }
 
+    public void DecreaseSlotItem(uint count = 1)
+    {
+        int newCount = (int)ItemCount - (int)count;
+        if( newCount < 1)
+        {
+            // 다 뺀다.
+            ClearSlotItem();
+        }
+        else
+        {
+            ItemCount = (uint)newCount;
+        }
+    }
+
     /// <summary>
     /// 슬롯을 비우는 함수
     /// </summary>
     public void ClearSlotItem()
     {
         SlotItemData = null;
+        ItemCount = 0;
     }
 
 

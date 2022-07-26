@@ -165,14 +165,39 @@ public class Inventory
     /// </summary>
     /// <param name="slotIndex">아이템을 버릴 슬롯의 인덱스</param>
     /// <returns>버리는데 성공하면 true, 아니면 false</returns>
-    public bool RemoveItem(uint slotIndex)
+    public bool RemoveItem(uint slotIndex, uint decreaseCount = 1)
+    {
+        bool result = false;
+
+        Debug.Log($"인벤토리에서 {slotIndex} 슬롯의 아이템을 {decreaseCount}개 비웁니다.");
+        if (IsValidSlotIndex(slotIndex))        // slotIndex가 적절한 범위인지 확인
+        {
+            ItemSlot slot = slots[slotIndex];
+            slot.DecreaseSlotItem(decreaseCount);
+            Debug.Log($"삭제에 성공했습니다.");
+            result = true;
+        }
+        else
+        {
+            Debug.Log($"실패 : 잘못된 인덱스입니다.");
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    /// 특정 슬롯의 아이템을 모두 버리는 함수
+    /// </summary>
+    /// <param name="slotIndex">아이템을 버릴 슬롯의 인덱스</param>
+    /// <returns>버리는데 성공하면 true, 아니면 false</returns>
+    public bool ClearItem(uint slotIndex)
     {
         bool result = false;
 
         Debug.Log($"인벤토리에서 {slotIndex} 슬롯을 비웁니다.");
         if (IsValidSlotIndex(slotIndex))        // slotIndex가 적절한 범위인지 확인
         {
-            ItemSlot slot = slots[slotIndex];   
+            ItemSlot slot = slots[slotIndex];
             Debug.Log($"{slot.SlotItemData.itemName}을 삭제합니다.");
             slot.ClearSlotItem();               // 적절한 슬롯이면 삭제 처리
             Debug.Log($"삭제에 성공했습니다.");
@@ -215,11 +240,21 @@ public class Inventory
         if (IsValidAndNotEmptySlot(from) && IsValidSlotIndex(to))
         {
             // from이 valid하고 비어있지 않다. 그리고 to가 valid하다
-            Debug.Log($"{from}에 있는 {slots[from].SlotItemData.itemName}이 {to}로 이동합니다.");
-            tempSlot.AssignSlotItem(slots[from].SlotItemData);
-            slots[from].AssignSlotItem(slots[to].SlotItemData);
-            slots[to].AssignSlotItem(tempSlot.SlotItemData);
-            tempSlot.ClearSlotItem();
+
+            if (slots[from].SlotItemData == slots[to].SlotItemData
+                && slots[to].ItemCount < slots[to].SlotItemData.maxStackCount )
+            {
+                uint overCount = slots[to].IncreaseSlotItem(slots[from].ItemCount);
+                slots[from].DecreaseSlotItem(slots[from].ItemCount - overCount);
+            }
+            else
+            {
+                Debug.Log($"{from}에 있는 {slots[from].SlotItemData.itemName}이 {to}로 이동합니다.");
+                tempSlot.AssignSlotItem(slots[from].SlotItemData, slots[from].ItemCount);
+                slots[from].AssignSlotItem(slots[to].SlotItemData, slots[to].ItemCount);
+                slots[to].AssignSlotItem(tempSlot.SlotItemData, tempSlot.ItemCount);
+                tempSlot.ClearSlotItem();
+            }
         }
         else
         {
