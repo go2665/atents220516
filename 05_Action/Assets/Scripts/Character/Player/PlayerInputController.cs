@@ -117,10 +117,10 @@ public class PlayerInputController : MonoBehaviour
     {
         // InventoryUI에 있는 델리게이트에 람다 함수 등록
 
-        //OnInventoryOpen델리게이트가 실행될 때 "actions.Player.Disable()"이런 기능이 있는 함수를 실행시킨다.
+        // OnInventoryOpen 델리게이트가 실행될 때 "actions.Player.Disable()"이런 기능이 있는 함수를 실행시킨다.
         GameManager.Inst.InvenUI.OnInventoryOpen += () => actions.Player.Disable();
 
-        //OnInventoryClose 실행될 때 "actions.Player.Enable()"이런 기능이 있는 함수를 실행시킨다.
+        // OnInventoryClose 실행될 때 "actions.Player.Enable()"이런 기능이 있는 함수를 실행시킨다.
         GameManager.Inst.InvenUI.OnInventoryClose += () => actions.Player.Enable();
     }
 

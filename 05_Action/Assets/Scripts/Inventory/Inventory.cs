@@ -65,20 +65,32 @@ public class Inventory
     public bool AddItem(ItemData data)
     {
         bool result = false;
-
         Debug.Log($"인벤토리에 {data.itemName}을 추가합니다");
-        ItemSlot slot = FindEmptySlot();    // 적절한 빈 슬롯 찾기
-        if (slot != null)
+
+        ItemSlot target = FindSameItem(data);
+        if(target != null)
         {
-            slot.AssignSlotItem(data);      // 아이템 할당
+            // 같은 종류의 아이템이 있으니 1만 증가시킨다.
+            target.IncreaseSlotItem();
             result = true;
-            Debug.Log($"추가에 성공했습니다.");
+            Debug.Log($"{data.itemName}을 하나 증가시킵니다.");
         }
         else
         {
-            // 모든 슬롯에 아이템이 들어있다.(인벤토리가 가득찼다.)
-            Debug.Log($"실패 : 인벤토리가 가득찼습니다.");
-        }
+            // 같은 종류의 아이템이 없다.
+            ItemSlot empty = FindEmptySlot();    // 적절한 빈 슬롯 찾기
+            if (empty != null)
+            {
+                empty.AssignSlotItem(data);      // 아이템 할당
+                result = true;
+                Debug.Log($"아이템 슬롯에 {data.itemName}을 할당합니다.");
+            }
+            else
+            {
+                // 모든 슬롯에 아이템이 들어있다.(인벤토리가 가득찼다.)
+                Debug.Log($"실패 : 인벤토리가 가득찼습니다.");
+            }
+        }        
 
         return result;
     }
@@ -232,6 +244,20 @@ public class Inventory
         return result;
     }
 
+    private ItemSlot FindSameItem(ItemData itemData)
+    {
+        ItemSlot slot = null;
+        for(int i=0;i<SlotCount;i++)
+        {
+            if (slots[i].SlotItemData == itemData && slots[i].ItemCount < slots[i].SlotItemData.maxStackCount )
+            {
+                slot = slots[i];
+                break;
+            }
+        }
+        return slot;
+    }
+
     /// <summary>
     /// index값이 적절한 범위인지 확인해주는 함수
     /// </summary>
@@ -258,7 +284,7 @@ public class Inventory
         {
             if (slots[i].SlotItemData != null)
             {
-                printText += slots[i].SlotItemData.itemName;
+                printText += $"{slots[i].SlotItemData.itemName}({slots[i].ItemCount})";
             }
             else
             {
@@ -269,7 +295,7 @@ public class Inventory
         ItemSlot slot = slots[SlotCount - 1];   // 마지막 슬롯만 따로 처리
         if (!slot.IsEmpty())
         {
-            printText += $"{slot.SlotItemData.itemName}]";
+            printText += $"{slot.SlotItemData.itemName}({slot.ItemCount})]";
         }
         else
         {

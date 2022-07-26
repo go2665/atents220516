@@ -13,4 +13,5 @@ public class ItemData : ScriptableObject    // 내가 원하는 데이터를 저
     public Sprite itemIcon;                 // 아이템 아이콘
     public GameObject prefab;               // 아이템의 프리팹
     public uint value;                      // 아이템의 가치
+    public uint maxStackCount = 1;          // 아이템 최대 누적 수
 }

@@ -15,15 +15,22 @@ public class Test_Inventory : MonoBehaviour
         InventoryUI invenUI = FindObjectOfType<InventoryUI>();
         invenUI.InitializeInventory(inven);
 
-        inven.RemoveItem(0);
-        inven.AddItem(ItemIDCode.Egg);
-        inven.AddItem(ItemIDCode.Egg);
+        //inven.RemoveItem(0);
+        //inven.AddItem(ItemIDCode.Egg);
+        //inven.AddItem(ItemIDCode.Egg);
 
-
+        inven.AddItem(ItemIDCode.HealingPotion);
+        inven.AddItem(ItemIDCode.HealingPotion);
+        inven.AddItem(ItemIDCode.HealingPotion);
+        inven.AddItem(ItemIDCode.HealingPotion);
+        inven.PrintInventory();
 
         //int i = 0;
     }
 
+
+
+    // 1칸에 1개 테스트
     private static void Test_AddRemoveMove()
     {
         Inventory inven = new();

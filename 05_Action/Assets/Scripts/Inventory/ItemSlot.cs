@@ -8,7 +8,7 @@ public class ItemSlot
     ItemData slotItemData;
 
     // 아이템 갯수(int)
-    //uint itemCount = 0;
+    uint itemCount = 0;
 
     // 프로퍼티 ------------------------------------------------------------------------------------
 
@@ -28,11 +28,17 @@ public class ItemSlot
         }
     }
 
+    public uint ItemCount
+    {
+        get => itemCount;
+    }
+
+    // 델리게이트 ----------------------------------------------------------------------------------
+
     // 아이템 갯수(int)
 
     // 델리게이트 ----------------------------------------------------------------------------------
     public System.Action onSlotItemChage;
-
 
     // 함수 ---------------------------------------------------------------------------------------
     
@@ -40,9 +46,33 @@ public class ItemSlot
     /// 슬롯에 아이템을 설정하는 함수 
     /// </summary>
     /// <param name="itemData">슬롯에 설정할 ItemData</param>
-    public void AssignSlotItem(ItemData itemData)
+    public void AssignSlotItem(ItemData itemData, uint count = 1)
     {
         SlotItemData = itemData;
+        itemCount = count;
+    }
+
+    /// <summary>
+    /// 같은 종류의 아이템이 추가되 아이템 갯수가 증가하는 상황에 사용
+    /// </summary>
+    /// <param name="count">증가시킬 갯수</param>
+    /// <returns>최대치를 넘어선 갯수. 0이면 다 증가시킨 상황</returns>
+    public uint IncreaseSlotItem(uint count = 1)
+    {
+        uint newCount = itemCount + count;
+        int overCount = (int)newCount - (int)SlotItemData.maxStackCount;
+        if(overCount > 0)
+        {
+            // 넘쳤다.
+            itemCount = SlotItemData.maxStackCount;
+        }
+        else
+        {
+            // 충분히 추가 가능하다.
+            itemCount = newCount;
+            overCount = 0;
+        }
+        return (uint)overCount;
     }
 
     /// <summary>
