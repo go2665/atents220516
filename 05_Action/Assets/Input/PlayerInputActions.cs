@@ -71,15 +71,6 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""InventoryOnOff"",
-                    ""type"": ""Button"",
-                    ""id"": ""6ae8ac68-438e-4ec6-b12c-906d0393e3fa"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -181,10 +172,27 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""action"": ""Pickup"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
-                },
+                }
+            ]
+        },
+        {
+            ""name"": ""ShortCut"",
+            ""id"": ""0d76f4d8-55ed-41dc-9c24-5bc9c9902ec5"",
+            ""actions"": [
+                {
+                    ""name"": ""InventoryOnOff"",
+                    ""type"": ""Button"",
+                    ""id"": ""175d185f-1e60-440b-ae05-5f56d23e11dd"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
                 {
                     ""name"": """",
-                    ""id"": ""c3e7e9be-03d8-4b34-992b-e86021226de4"",
+                    ""id"": ""ab9a2b36-72cb-48c6-8e5d-d13b0634882e"",
                     ""path"": ""<Keyboard>/i"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -222,7 +230,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
         m_Player_LockOn = m_Player.FindAction("LockOn", throwIfNotFound: true);
         m_Player_Pickup = m_Player.FindAction("Pickup", throwIfNotFound: true);
-        m_Player_InventoryOnOff = m_Player.FindAction("InventoryOnOff", throwIfNotFound: true);
+        // ShortCut
+        m_ShortCut = asset.FindActionMap("ShortCut", throwIfNotFound: true);
+        m_ShortCut_InventoryOnOff = m_ShortCut.FindAction("InventoryOnOff", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -287,7 +297,6 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Attack;
     private readonly InputAction m_Player_LockOn;
     private readonly InputAction m_Player_Pickup;
-    private readonly InputAction m_Player_InventoryOnOff;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -297,7 +306,6 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         public InputAction @Attack => m_Wrapper.m_Player_Attack;
         public InputAction @LockOn => m_Wrapper.m_Player_LockOn;
         public InputAction @Pickup => m_Wrapper.m_Player_Pickup;
-        public InputAction @InventoryOnOff => m_Wrapper.m_Player_InventoryOnOff;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -322,9 +330,6 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Pickup.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPickup;
                 @Pickup.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPickup;
                 @Pickup.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPickup;
-                @InventoryOnOff.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInventoryOnOff;
-                @InventoryOnOff.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInventoryOnOff;
-                @InventoryOnOff.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInventoryOnOff;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -344,13 +349,43 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Pickup.started += instance.OnPickup;
                 @Pickup.performed += instance.OnPickup;
                 @Pickup.canceled += instance.OnPickup;
+            }
+        }
+    }
+    public PlayerActions @Player => new PlayerActions(this);
+
+    // ShortCut
+    private readonly InputActionMap m_ShortCut;
+    private IShortCutActions m_ShortCutActionsCallbackInterface;
+    private readonly InputAction m_ShortCut_InventoryOnOff;
+    public struct ShortCutActions
+    {
+        private @PlayerInputActions m_Wrapper;
+        public ShortCutActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @InventoryOnOff => m_Wrapper.m_ShortCut_InventoryOnOff;
+        public InputActionMap Get() { return m_Wrapper.m_ShortCut; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(ShortCutActions set) { return set.Get(); }
+        public void SetCallbacks(IShortCutActions instance)
+        {
+            if (m_Wrapper.m_ShortCutActionsCallbackInterface != null)
+            {
+                @InventoryOnOff.started -= m_Wrapper.m_ShortCutActionsCallbackInterface.OnInventoryOnOff;
+                @InventoryOnOff.performed -= m_Wrapper.m_ShortCutActionsCallbackInterface.OnInventoryOnOff;
+                @InventoryOnOff.canceled -= m_Wrapper.m_ShortCutActionsCallbackInterface.OnInventoryOnOff;
+            }
+            m_Wrapper.m_ShortCutActionsCallbackInterface = instance;
+            if (instance != null)
+            {
                 @InventoryOnOff.started += instance.OnInventoryOnOff;
                 @InventoryOnOff.performed += instance.OnInventoryOnOff;
                 @InventoryOnOff.canceled += instance.OnInventoryOnOff;
             }
         }
     }
-    public PlayerActions @Player => new PlayerActions(this);
+    public ShortCutActions @ShortCut => new ShortCutActions(this);
     private int m_Keyboad_MouseSchemeIndex = -1;
     public InputControlScheme Keyboad_MouseScheme
     {
@@ -367,6 +402,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         void OnAttack(InputAction.CallbackContext context);
         void OnLockOn(InputAction.CallbackContext context);
         void OnPickup(InputAction.CallbackContext context);
+    }
+    public interface IShortCutActions
+    {
         void OnInventoryOnOff(InputAction.CallbackContext context);
     }
 }

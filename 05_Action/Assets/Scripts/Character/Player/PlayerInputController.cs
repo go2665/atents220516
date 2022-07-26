@@ -93,7 +93,8 @@ public class PlayerInputController : MonoBehaviour
         actions.Player.Attack.performed += OnAttack;
         actions.Player.LockOn.performed += OnLockOn;
         actions.Player.Pickup.performed += OnPickup;
-        actions.Player.InventoryOnOff.performed += OnInventoryShortcut;
+        actions.ShortCut.Enable();                  // "ShorCut" 액션맵 켜기
+        actions.ShortCut.InventoryOnOff.performed += OnInventoryShortcut;
     }
 
     /// <summary>
@@ -101,7 +102,8 @@ public class PlayerInputController : MonoBehaviour
     /// </summary>
     private void OnDisable()
     {
-        actions.Player.InventoryOnOff.performed -= OnInventoryShortcut;
+        actions.ShortCut.InventoryOnOff.performed -= OnInventoryShortcut;
+        actions.ShortCut.Disable();                 // "ShorCut" 액션맵 끄기
         actions.Player.Pickup.performed -= OnPickup;
         actions.Player.LockOn.performed -= OnLockOn;
         actions.Player.Attack.performed -= OnAttack;
@@ -111,10 +113,20 @@ public class PlayerInputController : MonoBehaviour
         actions.Player.Disable();                   // "Player" 액션맵 끄기
     }
 
+    private void Start()
+    {
+        // InventoryUI에 있는 델리게이트에 람다 함수 등록
+
+        //OnInventoryOpen델리게이트가 실행될 때 "actions.Player.Disable()"이런 기능이 있는 함수를 실행시킨다.
+        GameManager.Inst.InvenUI.OnInventoryOpen += () => actions.Player.Disable();
+
+        //OnInventoryClose 실행될 때 "actions.Player.Enable()"이런 기능이 있는 함수를 실행시킨다.
+        GameManager.Inst.InvenUI.OnInventoryClose += () => actions.Player.Enable();
+    }
+
     private void OnInventoryShortcut(InputAction.CallbackContext _)
     {
         GameManager.Inst.InvenUI.InventoryOnOffSwitch();
-
     }
 
     private void OnAttack(InputAction.CallbackContext _)

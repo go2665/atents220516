@@ -13,6 +13,8 @@ public class DetailInfoUI : MonoBehaviour
 
     ItemData itemData;
 
+    public bool IsPause;    // 상세정보창 열고 닫기 일시 정지(true면 열리지 않는다.)
+
     private void Awake()
     {
         itemName = transform.Find("Name").GetComponent<TextMeshProUGUI>();
@@ -23,15 +25,21 @@ public class DetailInfoUI : MonoBehaviour
 
     public void Open(ItemData data)
     {
-        itemData = data;
-        Refresh();
-        canvasGroup.alpha = 1;
+        if (!IsPause)
+        {
+            itemData = data;
+            Refresh();
+            canvasGroup.alpha = 1;
+        }
     }
 
     public void Close()
     {
-        itemData = null;
-        canvasGroup.alpha = 0;
+        if (!IsPause)
+        {
+            itemData = null;
+            canvasGroup.alpha = 0;
+        }
     }
 
     void Refresh()
