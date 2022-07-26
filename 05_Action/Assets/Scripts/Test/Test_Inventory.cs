@@ -41,7 +41,6 @@ public class Test_Inventory : MonoBehaviour
         inven.PrintInventory(); //[달걀(1),뼈다귀(1),힐링포션(3),힐링포션(1),(빈칸),(빈칸)]
         inven.AddItem(ItemIDCode.HealingPotion, 5);
         inven.AddItem(ItemIDCode.HealingPotion, 5);
-        inven.AddItem(ItemIDCode.HealingPotion, 5);
 
         //int i = 0;
     }

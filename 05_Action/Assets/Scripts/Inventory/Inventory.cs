@@ -237,7 +237,7 @@ public class Inventory
             // from에 있고 to에 없고
             // from에 없고 to에 있고 -> 뭔가 실행되면 안된다.
             // from에 없고 to에 없고 -> 뭔가 실행되면 안된다.
-        if (IsValidAndNotEmptySlot(from) && IsValidSlotIndex(to))
+        if ( (from != to) && IsValidAndNotEmptySlot(from) && IsValidSlotIndex(to))
         {
             // from이 valid하고 비어있지 않다. 그리고 to가 valid하다
 
