@@ -46,6 +46,17 @@ public class ItemSlot
     public System.Action onSlotItemChage;
 
     // 함수 ---------------------------------------------------------------------------------------
+    public ItemSlot() { }
+    public ItemSlot(ItemData data, uint count)
+    {
+        slotItemData = data;
+        itemCount = count;
+    }
+    public ItemSlot(ItemSlot other)
+    {
+        slotItemData = other.SlotItemData;
+        itemCount = other.ItemCount;
+    }
     
     /// <summary>
     /// 슬롯에 아이템을 설정하는 함수 

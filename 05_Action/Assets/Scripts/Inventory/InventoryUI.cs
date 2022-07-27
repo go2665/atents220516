@@ -49,10 +49,15 @@ public class InventoryUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndD
     /// 임시 슬롯(아이템 드래그나 아이템 분리할 때 사용)
     /// </summary>
     TempItemSlotUI tempItemSlotUI;
+    public TempItemSlotUI TempSlotUI => tempItemSlotUI;
 
     // 상세 정보 UI --------------------------------------------------------------------------------
     DetailInfoUI detail;
     public DetailInfoUI Detail => detail;
+
+    // 아이템 분할 UI --------------------------------------------------------------------------------
+    ItemSpliterUI itemSpliterUI;
+    public ItemSpliterUI SpliterUI => itemSpliterUI;
 
     // 돈 UI --------------------------------------------------------------------------------------
     /// <summary>
@@ -73,7 +78,10 @@ public class InventoryUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndD
         goldText = transform.Find("Gold").Find("GoldText").GetComponent<TextMeshProUGUI>(); 
         slotParent = transform.Find("ItemSlots");
         tempItemSlotUI = GetComponentInChildren<TempItemSlotUI>();
-        detail = transform.Find("Detail").GetComponent<DetailInfoUI>();
+        //detail = transform.Find("Detail").GetComponent<DetailInfoUI>();
+        detail = GetComponentInChildren<DetailInfoUI>();
+        itemSpliterUI = GetComponentInChildren<ItemSpliterUI>();
+        itemSpliterUI.Close();
 
         Button closeButton = transform.Find("CloseButton").GetComponent<Button>();
         closeButton.onClick.AddListener(Close);

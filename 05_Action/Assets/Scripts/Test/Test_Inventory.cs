@@ -7,7 +7,31 @@ public class Test_Inventory : MonoBehaviour
     private void Start()
     {
         //Test_AddRemoveMove();
+        //Test_Stack();
 
+        Inventory inven = new Inventory();
+        InventoryUI invenUI = FindObjectOfType<InventoryUI>();
+        invenUI.InitializeInventory(inven);
+        invenUI.InventoryOnOffSwitch();
+        inven.AddItem(ItemIDCode.ManaPotion);
+        inven.AddItem(ItemIDCode.ManaPotion);
+        inven.AddItem(ItemIDCode.ManaPotion);
+        inven.AddItem(ItemIDCode.ManaPotion);
+        inven.AddItem(ItemIDCode.ManaPotion);
+        inven.AddItem(ItemIDCode.ManaPotion);
+        inven.AddItem(ItemIDCode.ManaPotion);
+        inven.AddItem(ItemIDCode.ManaPotion);
+        inven.AddItem(ItemIDCode.ManaPotion);
+        inven.AddItem(ItemIDCode.ManaPotion);
+        inven.AddItem(ItemIDCode.ManaPotion,5);
+        inven.AddItem(ItemIDCode.ManaPotion,5);
+        inven.AddItem(ItemIDCode.ManaPotion,5);
+
+
+    }
+
+    private static void Test_Stack()
+    {
         Inventory inven = new Inventory();
         inven.AddItem(ItemIDCode.Egg);
         inven.AddItem(ItemIDCode.Bone);
@@ -26,7 +50,7 @@ public class Test_Inventory : MonoBehaviour
         inven.AddItem(ItemIDCode.HealingPotion);
         inven.PrintInventory(); //[달걀(1),뼈다귀(1),힐링포션(3),힐링포션(1),(빈칸),(빈칸)]
         inven.AddItem(ItemIDCode.ManaPotion);
-        inven.AddItem(ItemIDCode.ManaPotion,5);        
+        inven.AddItem(ItemIDCode.ManaPotion, 5);
         inven.PrintInventory();
         inven.AddItem(ItemIDCode.ManaPotion, 5);
         inven.AddItem(ItemIDCode.ManaPotion, 5);
@@ -41,8 +65,6 @@ public class Test_Inventory : MonoBehaviour
         inven.PrintInventory(); //[달걀(1),뼈다귀(1),힐링포션(3),힐링포션(1),(빈칸),(빈칸)]
         inven.AddItem(ItemIDCode.HealingPotion, 5);
         inven.AddItem(ItemIDCode.HealingPotion, 5);
-
-        //int i = 0;
     }
 
 

@@ -239,7 +239,7 @@ public class Inventory
             // from에 없고 to에 없고 -> 뭔가 실행되면 안된다.
         if ( (from != to) && IsValidAndNotEmptySlot(from) && IsValidSlotIndex(to))
         {
-            // from이 valid하고 비어있지 않다. 그리고 to가 valid하다
+            // from과 to는 서로 다르다. 그리고 from이 valid하고 비어있지 않다. 그리고 to가 valid하다
 
             if (slots[from].SlotItemData == slots[to].SlotItemData
                 && slots[to].ItemCount < slots[to].SlotItemData.maxStackCount )

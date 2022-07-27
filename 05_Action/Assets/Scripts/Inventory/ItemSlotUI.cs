@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using TMPro;
 
-public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerMoveHandler
+public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerMoveHandler, IPointerClickHandler
 {
     // 기본 데이터 ---------------------------------------------------------------------------------
     /// <summary>
@@ -117,5 +118,17 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         }
 
         detailUI.transform.position = mousePos;
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if( eventData.button == PointerEventData.InputButton.Left )
+        {
+            if(Keyboard.current.leftShiftKey.ReadValue() > 0)
+            {
+                Debug.Log("Shift+좌클릭");
+                invenUI.SpliterUI.Open(this);
+            }
+        }
     }
 }

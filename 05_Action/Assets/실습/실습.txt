@@ -120,3 +120,12 @@
 1. 코드 확인 및 수정
   1.1. 아이템 스택 기능에 맞게 public bool AddItem(ItemData data, uint index); 함수 수정해보기
   시간 : 6시 20분까지
+
+
+7/27
+1. ItemSplitCount의 set 수정하기
+  1.1. itemSplitCount에 값을 넣을 때 최소값은 1이다.
+  1.2. itemSplitCount에 값을 넣을 때 최대값은 targetSlotUI에 들어있는 아이템 갯수-1 이다.
+  1.3. itemSplitCount에 값을 넣을 때 inputField가 갱신된다.
+  1.4. 최대값 최소값은 Clamp대신 Mathf.Min, Mathf.Max함수를 이용한다. 
+  시간 : 4시 50분까지
