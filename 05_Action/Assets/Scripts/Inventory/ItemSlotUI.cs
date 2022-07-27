@@ -126,8 +126,33 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         {
             if(Keyboard.current.leftShiftKey.ReadValue() > 0)
             {
-                Debug.Log("Shift+좌클릭");
+                Debug.Log("Shift+좌클릭 => 분할창 열기");
                 invenUI.SpliterUI.Open(this);
+            }
+            else
+            {
+                // 분할된 아이템을 슬롯에 넣기
+                //2.1.완전히 빈칸에 넣기
+                //2.2. (같은 종류의 아이템이) 절반쯤 차있는 칸에 넣기(넣었을 때 넘치지 않음)
+                //2.3. (같은 종류의 아이템이) 절반쯤 차있는 칸에 넣기(넣고도 남는 경우)
+
+                //invenUI.TempSlotUI.ItemSlot.IsEmpty();
+
+                TempItemSlotUI temp = invenUI.TempSlotUI;
+                if ( ItemSlot.IsEmpty() )
+                {
+                    // 이 슬롯이 빈칸이다.
+                    itemSlot.AssignSlotItem(temp.ItemSlot.SlotItemData, temp.ItemSlot.ItemCount);
+                    temp.Close();
+                    
+                }
+                else if(temp.ItemSlot.SlotItemData == ItemSlot.SlotItemData)
+                {
+                    // 이 슬롯에는 같은 종류의 아이템이 들어있다.
+                    uint remains = ItemSlot.SlotItemData.maxStackCount - ItemSlot.ItemCount;
+                    ItemSlot.IncreaseSlotItem(remains);                    
+                    temp.ItemSlot.DecreaseSlotItem(remains);
+                }
             }
         }
     }

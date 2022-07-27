@@ -77,6 +77,7 @@ public class ItemSpliterUI : MonoBehaviour
         Debug.Log("OnOK");
         targetSlotUI.ItemSlot.DecreaseSlotItem(ItemSplitCount);
         ItemSlot tempSlot = new(targetSlotUI.ItemSlot.SlotItemData, ItemSplitCount);
+        tempSlot.onSlotItemChage = GameManager.Inst.InvenUI.TempSlotUI.Refresh;
         GameManager.Inst.InvenUI.TempSlotUI.Open(tempSlot);
         Close();
     }
@@ -91,6 +92,13 @@ public class ItemSpliterUI : MonoBehaviour
     private void OnInputChange(string input)
     {
         Debug.Log($"OnInputChange : {input}");
-        ItemSplitCount = uint.Parse(input);
+        if( input.Length == 0)
+        {
+            ItemSplitCount = 0;
+        }
+        else
+        {
+            ItemSplitCount = uint.Parse(input);
+        }
     }    
 }

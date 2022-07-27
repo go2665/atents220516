@@ -40,6 +40,11 @@ public class TempItemSlotUI : ItemSlotUI
     /// </summary>
     public void Close()
     {
+        if (itemSlot != null)
+        {
+            itemSlot.ClearSlotItem();
+            itemSlot = null;
+        }
         gameObject.SetActive(false);    // 실제로 보이지 않게 만들기(비활성화시키기)
     }
 
@@ -48,7 +53,7 @@ public class TempItemSlotUI : ItemSlotUI
     /// </summary>
     /// <param name="slot">보여질 슬롯</param>
     private void SetTempSlot(ItemSlot slot)
-    {
+    {        
         itemSlot = slot;    // 슬롯 설정하고
         Refresh();          // 화면 갱신
     }
