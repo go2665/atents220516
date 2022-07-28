@@ -13,11 +13,9 @@ public class Test_Inventory : MonoBehaviour
         InventoryUI invenUI = FindObjectOfType<InventoryUI>();
         invenUI.InitializeInventory(inven);
         invenUI.InventoryOnOffSwitch();
-        inven.AddItem(ItemIDCode.ManaPotion);
-        inven.AddItem(ItemIDCode.ManaPotion);
-        inven.AddItem(ItemIDCode.ManaPotion);
-        inven.AddItem(ItemIDCode.ManaPotion);
-        inven.AddItem(ItemIDCode.ManaPotion);
+        inven.AddItem(ItemIDCode.HealingPotion);
+        inven.AddItem(ItemIDCode.HealingPotion);
+        inven.AddItem(ItemIDCode.HealingPotion);
         inven.AddItem(ItemIDCode.ManaPotion);
         inven.AddItem(ItemIDCode.ManaPotion);
         inven.AddItem(ItemIDCode.ManaPotion);

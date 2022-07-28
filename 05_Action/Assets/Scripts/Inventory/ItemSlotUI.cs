@@ -139,19 +139,24 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
                 //invenUI.TempSlotUI.ItemSlot.IsEmpty();
 
                 TempItemSlotUI temp = invenUI.TempSlotUI;
-                if ( ItemSlot.IsEmpty() )
+
+                //temp.gameObject.activeSelf;
+                if (temp.ItemSlot != null)  // temp에 ItemSlot이 들어있다 => 아이템을 덜어낸 상황이다.
                 {
-                    // 이 슬롯이 빈칸이다.
-                    itemSlot.AssignSlotItem(temp.ItemSlot.SlotItemData, temp.ItemSlot.ItemCount);
-                    temp.Close();
-                    
-                }
-                else if(temp.ItemSlot.SlotItemData == ItemSlot.SlotItemData)
-                {
-                    // 이 슬롯에는 같은 종류의 아이템이 들어있다.
-                    uint remains = ItemSlot.SlotItemData.maxStackCount - ItemSlot.ItemCount;
-                    ItemSlot.IncreaseSlotItem(remains);                    
-                    temp.ItemSlot.DecreaseSlotItem(remains);
+                    if (ItemSlot.IsEmpty())
+                    {
+                        // 이 슬롯이 빈칸이다.
+                        itemSlot.AssignSlotItem(temp.ItemSlot.SlotItemData, temp.ItemSlot.ItemCount);
+                        temp.Close();
+
+                    }
+                    else if (temp.ItemSlot.SlotItemData == ItemSlot.SlotItemData)
+                    {
+                        // 이 슬롯에는 같은 종류의 아이템이 들어있다.
+                        uint remains = ItemSlot.SlotItemData.maxStackCount - ItemSlot.ItemCount;
+                        ItemSlot.IncreaseSlotItem(remains);
+                        temp.ItemSlot.DecreaseSlotItem(remains);
+                    }
                 }
             }
         }

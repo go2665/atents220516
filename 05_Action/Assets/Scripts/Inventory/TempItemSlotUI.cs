@@ -39,12 +39,8 @@ public class TempItemSlotUI : ItemSlotUI
     /// 임시 슬롯이 보이지 않게 닫기
     /// </summary>
     public void Close()
-    {
-        if (itemSlot != null)
-        {
-            itemSlot.ClearSlotItem();
-            itemSlot = null;
-        }
+    {        
+        itemSlot = null;
         gameObject.SetActive(false);    // 실제로 보이지 않게 만들기(비활성화시키기)
     }
 
