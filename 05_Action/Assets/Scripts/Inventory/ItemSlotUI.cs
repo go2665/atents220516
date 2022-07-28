@@ -153,9 +153,15 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
                     else if (temp.ItemSlot.SlotItemData == ItemSlot.SlotItemData)
                     {
                         // 이 슬롯에는 같은 종류의 아이템이 들어있다.
+
+                        // 담길 대상의 남은 공간
                         uint remains = ItemSlot.SlotItemData.maxStackCount - ItemSlot.ItemCount;
-                        ItemSlot.IncreaseSlotItem(remains);
-                        temp.ItemSlot.DecreaseSlotItem(remains);
+                        // 임시슬롯이 가지고 있는 것과 남은 공간 중 더 작은 것을 선택
+                        //uint small = System.Math.Min(remains, temp.ItemSlot.ItemCount);
+                        uint small = (uint)Mathf.Min((int)remains, (int)temp.ItemSlot.ItemCount);    
+                        
+                        ItemSlot.IncreaseSlotItem(small);
+                        temp.ItemSlot.DecreaseSlotItem(small);
                     }
                 }
             }
