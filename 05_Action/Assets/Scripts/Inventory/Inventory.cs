@@ -5,19 +5,38 @@ using UnityEngine;
 public class Inventory
 {
     // 변수 ---------------------------------------------------------------------------------------    
-    // ItemSlot[] : 아이템 칸 여러개
+    
+    /// <summary>
+    /// 인벤토리가 가지는 각 아이템 칸
+    /// </summary>
     ItemSlot[] slots = null;
+
+    /// <summary>
+    /// 임시 슬롯. Item Move할 때 스왑 용도로 사용
+    /// </summary>
     ItemSlot tempSlot = null;
 
     // 상수 ---------------------------------------------------------------------------------------
-    // 인벤토리 기본 크기
+    
+    /// <summary>
+    /// 인벤토리 기본 크기
+    /// </summary>
     public const int Default_Inventory_Size = 6;
 
     // 프로퍼티  -----------------------------------------------------------------------------------
-    // 인벤토리의 크기
-    public int SlotCount => slots.Length; 
-    public ItemSlot this[int index] => slots[index];    // 인벤토리에서 항상 보이는 슬롯들
-    public ItemSlot TempSlot => tempSlot;               // 임시 목적의 슬롯
+    
+    /// <summary>
+    /// 인벤토리의 크기
+    /// </summary>
+    public int SlotCount => slots.Length;
+
+    /// <summary>
+    /// 인덱서. 인벤토리에서 슬롯 가져오기
+    /// </summary>
+    /// <param name="index">가져올 슬롯의 인덱스</param>
+    /// <returns>index번째의 아이템 슬롯</returns>
+    public ItemSlot this[int index] => slots[index];    
+
 
     // 함수(주요기능) ------------------------------------------------------------------------------    
 
@@ -65,15 +84,15 @@ public class Inventory
     public bool AddItem(ItemData data)
     {
         bool result = false;
-        Debug.Log($"인벤토리에 {data.itemName}을 추가합니다");
+        //Debug.Log($"인벤토리에 {data.itemName}을 추가합니다");
 
-        ItemSlot target = FindSameItem(data);
+        ItemSlot target = FindSameItem(data);   // 같은 종류의 아이템이 인벤토리에 있는지 찾기
         if(target != null)
         {
             // 같은 종류의 아이템이 있으니 1만 증가시킨다.
             target.IncreaseSlotItem();
             result = true;
-            Debug.Log($"{data.itemName}을 하나 증가시킵니다.");
+            //Debug.Log($"{data.itemName}을 하나 증가시킵니다.");
         }
         else
         {
@@ -83,12 +102,12 @@ public class Inventory
             {
                 empty.AssignSlotItem(data);      // 아이템 할당
                 result = true;
-                Debug.Log($"아이템 슬롯에 {data.itemName}을 할당합니다.");
+                //Debug.Log($"아이템 슬롯에 {data.itemName}을 할당합니다.");
             }
             else
             {
                 // 모든 슬롯에 아이템이 들어있다.(인벤토리가 가득찼다.)
-                Debug.Log($"실패 : 인벤토리가 가득찼습니다.");
+                //Debug.Log($"실패 : 인벤토리가 가득찼습니다.");
             }
         }        
 
@@ -127,14 +146,14 @@ public class Inventory
     {
         bool result = false;
 
-        Debug.Log($"인벤토리의 {index} 슬롯에  {data.itemName}을 추가합니다");
+        //Debug.Log($"인벤토리의 {index} 슬롯에  {data.itemName}을 추가합니다");
         ItemSlot slot = slots[index];   // index번째의 슬롯 가져오기
 
         if(slot.IsEmpty())              // 찾은 슬롯이 비었는지 확인
         {
             slot.AssignSlotItem(data);  // 비어있으면 아이템 추가
             result = true;
-            Debug.Log($"추가에 성공했습니다.");
+            //Debug.Log($"추가에 성공했습니다.");
         }
         else
         {
@@ -143,16 +162,16 @@ public class Inventory
                 if( slot.IncreaseSlotItem() == 0 )  // 들어갈 자리가 있는가?
                 {
                     result = true;
-                    Debug.Log($"아이템 갯수 증가에 성공했습니다.");
+                    //Debug.Log($"아이템 갯수 증가에 성공했습니다.");
                 }
                 else
                 {
-                    Debug.Log($"실패 : 슬롯이 가득 찼습니다.");
+                    //Debug.Log($"실패 : 슬롯이 가득 찼습니다.");
                 }
             }
             else
             {
-                Debug.Log($"실패 : {index} 슬롯에는 다른 아이템이 들어있습니다.");
+                //Debug.Log($"실패 : {index} 슬롯에는 다른 아이템이 들어있습니다.");
             }
         }
 
@@ -164,22 +183,23 @@ public class Inventory
     /// 특정 슬롯의 아이템을 버리는 함수
     /// </summary>
     /// <param name="slotIndex">아이템을 버릴 슬롯의 인덱스</param>
+    /// <param name="decreaseCount">버리는 아이템 갯수</param>
     /// <returns>버리는데 성공하면 true, 아니면 false</returns>
     public bool RemoveItem(uint slotIndex, uint decreaseCount = 1)
     {
         bool result = false;
 
-        Debug.Log($"인벤토리에서 {slotIndex} 슬롯의 아이템을 {decreaseCount}개 비웁니다.");
+        //Debug.Log($"인벤토리에서 {slotIndex} 슬롯의 아이템을 {decreaseCount}개 비웁니다.");
         if (IsValidSlotIndex(slotIndex))        // slotIndex가 적절한 범위인지 확인
         {
             ItemSlot slot = slots[slotIndex];
             slot.DecreaseSlotItem(decreaseCount);
-            Debug.Log($"삭제에 성공했습니다.");
+            //Debug.Log($"삭제에 성공했습니다.");
             result = true;
         }
         else
         {
-            Debug.Log($"실패 : 잘못된 인덱스입니다.");
+            //Debug.Log($"실패 : 잘못된 인덱스입니다.");
         }
 
         return result;
@@ -194,18 +214,18 @@ public class Inventory
     {
         bool result = false;
 
-        Debug.Log($"인벤토리에서 {slotIndex} 슬롯을 비웁니다.");
+        //Debug.Log($"인벤토리에서 {slotIndex} 슬롯을 비웁니다.");
         if (IsValidSlotIndex(slotIndex))        // slotIndex가 적절한 범위인지 확인
         {
             ItemSlot slot = slots[slotIndex];
-            Debug.Log($"{slot.SlotItemData.itemName}을 삭제합니다.");
+            //Debug.Log($"{slot.SlotItemData.itemName}을 삭제합니다.");
             slot.ClearSlotItem();               // 적절한 슬롯이면 삭제 처리
-            Debug.Log($"삭제에 성공했습니다.");
+            //Debug.Log($"삭제에 성공했습니다.");
             result = true;
         }
         else
         {
-            Debug.Log($"실패 : 잘못된 인덱스입니다.");
+            //Debug.Log($"실패 : 잘못된 인덱스입니다.");
         }
 
         return result;
@@ -230,27 +250,28 @@ public class Inventory
     /// <param name="to">도착 슬롯의 ID</param>
     public void MoveItem(uint from, uint to)
     {
-        // from 시작을 한다. from에 아이템이 있을 수도 있고 없을 수도 있다.
-        // to 도착을 한다. to에도 아이템이 있을 수도 있고 없을 수도 있다.
-        // 발생 가능한 4가지 경우의 수
+        // from, to 값에 따라 발생 가능한 4가지 경우의 수
             // from에 있고 to에 있고
             // from에 있고 to에 없고
             // from에 없고 to에 있고 -> 뭔가 실행되면 안된다.
             // from에 없고 to에 없고 -> 뭔가 실행되면 안된다.
+
+
+        // from과 to는 서로 다르다. 그리고 from이 valid하고 비어있지 않다. 그리고 to가 valid하다
         if ( (from != to) && IsValidAndNotEmptySlot(from) && IsValidSlotIndex(to))
         {
-            // from과 to는 서로 다르다. 그리고 from이 valid하고 비어있지 않다. 그리고 to가 valid하다
-
             if (slots[from].SlotItemData == slots[to].SlotItemData
                 && slots[to].ItemCount < slots[to].SlotItemData.maxStackCount )
             {
-                uint overCount = slots[to].IncreaseSlotItem(slots[from].ItemCount);
-                slots[from].DecreaseSlotItem(slots[from].ItemCount - overCount);
+                // 같은 종류의 아이템이면서 목적지에 아이템을 추가할 여유가 있을 때
+                uint overCount = slots[to].IncreaseSlotItem(slots[from].ItemCount); // from에 있는 아이템을 전부 to에 넣기 시도
+                slots[from].DecreaseSlotItem(slots[from].ItemCount - overCount);    // to에 들어간 만큼만 from에서 제거
             }
             else
             {
-                Debug.Log($"{from}에 있는 {slots[from].SlotItemData.itemName}이 {to}로 이동합니다.");
-                tempSlot.AssignSlotItem(slots[from].SlotItemData, slots[from].ItemCount);
+                // 다른 종류의 아이템( 또는 to에 최대치보다 많은 종류의 아이템이 들어있다.)이다.
+                //Debug.Log($"{from}에 있는 {slots[from].SlotItemData.itemName}이 {to}로 이동합니다.");
+                tempSlot.AssignSlotItem(slots[from].SlotItemData, slots[from].ItemCount);   // temp슬롯을 이용하여 from과 to를 스왑
                 slots[from].AssignSlotItem(slots[to].SlotItemData, slots[to].ItemCount);
                 slots[to].AssignSlotItem(tempSlot.SlotItemData, tempSlot.ItemCount);
                 tempSlot.ClearSlotItem();
@@ -259,10 +280,9 @@ public class Inventory
         else
         {
             // from이 valid하지 않거나 비어있다 또는 to가 valid하지 않다.
-            Debug.Log($"실패 : {from}에서 {to}로 아이템을 옮길 수 없습니다.");
+            //Debug.Log($"실패 : {from}에서 {to}로 아이템을 옮길 수 없습니다.");
         }
     }
-
 
     // 아이템 나누기
     // 아이템 사용하기
@@ -270,10 +290,6 @@ public class Inventory
     // 아이템 정렬
 
     // 함수(백엔드) --------------------------------------------------------------------------------
-    // 적절한 빈 슬롯을 찾아주는 함수
-    //  비어있는 슬롯 확인하는 함수
-    //  보유하고 있는 칸 수에 맞는 인덱스인지 확인하는 변수
-    // 특정 종류의 아이템이 들어있는 슬롯을 찾아주는 함수
 
     /// <summary>
     /// 빈 슬롯을 찾아주는 함수
@@ -295,15 +311,21 @@ public class Inventory
         return result;
     }
 
+    /// <summary>
+    /// 같은 종류의 아이템이 들어있고 슬롯에 여유도 있는 슬롯을 찾아주는 함수
+    /// </summary>
+    /// <param name="itemData">찾을 아이템</param>
+    /// <returns>찾을 아이템이 들어있는 슬롯</returns>
     private ItemSlot FindSameItem(ItemData itemData)
     {
         ItemSlot slot = null;
         for(int i=0;i<SlotCount;i++)
         {
+            // 같은 종류의 아이템이 있고 슬롯에 아이템이 들어갈 여유가 있음
             if (slots[i].SlotItemData == itemData && slots[i].ItemCount < slots[i].SlotItemData.maxStackCount )
             {
                 slot = slots[i];
-                break;
+                break;      // 찾으면 break로 종료
             }
         }
         return slot;
@@ -319,8 +341,12 @@ public class Inventory
     //    return index < SlotCount;
     //}
 
+    /// <summary>
+    /// index값이 적절한 범위이면서 아이템이 들어있는지도 확인해주는 함수
+    /// </summary>
+    /// <param name="index">확인할 인덱스</param>
+    /// <returns>true면 적절한 범위이면서 아이템도 들어있음.</returns>
     private bool IsValidAndNotEmptySlot(uint index) => (IsValidSlotIndex(index) && !slots[index].IsEmpty());
-
 
     /// <summary>
     /// 인벤토리 내용을 콘솔창에 출력해주는 함수
@@ -357,8 +383,3 @@ public class Inventory
         Debug.Log(printText);
     }
 }
-
-
-// ItemData[]   -> ItemDataManager로 처리
-// 아이템 이미지 -> ItemData에 추가될 내용
-// 아이템 종류   -> ItemData에 추가될 내용

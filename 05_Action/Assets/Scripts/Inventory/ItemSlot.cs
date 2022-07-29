@@ -23,29 +23,35 @@ public class ItemSlot
             if( slotItemData != value )
             {
                 slotItemData = value;
-                onSlotItemChage?.Invoke();
+                onSlotItemChage?.Invoke();  // 변경이 일어나면 델리게이트 실행(주로 화면 갱신용)
             }
         }
     }
 
+    /// <summary>
+    /// 슬롯에 들어있는 아이템 갯수
+    /// </summary>
     public uint ItemCount
     {
         get => itemCount;
         private set
         {
             itemCount = value;
-            onSlotItemChage?.Invoke();
+            onSlotItemChage?.Invoke();  // 변경이 일어나면 델리게이트 실행(주로 화면 갱신용)
         }
     }
 
     // 델리게이트 ----------------------------------------------------------------------------------
-
-    // 아이템 갯수(int)
-
-    // 델리게이트 ----------------------------------------------------------------------------------
+    /// <summary>
+    /// 슬롯에 들어있는 아이템의 종류나 갯수가 변경될 때 실행되는 델리게이트
+    /// </summary>
     public System.Action onSlotItemChage;
 
     // 함수 ---------------------------------------------------------------------------------------
+
+    /// <summary>
+    /// 생성자들
+    /// </summary>
     public ItemSlot() { }
     public ItemSlot(ItemData data, uint count)
     {
@@ -57,11 +63,12 @@ public class ItemSlot
         slotItemData = other.SlotItemData;
         itemCount = other.ItemCount;
     }
-    
+
     /// <summary>
     /// 슬롯에 아이템을 설정하는 함수 
     /// </summary>
     /// <param name="itemData">슬롯에 설정할 ItemData</param>
+    /// /// <param name="count">슬롯에 설정할 아이템 갯수</param>
     public void AssignSlotItem(ItemData itemData, uint count = 1)
     {
         ItemCount = count;
@@ -76,7 +83,7 @@ public class ItemSlot
     public uint IncreaseSlotItem(uint count = 1)
     {
         uint newCount = ItemCount + count;
-        int overCount = (int)newCount - (int)SlotItemData.maxStackCount;
+        int overCount = (int)newCount - (int)SlotItemData.maxStackCount;    // 넘친 갯수 계산
         if(overCount > 0)
         {
             // 넘쳤다.
@@ -88,16 +95,20 @@ public class ItemSlot
             ItemCount = newCount;
             overCount = 0;
         }
-        return (uint)overCount;
+        return (uint)overCount; // 넘친 갯수 돌려주기
     }
 
+    /// <summary>
+    /// 슬롯에서 아이템 갯수 감소 시키기
+    /// </summary>
+    /// <param name="count">감소시킬 갯수</param>
     public void DecreaseSlotItem(uint count = 1)
     {
         int newCount = (int)ItemCount - (int)count;
-        if( newCount < 1)
+        if( newCount < 1)   // 최종적으로 갯수가 0이되면 완전 비우기
         {
             // 다 뺀다.
-            ClearSlotItem();
+            ClearSlotItem();    
         }
         else
         {
@@ -114,8 +125,6 @@ public class ItemSlot
         ItemCount = 0;
     }
 
-
-    // 아이템 갯수를 증가/감소시키는 함수
     // 아이템을 사용하는 함수
     // 아이템을 장비하는 함수
 

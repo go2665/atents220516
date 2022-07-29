@@ -19,7 +19,16 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     /// </summary>
     protected ItemSlot itemSlot;
 
+    // 주요 인벤토리 UI 가지고 있기 -----------------------------------------------------------------
+
+    /// <summary>
+    /// 인벤토리 UI
+    /// </summary>
     InventoryUI invenUI;
+
+    /// <summary>
+    /// 상세 정보창
+    /// </summary>
     DetailInfoUI detailUI;
 
     // UI처리용 데이터 -----------------------------------------------------------------------------
@@ -62,7 +71,7 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     /// <param name="targetSlot">이 슬롯이랑 연결된 ItemSlot</param>
     public void Initialize(uint newID, ItemSlot targetSlot)
     {
-        invenUI = GameManager.Inst.InvenUI;
+        invenUI = GameManager.Inst.InvenUI; // 미리 찾아놓기
         detailUI = invenUI.Detail;
 
         id = newID;
@@ -91,6 +100,10 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         }
     }
 
+    /// <summary>
+    /// 슬롯위에 마우스 포인터가 들어왔을 때
+    /// </summary>
+    /// <param name="eventData"></param>
     public void OnPointerEnter(PointerEventData eventData)
     {
         if (itemSlot.SlotItemData != null)
@@ -100,56 +113,67 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         }
     }
 
+    /// <summary>
+    /// 슬롯위에서 마우스 포인터가 나갔을 때
+    /// </summary>
+    /// <param name="eventData"></param>
     public void OnPointerExit(PointerEventData eventData)
     {
         //Debug.Log($"마우스가 {gameObject.name}에서 나갔다.");
         detailUI.Close();
     }
 
+    /// <summary>
+    /// 슬롯위에서 마우스 포인터가 움직일 때
+    /// </summary>
+    /// <param name="eventData"></param>
     public void OnPointerMove(PointerEventData eventData)
     {
         //Debug.Log($"마우스가 {gameObject.name}안에서 움직인다.");
         Vector2 mousePos = eventData.position;
 
+        // 상세정보창이 화면을 벗어났는지 체크
         RectTransform rect = (RectTransform)detailUI.transform;
         if( (mousePos.x + rect.sizeDelta.x) > Screen.width )
         {
-            mousePos.x -= rect.sizeDelta.x;
+            mousePos.x -= rect.sizeDelta.x; // 벗어났으면 상세정보창을 마우스 왼쪽으로 이동시킴)
         }
 
-        detailUI.transform.position = mousePos;
+        detailUI.transform.position = mousePos; // 상세정보창을 마우스 커서 위치로 변경
     }
 
+    /// <summary>
+    /// 슬롯을 마우스로 클릭했을 때
+    /// </summary>
+    /// <param name="eventData"></param>
     public void OnPointerClick(PointerEventData eventData)
     {
+        // 마우스 왼쪽 버튼 클릭일 때
         if( eventData.button == PointerEventData.InputButton.Left )
         {
+            // 쉬프트키가 눌러져 있을 때
             if(Keyboard.current.leftShiftKey.ReadValue() > 0)
             {
-                Debug.Log("Shift+좌클릭 => 분할창 열기");
-                invenUI.SpliterUI.Open(this);
-                detailUI.Close();
-                detailUI.IsPause = true;
+                // 쉬프트 좌클릭하면 아이템 분할창 연다.
+
+                //Debug.Log("Shift+좌클릭 => 분할창 열기");
+                invenUI.SpliterUI.Open(this);   // 아이템 분할창 열기
+                detailUI.Close();               // 상세정보창 닫기
+                detailUI.IsPause = true;        // 상세정보창 일시 정지
             }
             else
             {
                 // 분할된 아이템을 슬롯에 넣기
-                //2.1.완전히 빈칸에 넣기
-                //2.2. (같은 종류의 아이템이) 절반쯤 차있는 칸에 넣기(넣었을 때 넘치지 않음)
-                //2.3. (같은 종류의 아이템이) 절반쯤 차있는 칸에 넣기(넣고도 남는 경우)
-
-                //invenUI.TempSlotUI.ItemSlot.IsEmpty();
-
                 TempItemSlotUI temp = invenUI.TempSlotUI;
-
-                //temp.gameObject.activeSelf;
                 if (temp.ItemSlot != null)  // temp에 ItemSlot이 들어있다 => 아이템을 덜어낸 상황이다.
                 {
                     if (ItemSlot.IsEmpty())
                     {
-                        // 이 슬롯이 빈칸이다.
+                        // 클릭한 슬롯이 빈칸이다.
+
+                        // temp에 있는 내용을 이 슬롯에 다 넣기
                         itemSlot.AssignSlotItem(temp.ItemSlot.SlotItemData, temp.ItemSlot.ItemCount);
-                        temp.Close();
+                        temp.Close();   // temp칸 비우기
                     }
                     else if (temp.ItemSlot.SlotItemData == ItemSlot.SlotItemData)
                     {
@@ -161,7 +185,7 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
                         //uint small = System.Math.Min(remains, temp.ItemSlot.ItemCount);
                         uint small = (uint)Mathf.Min((int)remains, (int)temp.ItemSlot.ItemCount);    
                         
-                        ItemSlot.IncreaseSlotItem(small);
+                        ItemSlot.IncreaseSlotItem(small);       
                         temp.ItemSlot.DecreaseSlotItem(small);
 
                         if (temp.ItemSlot.ItemCount < 1)    // 임시 슬롯에 있던 것을 전부 넣었을 때만 닫아라
@@ -178,7 +202,7 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
                         itemSlot.AssignSlotItem(tempData, tempCount);
                     }
 
-                    detailUI.IsPause = false;
+                    detailUI.IsPause = false;   // 상세정보창 일시정지 풀기
                 }
             }
         }

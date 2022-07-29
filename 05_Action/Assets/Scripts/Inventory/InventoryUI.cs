@@ -36,11 +36,18 @@ public class InventoryUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndD
     /// </summary>
     ItemSlotUI[] slotUIs;
 
+    /// <summary>
+    /// 열고 닫기용 캔버스 그룹
+    /// </summary>
     CanvasGroup canvasGroup;
 
 
     // Item관련  ----------------------------------------------------------------------------------    
+    /// <summary>
+    /// 드래그 시작 표시용( 시작 id가 InvalideID면 드래그 시작을 안한 것)
+    /// </summary>
     const uint InvalideID = uint.MaxValue;
+
     /// <summary>
     /// 드래그가 시작된 슬롯의 ID
     /// </summary>
@@ -53,10 +60,16 @@ public class InventoryUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndD
     public TempItemSlotUI TempSlotUI => tempItemSlotUI;
 
     // 상세 정보 UI --------------------------------------------------------------------------------
+    /// <summary>
+    /// 아이템 상세정보 창
+    /// </summary>
     DetailInfoUI detail;
     public DetailInfoUI Detail => detail;
 
     // 아이템 분할 UI --------------------------------------------------------------------------------
+    /// <summary>
+    /// 아이템 분할 창
+    /// </summary>
     ItemSpliterUI itemSpliterUI;
     public ItemSpliterUI SpliterUI => itemSpliterUI;
 
@@ -79,7 +92,6 @@ public class InventoryUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndD
         goldText = transform.Find("Gold").Find("GoldText").GetComponent<TextMeshProUGUI>(); 
         slotParent = transform.Find("ItemSlots");
         tempItemSlotUI = GetComponentInChildren<TempItemSlotUI>();
-        //detail = transform.Find("Detail").GetComponent<DetailInfoUI>();
         detail = GetComponentInChildren<DetailInfoUI>();
         itemSpliterUI = GetComponentInChildren<ItemSpliterUI>();
         itemSpliterUI.Initialize();
@@ -160,9 +172,12 @@ public class InventoryUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndD
         goldText.text = $"{money:N0}";  // Money가 변경될 때 실행될 함수
     }
 
+    /// <summary>
+    /// 인벤토리 열고 닫기
+    /// </summary>
     public void InventoryOnOffSwitch()
     {
-        if(canvasGroup.blocksRaycasts)
+        if(canvasGroup.blocksRaycasts)  // 캔버스 그룹의 blocksRaycasts를 기준으로 처리
         {
             Close();
         }
@@ -172,6 +187,9 @@ public class InventoryUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndD
         }
     }
 
+    /// <summary>
+    /// 인벤토리 열기
+    /// </summary>
     void Open()
     {
         canvasGroup.alpha = 1;
@@ -180,6 +198,9 @@ public class InventoryUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndD
         OnInventoryOpen?.Invoke();
     }
 
+    /// <summary>
+    /// 인벤토리 닫기
+    /// </summary>
     void Close()
     {
         canvasGroup.alpha = 0;
@@ -191,7 +212,7 @@ public class InventoryUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndD
     // 이벤트 시스템의 인터페이스 함수들 -------------------------------------------------------------
 
     /// <summary>
-    /// 드래그 중에 실행
+    /// 드래그 중에 실행(OnBeginDrag, OnEndDrag를 사용하려면 반드시 필요해서 넣은 것)
     /// </summary>
     /// <param name="eventData"></param>
     public void OnDrag(PointerEventData eventData)
@@ -226,8 +247,8 @@ public class InventoryUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndD
                         //Debug.Log($"Start SlotID : {slotUI.ID}");
                         dragStartID = slotUI.ID;
                         tempItemSlotUI.Open(slotUI.ItemSlot);   // 드래그 시작할 때 열기
-                        detail.Close();
-                        detail.IsPause = true;  // 디테일창 안열리게 하기
+                        detail.Close();         // 상세정보창 닫기
+                        detail.IsPause = true;  // 상세정보창 안열리게 하기
                     }
                 }
             }
@@ -254,10 +275,10 @@ public class InventoryUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndD
                     {
                         // ItemSlotUI 컴포넌트가 있으면 Inventory.MoveItem() 실행시키기
                         //Debug.Log($"End SlotID : {slotUI.ID}");
-                        inven.MoveItem(dragStartID, slotUI.ID);
-                        detail.IsPause = false; // 디테일창 다시 열리게 하기
-                        detail.Open(slotUI.ItemSlot.SlotItemData);
-                        dragStartID = InvalideID;
+                        inven.MoveItem(dragStartID, slotUI.ID);         // 아이템 실제로 옮기기
+                        detail.IsPause = false;                         // 상세정보창 다시 열릴 수 있게 하기
+                        detail.Open(slotUI.ItemSlot.SlotItemData);      // 상세정보창 열기
+                        dragStartID = InvalideID;                       // 드래그 시작 id를 될 수 없는 값으로 설정(드래그가 끝났음을 표시)
                     }
                 }
                 tempItemSlotUI.Close(); // 정상적으로 드래그가 끝나면 닫기
