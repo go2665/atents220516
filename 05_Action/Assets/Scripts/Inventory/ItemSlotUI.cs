@@ -148,7 +148,6 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
                         // 이 슬롯이 빈칸이다.
                         itemSlot.AssignSlotItem(temp.ItemSlot.SlotItemData, temp.ItemSlot.ItemCount);
                         temp.Close();
-
                     }
                     else if (temp.ItemSlot.SlotItemData == ItemSlot.SlotItemData)
                     {
@@ -162,7 +161,20 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
                         
                         ItemSlot.IncreaseSlotItem(small);
                         temp.ItemSlot.DecreaseSlotItem(small);
+                        if (temp.ItemSlot.ItemCount < 1)    // 임시 슬롯에 있던 것을 전부 넣었을 때만 닫아라
+                        {
+                            temp.Close();
+                        }
                     }
+                    else
+                    {
+                        // 다른 종류의 아이템이다. => 서로 스왑
+                        ItemData tempData = temp.ItemSlot.SlotItemData;
+                        uint tempCount = temp.ItemSlot.ItemCount;
+                        temp.ItemSlot.AssignSlotItem(itemSlot.SlotItemData, itemSlot.ItemCount);
+                        itemSlot.AssignSlotItem(tempData, tempCount);
+                    }
+                    
                 }
             }
         }
