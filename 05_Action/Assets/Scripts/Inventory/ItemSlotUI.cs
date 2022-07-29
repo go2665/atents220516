@@ -128,6 +128,8 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             {
                 Debug.Log("Shift+좌클릭 => 분할창 열기");
                 invenUI.SpliterUI.Open(this);
+                detailUI.Close();
+                detailUI.IsPause = true;
             }
             else
             {
@@ -161,6 +163,7 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
                         
                         ItemSlot.IncreaseSlotItem(small);
                         temp.ItemSlot.DecreaseSlotItem(small);
+
                         if (temp.ItemSlot.ItemCount < 1)    // 임시 슬롯에 있던 것을 전부 넣었을 때만 닫아라
                         {
                             temp.Close();
@@ -174,7 +177,8 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
                         temp.ItemSlot.AssignSlotItem(itemSlot.SlotItemData, itemSlot.ItemCount);
                         itemSlot.AssignSlotItem(tempData, tempCount);
                     }
-                    
+
+                    detailUI.IsPause = false;
                 }
             }
         }
