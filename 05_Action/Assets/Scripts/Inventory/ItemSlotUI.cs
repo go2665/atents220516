@@ -151,10 +151,11 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         // 마우스 왼쪽 버튼 클릭일 때
         if( eventData.button == PointerEventData.InputButton.Left )
         {
-            // 쉬프트키가 눌러져 있을 때
-            if(Keyboard.current.leftShiftKey.ReadValue() > 0)
+            TempItemSlotUI temp = invenUI.TempSlotUI;
+
+            if (Keyboard.current.leftShiftKey.ReadValue() > 0 && temp.IsEmpty())
             {
-                // 쉬프트 좌클릭하면 아이템 분할창 연다.
+                // 쉬프트 좌클릭하고 temp가 비었을 때 아이템 분할창 연다.
 
                 //Debug.Log("Shift+좌클릭 => 분할창 열기");
                 invenUI.SpliterUI.Open(this);   // 아이템 분할창 열기
@@ -163,9 +164,8 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             }
             else
             {
-                // 분할된 아이템을 슬롯에 넣기
-                TempItemSlotUI temp = invenUI.TempSlotUI;
-                if (!temp.IsEmpty())  // temp에 ItemSlot이 들어있다 => 아이템을 덜어낸 상황이다.
+                // 분할된 아이템을 슬롯에 넣기                
+                if (!temp.IsEmpty())  // temp에 ItemSlot이 들어있다 => 아이템을 덜어낸 상황이다.                
                 {
                     if (ItemSlot.IsEmpty())
                     {
@@ -183,9 +183,9 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
                         uint remains = ItemSlot.SlotItemData.maxStackCount - ItemSlot.ItemCount;
                         // 임시슬롯이 가지고 있는 것과 남은 공간 중 더 작은 것을 선택
                         //uint small = System.Math.Min(remains, temp.ItemSlot.ItemCount);
-                        uint small = (uint)Mathf.Min((int)remains, (int)temp.ItemSlot.ItemCount);    
-                        
-                        ItemSlot.IncreaseSlotItem(small);       
+                        uint small = (uint)Mathf.Min((int)remains, (int)temp.ItemSlot.ItemCount);
+
+                        ItemSlot.IncreaseSlotItem(small);
                         temp.ItemSlot.DecreaseSlotItem(small);
 
                         if (temp.ItemSlot.ItemCount < 1)    // 임시 슬롯에 있던 것을 전부 넣었을 때만 닫아라
