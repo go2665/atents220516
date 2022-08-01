@@ -78,7 +78,7 @@ public class ItemSpliterUI : MonoBehaviour
         targetSlotUI.ItemSlot.DecreaseSlotItem(ItemSplitCount);
         ItemSlot tempSlot = new(targetSlotUI.ItemSlot.SlotItemData, ItemSplitCount);
         tempSlot.onSlotItemChage = GameManager.Inst.InvenUI.TempSlotUI.Refresh;
-        GameManager.Inst.InvenUI.TempSlotUI.Open(tempSlot);
+        //GameManager.Inst.InvenUI.TempSlotUI.Open(tempSlot);
         Close();
     }
 

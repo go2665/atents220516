@@ -27,6 +27,8 @@ public class Test_Inventory : MonoBehaviour
         //inven.AddItem(ItemIDCode.ManaPotion, 4);
         //inven.AddItem(ItemIDCode.ManaPotion, 4);
         //inven.AddItem(ItemIDCode.ManaPotion, 4);
+        //inven.TempRemoveItem(1, 3);
+        //inven.TempToSlot(5);
 
 
     }

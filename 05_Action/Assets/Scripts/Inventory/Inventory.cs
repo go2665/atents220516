@@ -31,6 +31,11 @@ public class Inventory
     public int SlotCount => slots.Length;
 
     /// <summary>
+    /// 임시 슬롯(읽기전용)
+    /// </summary>
+    public ItemSlot TempSlot => tempSlot;
+
+    /// <summary>
     /// 인덱서. 인벤토리에서 슬롯 가져오기
     /// </summary>
     /// <param name="index">가져올 슬롯의 인덱스</param>
@@ -285,6 +290,38 @@ public class Inventory
     }
 
     // 아이템 나누기
+
+    public void TempRemoveItem(uint from, uint count = 1)
+    {
+        if( IsValidAndNotEmptySlot(from) )
+        {
+            ItemSlot slot = slots[from];
+            tempSlot.AssignSlotItem(slot.SlotItemData, count);
+            slot.DecreaseSlotItem(count);
+        }
+    }
+
+    public void TempToSlot(uint to)
+    {
+        if( !tempSlot.IsEmpty() )
+        {
+            ItemSlot toSlot = slots[to];
+
+            if(tempSlot.SlotItemData == toSlot.SlotItemData)
+            {
+                uint overCount = toSlot.IncreaseSlotItem(tempSlot.ItemCount);
+                tempSlot.DecreaseSlotItem(tempSlot.ItemCount - overCount);
+            }
+            else
+            {
+                ItemData tempItemData = toSlot.SlotItemData;
+                uint tempItemCount = toSlot.ItemCount;
+                toSlot.AssignSlotItem(tempSlot.SlotItemData, tempSlot.ItemCount);
+                tempSlot.AssignSlotItem(tempItemData, tempItemCount);
+            }
+        }
+    }
+
     // 아이템 사용하기
     // 아이템 장비하기
     // 아이템 정렬
