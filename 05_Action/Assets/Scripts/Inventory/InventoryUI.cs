@@ -251,7 +251,8 @@ public class InventoryUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndD
     {
         if( eventData.button == PointerEventData.InputButton.Left ) // 좌클릭일 때만 처리
         {
-            if (TempSlotUI.IsEmpty())    // 임시 슬롯에 아이템이 없는 경우에만 실행(아이템은 나누어서 들고 있는 상황)
+            // 임시 슬롯에 아이템이 없고 스플리터UI가 안열렸을 경우에만 실행(아이템은 나누어서 들고 있는 상황)
+            if (TempSlotUI.IsEmpty() && !SpliterUI.isActiveAndEnabled)    
             {
                 GameObject startObj = eventData.pointerCurrentRaycast.gameObject;   // 드래그 시작한 위치에 있는 게임 오브젝트 가져오기
                 if (startObj != null)

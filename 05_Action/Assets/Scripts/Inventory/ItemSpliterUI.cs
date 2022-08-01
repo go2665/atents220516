@@ -56,6 +56,7 @@ public class ItemSpliterUI : MonoBehaviour
         {
             targetSlotUI = target;
             ItemSplitCount = 1;
+            transform.position = target.transform.position; // 아이템을 나눌 슬롯의 위치로 스플리터UI 옮기기
             gameObject.SetActive(true);
         }
     }

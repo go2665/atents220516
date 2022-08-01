@@ -165,7 +165,7 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             {
                 // 분할된 아이템을 슬롯에 넣기
                 TempItemSlotUI temp = invenUI.TempSlotUI;
-                if (temp.ItemSlot != null)  // temp에 ItemSlot이 들어있다 => 아이템을 덜어낸 상황이다.
+                if (!temp.IsEmpty())  // temp에 ItemSlot이 들어있다 => 아이템을 덜어낸 상황이다.
                 {
                     if (ItemSlot.IsEmpty())
                     {
