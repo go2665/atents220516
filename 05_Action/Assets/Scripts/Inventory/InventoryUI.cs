@@ -93,8 +93,7 @@ public class InventoryUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndD
         slotParent = transform.Find("ItemSlots");
         tempItemSlotUI = GetComponentInChildren<TempItemSlotUI>();
         detail = GetComponentInChildren<DetailInfoUI>();
-        itemSpliterUI = GetComponentInChildren<ItemSpliterUI>();
-        itemSpliterUI.Initialize();
+        itemSpliterUI = GetComponentInChildren<ItemSpliterUI>();        
 
         Button closeButton = transform.Find("CloseButton").GetComponent<Button>();
         closeButton.onClick.AddListener(Close);
@@ -151,7 +150,16 @@ public class InventoryUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndD
         tempItemSlotUI.Initialize(TempItemSlotUI.TempSlotID, inven.TempSlot);
         tempItemSlotUI.Close(); // 닫은체로 시작하기
 
+        itemSpliterUI.Initialize();
+        itemSpliterUI.OnOkClick += OnSpliteOK;
+
         RefreshAllSlots();  // 전체 슬롯UI 갱신
+    }
+
+    private void OnSpliteOK(uint slotID, uint count)
+    {
+        inven.TempRemoveItem(slotID, count);
+        tempItemSlotUI.Open();
     }
 
     /// <summary>
