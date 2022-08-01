@@ -10,7 +10,6 @@ using TMPro;
 /// </summary>
 public class TempItemSlotUI : ItemSlotUI
 {
-    public const uint TempSlotID = 99999;
     /// <summary>
     /// Awake을 override해서 부모의 Awake 실행안되게 만들기(base.Awake 제거)
     /// </summary>
@@ -30,7 +29,7 @@ public class TempItemSlotUI : ItemSlotUI
     /// </summary>
     public void Open()
     {
-        if (!ItemSlot.IsEmpty())
+        if (!ItemSlot.IsEmpty())    // 슬롯에 아이템이 들어있을 때만 열기
         {
             transform.position = Mouse.current.position.ReadValue();    // 보이기 전에 위치 조정
             gameObject.SetActive(true); // 실제로 보이게 만들기(활성화시키기)
@@ -42,19 +41,13 @@ public class TempItemSlotUI : ItemSlotUI
     /// </summary>
     public void Close()
     {
-        itemSlot.ClearSlotItem();
+        itemSlot.ClearSlotItem();       // 슬롯에 들어있는 아이템과 갯수 비우기
         gameObject.SetActive(false);    // 실제로 보이지 않게 만들기(비활성화시키기)
     }
 
-    public bool IsEmpty() => itemSlot.IsEmpty();
-
     /// <summary>
-    /// 임시 슬롯에서 보일 슬롯 지정
+    /// 슬롯이 비었는지 확인
     /// </summary>
-    /// <param name="slot">보여질 슬롯</param>
-    private void SetTempSlot(ItemSlot slot)
-    {        
-        itemSlot = slot;    // 슬롯 설정하고
-        Refresh();          // 화면 갱신
-    }
+    /// <returns>true면 슬롯이 비어있다.</returns>
+    public bool IsEmpty() => itemSlot.IsEmpty();
 }

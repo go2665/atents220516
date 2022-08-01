@@ -147,20 +147,16 @@ public class InventoryUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndD
             }
         }
 
-        tempItemSlotUI.Initialize(TempItemSlotUI.TempSlotID, inven.TempSlot);
-        tempItemSlotUI.Close(); // 닫은체로 시작하기
+        // TempSlot 초기화
+        tempItemSlotUI.Initialize(Inventory.TempSlotID, inven.TempSlot);    // TempItemSlotUI와 TempSlot 연결
+        tempItemSlotUI.Close(); // tempItemSlotUI 닫은채로 시작하기
 
+        // ItemSpliterUI 초기화(순서는 딱히 상관 없음)
         itemSpliterUI.Initialize();
-        itemSpliterUI.OnOkClick += OnSpliteOK;
+        itemSpliterUI.OnOkClick += OnSpliteOK;  // itemSpliterUI의 OK 버튼이 눌려졌을 때 실행할 함수 등록
 
         RefreshAllSlots();  // 전체 슬롯UI 갱신
-    }
-
-    private void OnSpliteOK(uint slotID, uint count)
-    {
-        inven.TempRemoveItem(slotID, count);
-        tempItemSlotUI.Open();
-    }
+    }    
 
     /// <summary>
     /// 모든 슬롯의 Icon이미지를 갱신
@@ -219,6 +215,18 @@ public class InventoryUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndD
         OnInventoryClose?.Invoke();
     }
 
+    // 델리게이트용 함수 ---------------------------------------------------------------------------
+    /// <summary>
+    /// SpliterUI가 OK됬을 때 실행될 함수
+    /// </summary>
+    /// <param name="slotID">나누려는 슬롯의 ID</param>
+    /// <param name="count">나눈 갯수</param>
+    private void OnSpliteOK(uint slotID, uint count)
+    {
+        inven.TempRemoveItem(slotID, count);    // slotID에서 count만큼 덜어내서 TempSlot에 옮기기
+        tempItemSlotUI.Open();  // tempItemSlotUI 열어서 보여주기
+    }
+
     // 이벤트 시스템의 인터페이스 함수들 -------------------------------------------------------------
 
     /// <summary>
@@ -256,8 +264,8 @@ public class InventoryUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndD
                         // ItemSlotUI 컴포넌트가 있으면 ID 기록해 놓기
                         //Debug.Log($"Start SlotID : {slotUI.ID}");
                         dragStartID = slotUI.ID;
-                        inven.TempRemoveItem(dragStartID, slotUI.ItemSlot.ItemCount);
-                        tempItemSlotUI.Open();   // 드래그 시작할 때 열기
+                        inven.TempRemoveItem(dragStartID, slotUI.ItemSlot.ItemCount);   // 드래그 시작한 위치의 아이템을 TempSlot으로 옮김
+                        tempItemSlotUI.Open();  // 드래그 시작할 때 TempSlot 열기
                         detail.Close();         // 상세정보창 닫기
                         detail.IsPause = true;  // 상세정보창 안열리게 하기
                     }
@@ -287,17 +295,22 @@ public class InventoryUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndD
                         // ItemSlotUI 컴포넌트가 있으면 Inventory.MoveItem() 실행시키기
                         //Debug.Log($"End SlotID : {slotUI.ID}");
 
-                        inven.MoveItem(TempItemSlotUI.TempSlotID, slotUI.ID);       // 아이템 실제로 옮기기
-                        inven.MoveItem(TempItemSlotUI.TempSlotID, dragStartID);     // 
+                        // TempSlot의 아이템을 드래그가 끝난 슬롯에 옮기기.
+                        // 만약 드래그가 끝난 슬롯에 아이템이 있었을 경우 그 아이템은 TempSlot로 이동
+                        inven.MoveItem(Inventory.TempSlotID, slotUI.ID);
+                        
+                        // 드래그가 끝난 슬롯에 있던 아이템을 dragStartID 슬롯으로 옮기기
+                        inven.MoveItem(Inventory.TempSlotID, dragStartID);     
 
                         detail.IsPause = false;                         // 상세정보창 다시 열릴 수 있게 하기
                         detail.Open(slotUI.ItemSlot.SlotItemData);      // 상세정보창 열기
                         dragStartID = InvalideID;                       // 드래그 시작 id를 될 수 없는 값으로 설정(드래그가 끝났음을 표시)
                     }
                 }
+                                
                 if (tempItemSlotUI.IsEmpty())
                 {
-                    tempItemSlotUI.Close(); // 정상적으로 드래그가 끝나면 닫기
+                    tempItemSlotUI.Close(); // 드래그를 끝내고 tempSlot이 비어지면 닫기
                 }
             }
         }

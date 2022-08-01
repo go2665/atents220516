@@ -7,12 +7,12 @@ public class Inventory
     // 변수 ---------------------------------------------------------------------------------------    
     
     /// <summary>
-    /// 인벤토리가 가지는 각 아이템 칸
+    /// 인벤토리가 가지는 각 아이템 칸.
     /// </summary>
     ItemSlot[] slots = null;
 
     /// <summary>
-    /// 임시 슬롯. Item Move할 때 스왑 용도로 사용
+    /// 아이템을 옮기거나 덜어낼때 사용할 임시 슬롯.
     /// </summary>
     ItemSlot tempSlot = null;
 
@@ -23,8 +23,13 @@ public class Inventory
     /// </summary>
     public const int Default_Inventory_Size = 6;
 
+    /// <summary>
+    /// TempSlot용 아이디
+    /// </summary>
+    public const uint TempSlotID = 99999;   //숫자는 의미가 없다. Slot Index로 적절하지 않은 값이면 된다.
+
     // 프로퍼티  -----------------------------------------------------------------------------------
-    
+
     /// <summary>
     /// 인벤토리의 크기
     /// </summary>
@@ -56,11 +61,10 @@ public class Inventory
         {
             slots[i] = new ItemSlot();
         }
-        tempSlot = new ItemSlot();
+        tempSlot = new ItemSlot();      // 임시 용도로 사용하는 슬롯은 따로 생성
     }
 
     // AddItem은 함수 오버로딩(Overloading)을 통해 이름과 리턴값은 같지만 다양한 종류의 파라메터를 입력 받을 수 있게 했다.
-
     /// <summary>
     /// 아이템 추가하기 (적절한 빈칸에 넣기)
     /// </summary>
@@ -183,7 +187,6 @@ public class Inventory
         return result;
     }
 
-
     /// <summary>
     /// 특정 슬롯의 아이템을 버리는 함수
     /// </summary>
@@ -261,55 +264,62 @@ public class Inventory
             // from에 없고 to에 있고 -> 뭔가 실행되면 안된다.
             // from에 없고 to에 없고 -> 뭔가 실행되면 안된다.
 
+        // from은 밸리드한 슬롯 인덱스고 슬롯이 비어있지 않다. 그리고 to는 밸리드한 슬롯 인덱스다.
         if(IsValidAndNotEmptySlot(from) && IsValidSlotIndex(to))
         {
             ItemSlot fromSlot = null;
             ItemSlot toSlot = null;
 
-            if( from == TempItemSlotUI.TempSlotID )
+            // 인덱스로 슬롯 찾기
+            if( from == TempSlotID )
             {
-                fromSlot = TempSlot;
+                fromSlot = TempSlot;    // temp슬롯은 별도로 인덱스 확인
             }
             else
             {
-                fromSlot = slots[from];
+                fromSlot = slots[from]; // 다른 슬롯은 인덱스값 그대로 활용
             }
-            if (to == TempItemSlotUI.TempSlotID)
+            if (to == TempSlotID)
             {
-                toSlot = TempSlot;
+                toSlot = TempSlot;      // temp슬롯은 별도로 인덱스 확인
             }
             else
             {
-                toSlot = slots[to];
+                toSlot = slots[to];     // 다른 슬롯은 인덱스값 그대로 활용
             }
 
+            // 두 슬롯에 들어있는 아이템 확인
             if ( fromSlot.SlotItemData == toSlot.SlotItemData )
             {
+                // 같은 종류의 아이템이다. => to에 최대한 채우고 넘치면 temp에 그대로 남긴다.
                 uint overCount = toSlot.IncreaseSlotItem(fromSlot.ItemCount);
                 fromSlot.DecreaseSlotItem(fromSlot.ItemCount - overCount);
             }
             else
             {
-                ItemData tempItemData = toSlot.SlotItemData;
+                // 다른 종류의 아이템이다. => 아이템과 아이템 갯수를 서로 스왑한다.
+                ItemData tempItemData = toSlot.SlotItemData;    // 임시 저장
                 uint tempItemCount = toSlot.ItemCount;
-                toSlot.AssignSlotItem(fromSlot.SlotItemData, fromSlot.ItemCount);
-                fromSlot.AssignSlotItem(tempItemData, tempItemCount);
+                toSlot.AssignSlotItem(fromSlot.SlotItemData, fromSlot.ItemCount);   // to에다 from의 정보 넣기
+                fromSlot.AssignSlotItem(tempItemData, tempItemCount);               // from에다가 임시로 저장한 to의 정보 넣기
             }
         }        
     }
 
-    // 아이템 나누기
-
+    /// <summary>
+    /// 아이템을 나눠서 임시 슬롯에 저장
+    /// </summary>
+    /// <param name="from">아이템을 나눌 슬롯</param>
+    /// <param name="count">나는 아이템 갯수</param>
     public void TempRemoveItem(uint from, uint count = 1)
     {
-        if( IsValidAndNotEmptySlot(from) )
+        if( IsValidAndNotEmptySlot(from) )  // from이 절절한 슬롯이면
         {
             ItemSlot slot = slots[from];
-            tempSlot.AssignSlotItem(slot.SlotItemData, count);
-            slot.DecreaseSlotItem(count);
+            tempSlot.AssignSlotItem(slot.SlotItemData, count);  // temp 슬롯에 지정된 갯수의 아이템 할당
+            slot.DecreaseSlotItem(count);   // from 슬롯에서 해당 갯수만큼 감소
         }
     }
-
 
     // 아이템 사용하기
     // 아이템 장비하기
@@ -362,7 +372,7 @@ public class Inventory
     /// </summary>
     /// <param name="index">확인할 인덱스</param>
     /// <returns>true면 적절한 범위. 아니면 false</returns>
-    private bool IsValidSlotIndex(uint index) => (index < SlotCount) || (index == TempItemSlotUI.TempSlotID);
+    private bool IsValidSlotIndex(uint index) => (index < SlotCount) || (index == TempSlotID);
     //{
     //    return index < SlotCount;
     //}
@@ -375,13 +385,13 @@ public class Inventory
     private bool IsValidAndNotEmptySlot(uint index)
     {
         ItemSlot testSlot = null;
-        if(index != TempItemSlotUI.TempSlotID)
+        if(index != TempSlotID)
         {
-            testSlot = slots[index];
+            testSlot = slots[index];    // index가 tempSlot이 아니면 인덱스로 찾기
         }
         else
         {
-            testSlot = TempSlot;
+            testSlot = TempSlot;    // index가 tempSlot인 경우 TempSlot 저장
         }
 
         return (IsValidSlotIndex(index) && !testSlot.IsEmpty());

@@ -77,10 +77,6 @@ public class ItemSpliterUI : MonoBehaviour
     private void OnOK()
     {
         Debug.Log("OnOK");
-        //targetSlotUI.ItemSlot.DecreaseSlotItem(ItemSplitCount);
-        //ItemSlot tempSlot = new(targetSlotUI.ItemSlot.SlotItemData, ItemSplitCount);
-        //tempSlot.onSlotItemChage = GameManager.Inst.InvenUI.TempSlotUI.Refresh;
-        //GameManager.Inst.InvenUI.TempSlotUI.Open(tempSlot);
 
         OnOkClick?.Invoke(targetSlotUI.ID, ItemSplitCount);
 
