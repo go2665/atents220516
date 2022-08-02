@@ -202,6 +202,34 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""UI"",
+            ""id"": ""94ca2bfc-631c-4a20-9a5f-9f3f89d79fc1"",
+            ""actions"": [
+                {
+                    ""name"": ""ItemDrop"",
+                    ""type"": ""Button"",
+                    ""id"": ""1bb78b4a-3112-41fc-9d27-dd008a022535"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""44140db9-0c2f-44e8-a1fd-b08637d92dd8"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboad_Mouse"",
+                    ""action"": ""ItemDrop"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -233,6 +261,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         // ShortCut
         m_ShortCut = asset.FindActionMap("ShortCut", throwIfNotFound: true);
         m_ShortCut_InventoryOnOff = m_ShortCut.FindAction("InventoryOnOff", throwIfNotFound: true);
+        // UI
+        m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
+        m_UI_ItemDrop = m_UI.FindAction("ItemDrop", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -386,6 +417,39 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         }
     }
     public ShortCutActions @ShortCut => new ShortCutActions(this);
+
+    // UI
+    private readonly InputActionMap m_UI;
+    private IUIActions m_UIActionsCallbackInterface;
+    private readonly InputAction m_UI_ItemDrop;
+    public struct UIActions
+    {
+        private @PlayerInputActions m_Wrapper;
+        public UIActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @ItemDrop => m_Wrapper.m_UI_ItemDrop;
+        public InputActionMap Get() { return m_Wrapper.m_UI; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(UIActions set) { return set.Get(); }
+        public void SetCallbacks(IUIActions instance)
+        {
+            if (m_Wrapper.m_UIActionsCallbackInterface != null)
+            {
+                @ItemDrop.started -= m_Wrapper.m_UIActionsCallbackInterface.OnItemDrop;
+                @ItemDrop.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnItemDrop;
+                @ItemDrop.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnItemDrop;
+            }
+            m_Wrapper.m_UIActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @ItemDrop.started += instance.OnItemDrop;
+                @ItemDrop.performed += instance.OnItemDrop;
+                @ItemDrop.canceled += instance.OnItemDrop;
+            }
+        }
+    }
+    public UIActions @UI => new UIActions(this);
     private int m_Keyboad_MouseSchemeIndex = -1;
     public InputControlScheme Keyboad_MouseScheme
     {
@@ -406,5 +470,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     public interface IShortCutActions
     {
         void OnInventoryOnOff(InputAction.CallbackContext context);
+    }
+    public interface IUIActions
+    {
+        void OnItemDrop(InputAction.CallbackContext context);
     }
 }

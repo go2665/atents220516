@@ -4,12 +4,16 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.EventSystems;
+using System;
 
 /// <summary>
 /// 임시로 한번씩만 보이는 슬롯
 /// </summary>
 public class TempItemSlotUI : ItemSlotUI
 {
+    PointerEventData eventData;
+
     /// <summary>
     /// Awake을 override해서 부모의 Awake 실행안되게 만들기(base.Awake 제거)
     /// </summary>
@@ -19,9 +23,14 @@ public class TempItemSlotUI : ItemSlotUI
         countText = GetComponentInChildren<TextMeshProUGUI>();
     }
 
+    private void Start()
+    {
+        eventData = new PointerEventData(EventSystem.current);
+    }
+
     private void Update()
     {
-        transform.position = Mouse.current.position.ReadValue();    // 마우스 위치에 맞춰서 임시 슬롯 이동
+        transform.position = Mouse.current.position.ReadValue();    // 마우스 위치에 맞춰서 임시 슬롯 이동        
     }
 
     /// <summary>
@@ -40,7 +49,7 @@ public class TempItemSlotUI : ItemSlotUI
     /// 임시 슬롯이 보이지 않게 닫기
     /// </summary>
     public void Close()
-    {
+    {   
         itemSlot.ClearSlotItem();       // 슬롯에 들어있는 아이템과 갯수 비우기
         gameObject.SetActive(false);    // 실제로 보이지 않게 만들기(비활성화시키기)
     }
@@ -50,4 +59,15 @@ public class TempItemSlotUI : ItemSlotUI
     /// </summary>
     /// <returns>true면 슬롯이 비어있다.</returns>
     public bool IsEmpty() => itemSlot.IsEmpty();
+
+    public void OnDrop(InputAction.CallbackContext obj)
+    {
+        eventData.position = Mouse.current.position.ReadValue();
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventData, results);
+        if (results.Count < 1 && !IsEmpty())
+        {
+            Debug.Log("UI 바깥쪽 드랍");
+        }
+    }
 }

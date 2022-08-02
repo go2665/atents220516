@@ -29,7 +29,12 @@ public class Test_Inventory : MonoBehaviour
         //inven.AddItem(ItemIDCode.ManaPotion, 4);
         //inven.TempRemoveItem(1, 3);
         //inven.TempToSlot(5);
+        //ItemFactory.MakeItem(ItemIDCode.Egg, new(1, 0, 0));
+        //ItemFactory.MakeItem(ItemIDCode.Bone, new(2, 0, 0));
+        //ItemFactory.MakeItem(ItemIDCode.HealingPotion, new(3, 0, 0));
+        //ItemFactory.MakeItem(ItemIDCode.ManaPotion, new(4, 0, 0));
 
+        //Camera.main.ScreenPointToRay(UnityEngine.InputSystem.Mouse.current.position.ReadValue());
 
     }
 

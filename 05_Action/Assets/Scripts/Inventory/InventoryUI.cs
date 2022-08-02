@@ -41,6 +41,8 @@ public class InventoryUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndD
     /// </summary>
     CanvasGroup canvasGroup;
 
+    PlayerInputActions inputActions;
+
 
     // Item관련  ----------------------------------------------------------------------------------    
     /// <summary>
@@ -97,6 +99,18 @@ public class InventoryUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndD
 
         Button closeButton = transform.Find("CloseButton").GetComponent<Button>();
         closeButton.onClick.AddListener(Close);
+
+        inputActions = new PlayerInputActions();
+    }
+
+    private void OnEnable()
+    {
+        inputActions.Enable();
+    }
+
+    private void OnDisable()
+    {
+        inputActions.Disable();
     }
 
 
@@ -150,6 +164,7 @@ public class InventoryUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndD
         // TempSlot 초기화
         tempItemSlotUI.Initialize(Inventory.TempSlotID, inven.TempSlot);    // TempItemSlotUI와 TempSlot 연결
         tempItemSlotUI.Close(); // tempItemSlotUI 닫은채로 시작하기
+        inputActions.UI.ItemDrop.canceled += tempItemSlotUI.OnDrop;
 
         // ItemSpliterUI 초기화(순서는 딱히 상관 없음)
         itemSpliterUI.Initialize();
