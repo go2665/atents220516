@@ -27,6 +27,8 @@ public class Test_Inventory : MonoBehaviour
         ItemFactory.MakeItem(ItemIDCode.ManaPotion, new(7, 0, 0));
         ItemFactory.MakeItem(ItemIDCode.ManaPotion, new(7, 0, 0));
 
+        GameManager.Inst.MainPlayer.HP = 50;
+
     }
 
     private static void Test_DummyInventory()

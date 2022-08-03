@@ -46,7 +46,7 @@ public class Enemy : MonoBehaviour, IHealth, IBattle
     public float HP
     {
         get => hp;
-        private set
+        set
         {
             hp = Mathf.Clamp(value, 0.0f, maxHP);
             onHealthChange?.Invoke();

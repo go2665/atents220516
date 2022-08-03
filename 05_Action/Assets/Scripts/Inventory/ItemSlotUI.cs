@@ -204,6 +204,19 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
                     detailUI.IsPause = false;   // 상세정보창 일시정지 풀기
                 }
+                else
+                {
+                    // 그냥 클릭한 상황
+                    if( !itemSlot.IsEmpty() )
+                    {
+                        IUsable usable = itemSlot.SlotItemData as IUsable;
+                        if(usable != null)
+                        {
+                            usable.Use(GameManager.Inst.MainPlayer.gameObject);
+                            ItemSlot.DecreaseSlotItem();
+                        }
+                    }
+                }
             }
         }
     }

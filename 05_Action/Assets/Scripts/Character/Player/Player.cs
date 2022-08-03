@@ -223,13 +223,15 @@ public class Player : MonoBehaviour, IHealth, IBattle
             if (consumable != null)
             {
                 consumable.Consume(this);   // 먹자마자 소비하는 형태의 아이템은 각자의 효과에 맞게 사용됨                
+                Destroy(col.gameObject);
             }
             else
             {
-                inven.AddItem(item.data);
-            }
-
-            Destroy(col.gameObject);
+                if( inven.AddItem(item.data) )
+                {
+                    Destroy(col.gameObject);
+                }
+            }            
         }
 
         //Debug.Log($"플레이어의 돈 : {money}");
