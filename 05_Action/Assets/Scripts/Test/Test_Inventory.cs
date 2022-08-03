@@ -8,7 +8,29 @@ public class Test_Inventory : MonoBehaviour
     {
         //Test_AddRemoveMove();
         //Test_Stack();
+        //Test_DummyInventory();
 
+        ItemFactory.MakeItem(ItemIDCode.Coin_Gold, new(1, 0, 0));
+        ItemFactory.MakeItem(ItemIDCode.Coin_Copper, new(2, 0, 0));
+        ItemFactory.MakeItem(ItemIDCode.Coin_Silver, new(3, 0, 0));
+        ItemFactory.MakeItem(ItemIDCode.Bone, new(4, 0, 0));
+        ItemFactory.MakeItem(ItemIDCode.Egg, new(5, 0, 0));
+        ItemFactory.MakeItem(ItemIDCode.Egg, new(5, 0, 0));
+        ItemFactory.MakeItem(ItemIDCode.HealingPotion, new(6, 0, 0));
+        ItemFactory.MakeItem(ItemIDCode.HealingPotion, new(6, 0, 0));
+        ItemFactory.MakeItem(ItemIDCode.HealingPotion, new(6, 0, 0));
+        ItemFactory.MakeItem(ItemIDCode.HealingPotion, new(6, 0, 0));
+        ItemFactory.MakeItem(ItemIDCode.ManaPotion, new(7, 0, 0));
+        ItemFactory.MakeItem(ItemIDCode.ManaPotion, new(7, 0, 0));
+        ItemFactory.MakeItem(ItemIDCode.ManaPotion, new(7, 0, 0));
+        ItemFactory.MakeItem(ItemIDCode.ManaPotion, new(7, 0, 0));
+        ItemFactory.MakeItem(ItemIDCode.ManaPotion, new(7, 0, 0));
+        ItemFactory.MakeItem(ItemIDCode.ManaPotion, new(7, 0, 0));
+
+    }
+
+    private static void Test_DummyInventory()
+    {
         Inventory inven = new Inventory();
         InventoryUI invenUI = FindObjectOfType<InventoryUI>();
         invenUI.InitializeInventory(inven);
@@ -21,9 +43,9 @@ public class Test_Inventory : MonoBehaviour
         inven.AddItem(ItemIDCode.ManaPotion);
         inven.AddItem(ItemIDCode.ManaPotion);
         inven.AddItem(ItemIDCode.ManaPotion);
-        inven.AddItem(ItemIDCode.ManaPotion,5);
-        inven.AddItem(ItemIDCode.ManaPotion,5);
-        inven.AddItem(ItemIDCode.ManaPotion,5);
+        inven.AddItem(ItemIDCode.ManaPotion, 5);
+        inven.AddItem(ItemIDCode.ManaPotion, 5);
+        inven.AddItem(ItemIDCode.ManaPotion, 5);
         //inven.AddItem(ItemIDCode.ManaPotion, 4);
         //inven.AddItem(ItemIDCode.ManaPotion, 4);
         //inven.AddItem(ItemIDCode.ManaPotion, 4);
@@ -34,8 +56,9 @@ public class Test_Inventory : MonoBehaviour
         //ItemFactory.MakeItem(ItemIDCode.HealingPotion, new(3, 0, 0));
         //ItemFactory.MakeItem(ItemIDCode.ManaPotion, new(4, 0, 0));
 
-        //Camera.main.ScreenPointToRay(UnityEngine.InputSystem.Mouse.current.position.ReadValue());
+        ItemFactory.MakeItem(ItemIDCode.Coin_Gold);
 
+        //Camera.main.ScreenPointToRay(UnityEngine.InputSystem.Mouse.current.position.ReadValue());
     }
 
     private static void Test_Stack()

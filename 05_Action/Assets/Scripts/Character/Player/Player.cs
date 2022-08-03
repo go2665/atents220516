@@ -54,7 +54,7 @@ public class Player : MonoBehaviour, IHealth, IBattle
     public int Money
     {
         get => money;
-        private set
+        set
         {
             if (money != value) // 실제로 금액이 변경되었을 때만 실행
             {
@@ -67,6 +67,11 @@ public class Player : MonoBehaviour, IHealth, IBattle
     public System.Action<int> OnMoneyChange;// 돈이 변경되면 실행되는 델리게이트
     float dropRange = 2.0f;
 
+    // 인벤토리 용 ---------------------------------------------------------------------------------
+    Inventory inven;
+
+    //---------------------------------------------------------------------------------------------
+
 
     private void Awake()
     {
@@ -76,6 +81,8 @@ public class Player : MonoBehaviour, IHealth, IBattle
         sheild = GetComponentInChildren<FindShield>().gameObject;
 
         ps = weapon.GetComponentInChildren<ParticleSystem>();
+
+        inven = new Inventory();
     }
 
     void Start()
@@ -84,6 +91,7 @@ public class Player : MonoBehaviour, IHealth, IBattle
         {
             lockOnEffect = GameObject.Find("LockOnEffect");
         }
+        GameManager.Inst.InvenUI.InitializeInventory(inven);
     }
 
     public void ShowWeapons(bool isShow)
@@ -208,7 +216,19 @@ public class Player : MonoBehaviour, IHealth, IBattle
         foreach(var col in cols)
         {
             Item item = col.GetComponent<Item>();
-            Money += (int)item.data.value;  // 종류별로 돈 더하기
+
+            // as : as 앞의 변수가 as 뒤의 타입으로 캐스팅이 되면 캐스팅 된 결과를 주고 안되면 null을 준다.
+            // is : is 앞의 변수가 is 뒤의 타입으로 캐스팅이 되면 true, 아니면 false
+            IConsumable consumable = item.data as IConsumable;  
+            if (consumable != null)
+            {
+                consumable.Consume(this);   // 먹자마자 소비하는 형태의 아이템은 각자의 효과에 맞게 사용됨                
+            }
+            else
+            {
+                inven.AddItem(item.data);
+            }
+
             Destroy(col.gameObject);
         }
 
@@ -237,5 +257,7 @@ public class Player : MonoBehaviour, IHealth, IBattle
     {
         Handles.color = Color.white;
         Handles.DrawWireDisc(transform.position, transform.up, lockOnRange);
+        Handles.color = Color.yellow;
+        Handles.DrawWireDisc(transform.position, transform.up, itemPickupRange);
     }
 }

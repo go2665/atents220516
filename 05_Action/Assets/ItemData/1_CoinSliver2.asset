@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18c6c0b2afc625c4cb40028baee0f0b8, type: 3}
+  m_Name: 1_CoinSliver2
+  m_EditorClassIdentifier: 
+  id: 1
+  itemName: "\uC740\uD654"
+  itemIcon: {fileID: 21300000, guid: 83f2beb3e2ba2e347b4b0d5d63d0373b, type: 3}
+  prefab: {fileID: 1419077572623367931, guid: 809f6113c87478943b1494dadce06467, type: 3}
+  value: 10
+  maxStackCount: 1
