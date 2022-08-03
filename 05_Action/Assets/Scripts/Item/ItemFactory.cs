@@ -39,6 +39,13 @@ public class ItemFactory
         return obj;     // 생성완료된 것 리턴
     }
 
+    /// <summary>
+    /// 아이템 생성 위치를 살짝 변동시키 위한 함수
+    /// </summary>
+    /// <param name="code">생성할 아이템</param>
+    /// <param name="position">생성될 위치</param>
+    /// <param name="randomNoise">false면 정확한 position에 생성. true면 position에서 살짝 위치 변경</param>
+    /// <returns></returns>
     public static GameObject MakeItem(ItemIDCode code, Vector3 position, bool randomNoise = false)
     {
         GameObject obj = MakeItem(code);
@@ -51,5 +58,34 @@ public class ItemFactory
         obj.transform.position = position;
         
         return obj;
+    }
+
+    /// <summary>
+    /// 아이템을 여러개 생성하기 위한 함수
+    /// </summary>
+    /// <param name="code">생성할 아이템</param>
+    /// <param name="position">생성된 아이템의 위치</param>
+    /// <param name="count">생성할 갯수</param>
+    public static void MakeItems(ItemIDCode code, Vector3 position, uint count)
+    {
+        for(int i=0;i<count;i++)
+        {
+            MakeItem(code, position, true);
+        }
+    }
+
+    public static GameObject MakeItem(uint id)
+    {
+        return MakeItem((ItemIDCode)id);
+    }
+
+    public static GameObject MakeItem(uint id, Vector3 position, bool randomNoise = false)
+    {
+        return MakeItem((ItemIDCode)id, position, randomNoise);
+    }
+
+    public static void MakeItems(uint id, Vector3 position, uint count)
+    {
+        MakeItems((ItemIDCode)id, position, count);
     }
 }
