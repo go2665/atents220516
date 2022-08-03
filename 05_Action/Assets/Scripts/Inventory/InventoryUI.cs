@@ -105,12 +105,14 @@ public class InventoryUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndD
 
     private void OnEnable()
     {
-        inputActions.Enable();
+        inputActions.ShortCut.Enable();
+        inputActions.UI.Enable();
     }
 
     private void OnDisable()
     {
-        inputActions.Disable();
+        inputActions.UI.Disable();
+        inputActions.ShortCut.Disable();
     }
 
 

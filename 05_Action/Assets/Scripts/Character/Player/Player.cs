@@ -65,6 +65,7 @@ public class Player : MonoBehaviour, IHealth, IBattle
     }
     float itemPickupRange = 2.0f;           // 아이템을 줍는 범위(반지름)
     public System.Action<int> OnMoneyChange;// 돈이 변경되면 실행되는 델리게이트
+    float dropRange = 2.0f;
 
 
     private void Awake()
@@ -212,6 +213,24 @@ public class Player : MonoBehaviour, IHealth, IBattle
         }
 
         //Debug.Log($"플레이어의 돈 : {money}");
+    }
+
+    public Vector3 ItemDropPosition(Vector3 inputPos)
+    {
+        Vector3 result = Vector3.zero;
+        Vector3 toInputPos = inputPos - transform.position;
+        if(toInputPos.sqrMagnitude > dropRange * dropRange)
+        {
+            // inputPos가 dropRange 밖에 있다.
+            result = transform.position + toInputPos.normalized * dropRange;
+        }
+        else
+        {
+            // inputPos가 dropRange 안에 있다.
+            result = inputPos;
+        }
+
+        return result;
     }
 
     private void OnDrawGizmos()

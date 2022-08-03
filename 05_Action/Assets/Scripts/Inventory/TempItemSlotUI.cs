@@ -72,14 +72,17 @@ public class TempItemSlotUI : ItemSlotUI
         EventSystem.current.RaycastAll(eventData, results);         // 이벤트 시스템을 이용해 UI와 레이캐스팅
         if (results.Count < 1 && !IsEmpty())    // UI 중에 레이캐스팅된 UI가 없고 임시 슬롯에 아이템이 들어있다.
         {
-            Debug.Log("UI 바깥쪽 드랍");
+            //Debug.Log("UI 바깥쪽 드랍");
 
             Ray ray = Camera.main.ScreenPointToRay(mousePos);
             // Ground 레이어에 들어있는 오브젝트가 피킹(레이캐스팅)되었는지 확인
             if( Physics.Raycast(ray, out RaycastHit hit, 1000.0f, LayerMask.GetMask("Ground")) )
             {
-                Debug.Log("땅 레이캐스트 성공");
-                ItemFactory.MakeItems(ItemSlot.SlotItemData.id, hit.point, ItemSlot.ItemCount); // 임시 슬롯에 들어있는 모든 아이템을 생성
+                //Debug.Log("땅 레이캐스트 성공");
+                Vector3 pos = GameManager.Inst.MainPlayer.ItemDropPosition(hit.point);      // 아이템 드랍할 위치 계산
+                ItemFactory.MakeItems(ItemSlot.SlotItemData.id, pos, ItemSlot.ItemCount);   // 임시 슬롯에 들어있는 모든 아이템을 생성
+
+                Close();    // 임시슬롯UI 닫고 클리어하기
             }
         }
     }
