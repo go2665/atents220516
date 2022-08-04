@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-public class Player : MonoBehaviour, IHealth, IBattle
+public class Player : MonoBehaviour, IHealth, IMana, IBattle
 {
     GameObject weapon;
     GameObject sheild;
@@ -34,6 +34,28 @@ public class Player : MonoBehaviour, IHealth, IBattle
     }
 
     public System.Action onHealthChange { get; set; }
+
+    // IMana --------------------------------------------------------------------------------------
+    float mp = 150.0f;
+    float maxMP = 150.0f;
+
+    public float MP
+    {
+        get => mp;
+        set
+        {
+            if (mp != value)
+            {
+                mp = value;
+                onManaChange?.Invoke();
+            }
+        }
+    }
+
+    public float MaxMP => maxMP;
+
+    public System.Action onManaChange { get ; set; }
+
 
     // IBattle ------------------------------------------------------------------------------------
     public float attackPower = 30.0f;

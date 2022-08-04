@@ -8,7 +8,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Healing Potion", menuName = "Scriptable Object/Item Data - HealingPotion", order = 3)]
 public class ItemData_HealingPotion : ItemData, IUsable
 {
-    float healPoint = 20.0f;
+    [Header("힐링포션 데이터")]
+    public float healPoint = 20.0f;
 
     public void Use(GameObject target = null)
     {

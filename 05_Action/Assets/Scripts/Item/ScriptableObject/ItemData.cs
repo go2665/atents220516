@@ -8,6 +8,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName ="New Item Data", menuName = "Scriptable Object/Item Data", order = 1)]
 public class ItemData : ScriptableObject    // 내가 원하는 데이터를 저장할 수 있는 데이터파일을 설계할 수 있게 해주는 클래스
 {
+    [Header("기본 데이터")]
     public uint id = 0;                     // 아이템 ID
     public string itemName = "아이템";       // 아이템 이름
     public Sprite itemIcon;                 // 아이템 아이콘
