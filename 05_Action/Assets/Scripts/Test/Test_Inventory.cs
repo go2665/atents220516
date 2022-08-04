@@ -15,19 +15,16 @@ public class Test_Inventory : MonoBehaviour
         ItemFactory.MakeItem(ItemIDCode.Coin_Silver, new(3, 0, 0));
         ItemFactory.MakeItem(ItemIDCode.Bone, new(4, 0, 0));
         ItemFactory.MakeItem(ItemIDCode.Egg, new(5, 0, 0));
-        ItemFactory.MakeItem(ItemIDCode.Egg, new(5, 0, 0));
-        ItemFactory.MakeItem(ItemIDCode.HealingPotion, new(6, 0, 0));
-        ItemFactory.MakeItem(ItemIDCode.HealingPotion, new(6, 0, 0));
         ItemFactory.MakeItem(ItemIDCode.HealingPotion, new(6, 0, 0));
         ItemFactory.MakeItem(ItemIDCode.HealingPotion, new(6, 0, 0));
         ItemFactory.MakeItem(ItemIDCode.ManaPotion, new(7, 0, 0));
         ItemFactory.MakeItem(ItemIDCode.ManaPotion, new(7, 0, 0));
         ItemFactory.MakeItem(ItemIDCode.ManaPotion, new(7, 0, 0));
-        ItemFactory.MakeItem(ItemIDCode.ManaPotion, new(7, 0, 0));
-        ItemFactory.MakeItem(ItemIDCode.ManaPotion, new(7, 0, 0));
-        ItemFactory.MakeItem(ItemIDCode.ManaPotion, new(7, 0, 0));
+        ItemFactory.MakeItem(ItemIDCode.OneHandSword1, new(8, 0, 0));
+        ItemFactory.MakeItem(ItemIDCode.OneHandSword2, new(9, 0, 0));
 
         GameManager.Inst.MainPlayer.HP = 50;
+        GameManager.Inst.MainPlayer.MP = 50;
 
     }
 

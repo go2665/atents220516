@@ -22,7 +22,7 @@ public class Player : MonoBehaviour, IHealth, IMana, IBattle
         {
             if(hp != value)
             {
-                hp = value;
+                hp = Mathf.Clamp(value, 0, maxHP);
                 onHealthChange?.Invoke();
             }
         }
@@ -36,7 +36,7 @@ public class Player : MonoBehaviour, IHealth, IMana, IBattle
     public System.Action onHealthChange { get; set; }
 
     // IMana --------------------------------------------------------------------------------------
-    float mp = 150.0f;
+    public float mp = 150.0f;
     float maxMP = 150.0f;
 
     public float MP
@@ -46,7 +46,7 @@ public class Player : MonoBehaviour, IHealth, IMana, IBattle
         {
             if (mp != value)
             {
-                mp = value;
+                mp = Mathf.Clamp(value, 0, maxMP);
                 onManaChange?.Invoke();
             }
         }

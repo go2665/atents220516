@@ -22,5 +22,7 @@ public enum ItemIDCode
     Egg,
     Bone,
     HealingPotion,
-    ManaPotion
+    ManaPotion,
+    OneHandSword1,
+    OneHandSword2
 }

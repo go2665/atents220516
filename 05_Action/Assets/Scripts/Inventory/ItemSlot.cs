@@ -126,6 +126,17 @@ public class ItemSlot
     }
 
     // 아이템을 사용하는 함수
+    public void UseSlotItem(GameObject target = null)
+    {
+        IUsable usable = slotItemData as IUsable;
+        if (usable != null)
+        {
+            usable.Use(target);
+            DecreaseSlotItem();            
+        }
+    }
+
+
     // 아이템을 장비하는 함수
 
     // 함수(백엔드) --------------------------------------------------------------------------------

@@ -207,13 +207,12 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
                 else
                 {
                     // 그냥 클릭한 상황
-                    if( !itemSlot.IsEmpty() )
+                    if( !ItemSlot.IsEmpty() )
                     {
-                        IUsable usable = itemSlot.SlotItemData as IUsable;
-                        if(usable != null)
+                        ItemSlot.UseSlotItem(GameManager.Inst.MainPlayer.gameObject);
+                        if (ItemSlot.IsEmpty())
                         {
-                            usable.Use(GameManager.Inst.MainPlayer.gameObject);
-                            ItemSlot.DecreaseSlotItem();
+                            invenUI.Detail.Close();
                         }
                     }
                 }
