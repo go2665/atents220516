@@ -8,23 +8,39 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Weapon Item Data", menuName = "Scriptable Object/Item Data - Weapon", order = 5)]
 public class ItemData_Weapon : ItemData, IEquipItem
 {
+    [Header("무기 데이터")]
+    public float attackPower = 10.0f;
+    public float attackSpeed = 1.0f;
+
+    /// <summary>
+    /// 아이템 장비
+    /// </summary>
+    /// <param name="target">아이템을 장비할 대상</param>
     public void EquipItem(IEquipTarget target)
     {
         target.EquipWeapon(this);
     }
 
+    /// <summary>
+    /// 아이템 장비/해제 토글
+    /// </summary>
+    /// <param name="target">아이템을 토글할 대상</param>
     public void ToggleEquipItem(IEquipTarget target)
     {
         if(target.IsWeaponEquiped)
         {
-            target.UnEquipWeapon();
+            target.UnEquipWeapon();     // 장비되어있으면 해제하고
         }
         else
         {
-            target.EquipWeapon(this);
+            target.EquipWeapon(this);   // 장비안되어있으면 장비
         }
     }
 
+    /// <summary>
+    /// 아이템 해제
+    /// </summary>
+    /// <param name="target">아이템을 해제할 대상</param>
     public void UnEquipItem(IEquipTarget target)
     {
         target.UnEquipWeapon();

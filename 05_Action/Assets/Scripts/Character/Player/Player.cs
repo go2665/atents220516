@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-public class Player : MonoBehaviour, IHealth, IMana, IBattle
+public class Player : MonoBehaviour, IHealth, IMana, IBattle, IEquipTarget
 {
     GameObject weapon;
     GameObject sheild;
@@ -85,12 +85,18 @@ public class Player : MonoBehaviour, IHealth, IMana, IBattle
             }
         }
     }
+
     float itemPickupRange = 2.0f;           // 아이템을 줍는 범위(반지름)
     public System.Action<int> OnMoneyChange;// 돈이 변경되면 실행되는 델리게이트
     float dropRange = 2.0f;
 
     // 인벤토리 용 ---------------------------------------------------------------------------------
     Inventory inven;
+
+    ItemData_Weapon equipItem;
+    public ItemData_Weapon EquipItem => equipItem;
+
+    public bool IsWeaponEquiped => equipItem != null;
 
     //---------------------------------------------------------------------------------------------
 
@@ -124,13 +130,16 @@ public class Player : MonoBehaviour, IHealth, IMana, IBattle
 
     public void TurnOnAura(bool turnOn)
     {
-        if (turnOn)
+        if (ps != null)
         {
-            ps.Play();
-        }
-        else
-        {
-            ps.Stop();
+            if (turnOn)
+            {
+                ps.Play();
+            }
+            else
+            {
+                ps.Stop();
+            }
         }
     }
 
@@ -283,5 +292,30 @@ public class Player : MonoBehaviour, IHealth, IMana, IBattle
         Handles.DrawWireDisc(transform.position, transform.up, lockOnRange);
         Handles.color = Color.yellow;
         Handles.DrawWireDisc(transform.position, transform.up, itemPickupRange);
+    }
+
+    /// <summary>
+    /// 아이템 장비
+    /// </summary>
+    /// <param name="weaponData">장비하는 무기 아이템 데이터</param>
+    public void EquipWeapon(ItemData_Weapon weaponData)
+    {
+        ShowWeapons(true);  // 장비하면 무조건 보이도록
+        GameObject obj = Instantiate(weaponData.prefab, weapon.transform);  // 새로 장비할 아이템 생성하기
+        obj.transform.localPosition = new(0, 0, 0);             // 부모에게 정확히 붙도록 로컬을 0,0,0으로 설정
+        ps = obj.GetComponent<ParticleSystem>();                // 파티클 시스템 갱신
+        equipItem = weaponData;                                 // 장비한 아이템 표시
+    }
+
+    /// <summary>
+    /// 아이템 해제
+    /// </summary>
+    public void UnEquipWeapon()
+    {
+        equipItem = null;   // 장비가 해재됬다는 것을 표시하기 위함(IsWeaponEquiped 변경용)
+        ps = null;          // 파티클 시스템 비우기
+        Transform weaponChild = weapon.transform.GetChild(0);   
+        weaponChild.parent = null;          // 무기가 붙는 장소에 있는 자식 지우기
+        Destroy(weaponChild.gameObject);    // 무기 디스트로이
     }
 }

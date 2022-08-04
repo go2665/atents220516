@@ -209,11 +209,15 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
                     // 그냥 클릭한 상황
                     if( !ItemSlot.IsEmpty() )
                     {
+                        // 아이템 사용 시도
                         ItemSlot.UseSlotItem(GameManager.Inst.MainPlayer.gameObject);
                         if (ItemSlot.IsEmpty())
                         {
                             invenUI.Detail.Close();
                         }
+
+                        // 아이템 장비 시도
+                        ItemSlot.EquipSlotItem(GameManager.Inst.MainPlayer.gameObject);
                     }
                 }
             }
