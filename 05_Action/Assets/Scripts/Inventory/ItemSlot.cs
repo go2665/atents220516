@@ -136,6 +136,7 @@ public class ItemSlot
     {
         SlotItemData = null;
         ItemCount = 0;
+        ItemEquiped = false;
     }
 
     /// <summary>

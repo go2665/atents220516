@@ -318,7 +318,7 @@ public class Inventory
         {
             ItemSlot slot = slots[from];
             tempSlot.AssignSlotItem(slot.SlotItemData, count);  // temp 슬롯에 지정된 갯수의 아이템 할당
-            slot.DecreaseSlotItem(count);   // from 슬롯에서 해당 갯수만큼 감소
+            slot.DecreaseSlotItem(count);   // from 슬롯에서 해당 갯수만큼 감소            
             tempSlot.ItemEquiped = equiped;
         }
     }
