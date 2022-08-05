@@ -84,6 +84,11 @@ public class TempItemSlotUI : ItemSlotUI
                 Vector3 pos = GameManager.Inst.MainPlayer.ItemDropPosition(hit.point);      // 아이템 드랍할 위치 계산
                 ItemFactory.MakeItems(ItemSlot.SlotItemData.id, pos, ItemSlot.ItemCount);   // 임시 슬롯에 들어있는 모든 아이템을 생성
 
+                if( itemSlot.ItemEquiped )  // 장비중인 아이템을 버리는 상황이면 장비 해재
+                {
+                    GameManager.Inst.MainPlayer.UnEquipWeapon();
+                }
+
                 Close();    // 임시슬롯UI 닫고 클리어하기
             }
         }

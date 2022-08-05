@@ -24,8 +24,14 @@ public class Test_Inventory : MonoBehaviour
         ItemFactory.MakeItem(ItemIDCode.OneHandSword2);
         ItemFactory.MakeItem(ItemIDCode.OneHandSword1);
         ItemFactory.MakeItem(ItemIDCode.OneHandSword2);
-        ItemFactory.MakeItem(ItemIDCode.OneHandSword1);
-        ItemFactory.MakeItem(ItemIDCode.OneHandSword2);
+        ItemFactory.MakeItem(ItemIDCode.HealingPotion);
+        ItemFactory.MakeItem(ItemIDCode.HealingPotion);
+        ItemFactory.MakeItem(ItemIDCode.HealingPotion);
+        ItemFactory.MakeItem(ItemIDCode.ManaPotion);
+        ItemFactory.MakeItem(ItemIDCode.ManaPotion);
+        ItemFactory.MakeItem(ItemIDCode.ManaPotion);
+        ItemFactory.MakeItem(ItemIDCode.ManaPotion);
+        ItemFactory.MakeItem(ItemIDCode.ManaPotion);
 
 
 

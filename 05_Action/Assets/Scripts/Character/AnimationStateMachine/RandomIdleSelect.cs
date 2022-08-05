@@ -55,6 +55,7 @@ public class RandomIdleSelect : StateMachineBehaviour
         {
             select = 4;
         }
+        select = 0;
         return select;
     }
 

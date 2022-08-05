@@ -97,7 +97,10 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             itemImage.sprite = itemSlot.SlotItemData.itemIcon;  // 아이콘 이미지 설정하고
             itemImage.color = Color.white;  // 불투명하게 만들기
             countText.text = itemSlot.ItemCount.ToString();
-            equipMark.gameObject.SetActive(itemSlot.ItemEquiped);
+
+            // equipMark는 장비아이템이 장비중인 상황일때만 보여지기
+            equipMark.gameObject.SetActive((itemSlot.SlotItemData is ItemData_Weapon) && itemSlot.ItemEquiped);
+            
         }
         else
         {
@@ -209,6 +212,7 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
                         uint tempCount = temp.ItemSlot.ItemCount;
                         temp.ItemSlot.AssignSlotItem(itemSlot.SlotItemData, itemSlot.ItemCount);
                         itemSlot.AssignSlotItem(tempData, tempCount);
+                        (temp.ItemSlot.ItemEquiped, itemSlot.ItemEquiped) = (itemSlot.ItemEquiped, temp.ItemSlot.ItemEquiped);
                     }
 
                     detailUI.IsPause = false;   // 상세정보창 일시정지 풀기
