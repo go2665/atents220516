@@ -43,6 +43,11 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     /// </summary>
     protected TextMeshProUGUI countText;
 
+    /// <summary>
+    /// 아이템의 장비 여부를 표시할 Text 컴포넌트
+    /// </summary>
+    protected TextMeshProUGUI equipMark;
+
 
 
     // 프로퍼티들 ----------------------------------------------------------------------------------
@@ -61,7 +66,9 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     protected virtual void Awake()  // 오버라이드 가능하도록 virtual 추가
     {
         itemImage = transform.GetChild(0).GetComponent<Image>();    // 아이템 표시용 이미지 컴포넌트 찾아놓기
-        countText = GetComponentInChildren<TextMeshProUGUI>();
+        countText = transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+        equipMark = transform.GetChild(2).GetComponent<TextMeshProUGUI>();
+        equipMark.gameObject.SetActive(false);
     }
 
     /// <summary>
@@ -217,10 +224,24 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
                         }
 
                         // 아이템 장비 시도
-                        ItemSlot.EquipSlotItem(GameManager.Inst.MainPlayer.gameObject);
+                        bool isEquiped = ItemSlot.EquipSlotItem(GameManager.Inst.MainPlayer.gameObject);
+                        if(isEquiped)
+                        {
+                            invenUI.ClearAllEquipMark();
+                            equipMark.gameObject.SetActive(true);
+                        }
+                        else
+                        {
+                            equipMark.gameObject.SetActive(false);
+                        }
                     }
                 }
             }
         }
+    }
+
+    public void ClearEquipMark()
+    {
+        equipMark.gameObject.SetActive(false);
     }
 }

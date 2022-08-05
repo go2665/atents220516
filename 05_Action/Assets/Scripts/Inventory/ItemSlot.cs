@@ -144,8 +144,9 @@ public class ItemSlot
     /// 아이템을 장비하는 함수
     /// </summary>
     /// <param name="target">아이템을 장비하는 대상</param>
-    public void EquipSlotItem(GameObject target = null)
+    public bool EquipSlotItem(GameObject target = null)
     {
+        bool result = false;
         IEquipItem equipItem = SlotItemData as IEquipItem;  // 이 아이템이 장비 가능한 아이템인지 확인
         if(equipItem != null)
         {
@@ -163,6 +164,7 @@ public class ItemSlot
                         // 다른 무기를 장비하고 있다.
                         equipTarget.UnEquipWeapon();            // 일단 무기를 벗는다.
                         equipTarget.EquipWeapon(weaponData);    // 다른 무기를 장비한다.
+                        result = true;
                     }
                     else
                     {
@@ -173,9 +175,11 @@ public class ItemSlot
                 {
                     // 무기를 장비하고 있지 않다. => 그냥 장비
                     equipTarget.EquipWeapon(weaponData);
+                    result = true;
                 }
             }
         }
+        return result;
     }
 
 

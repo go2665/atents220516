@@ -232,6 +232,14 @@ public class InventoryUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndD
         OnInventoryClose?.Invoke();
     }
 
+    public void ClearAllEquipMark()
+    {
+        foreach(var slot in slotUIs)
+        {
+            slot.ClearEquipMark();
+        }
+    }
+
     // 델리게이트용 함수 ---------------------------------------------------------------------------
     /// <summary>
     /// SpliterUI가 OK됬을 때 실행될 함수
