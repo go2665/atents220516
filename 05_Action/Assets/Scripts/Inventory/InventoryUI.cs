@@ -290,7 +290,7 @@ public class InventoryUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndD
                         // ItemSlotUI 컴포넌트가 있으면 ID 기록해 놓기
                         //Debug.Log($"Start SlotID : {slotUI.ID}");
                         dragStartID = slotUI.ID;
-                        inven.TempRemoveItem(dragStartID, slotUI.ItemSlot.ItemCount);   // 드래그 시작한 위치의 아이템을 TempSlot으로 옮김
+                        inven.TempRemoveItem(dragStartID, slotUI.ItemSlot.ItemCount, slotUI.ItemSlot.ItemEquiped);   // 드래그 시작한 위치의 아이템을 TempSlot으로 옮김
                         tempItemSlotUI.Open();  // 드래그 시작할 때 TempSlot 열기
                         detail.Close();         // 상세정보창 닫기
                         detail.IsPause = true;  // 상세정보창 안열리게 하기

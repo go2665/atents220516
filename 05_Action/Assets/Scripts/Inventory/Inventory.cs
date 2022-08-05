@@ -312,13 +312,14 @@ public class Inventory
     /// </summary>
     /// <param name="from">아이템을 나눌 슬롯</param>
     /// <param name="count">나는 아이템 갯수</param>
-    public void TempRemoveItem(uint from, uint count = 1)
+    public void TempRemoveItem(uint from, uint count = 1, bool equiped = false)
     {
         if( IsValidAndNotEmptySlot(from) )  // from이 절절한 슬롯이면
         {
             ItemSlot slot = slots[from];
             tempSlot.AssignSlotItem(slot.SlotItemData, count);  // temp 슬롯에 지정된 갯수의 아이템 할당
             slot.DecreaseSlotItem(count);   // from 슬롯에서 해당 갯수만큼 감소
+            tempSlot.ItemEquiped = equiped;
         }
     }
 
