@@ -9,6 +9,7 @@ public class Player : MonoBehaviour, IHealth, IMana, IBattle, IEquipTarget
     GameObject sheild;
 
     ParticleSystem ps;
+    CapsuleCollider weaponCollider;
     Animator anim;
 
     // IHealth ------------------------------------------------------------------------------------
@@ -117,6 +118,7 @@ public class Player : MonoBehaviour, IHealth, IMana, IBattle, IEquipTarget
         if (lockOnEffect == null)
         {
             lockOnEffect = GameObject.Find("LockOnEffect");
+            lockOnEffect.SetActive(false);
         }
         GameManager.Inst.InvenUI.InitializeInventory(inven);
     }
@@ -303,6 +305,7 @@ public class Player : MonoBehaviour, IHealth, IMana, IBattle, IEquipTarget
         GameObject obj = Instantiate(weaponSlot.SlotItemData.prefab, weapon.transform);  // 새로 장비할 아이템 생성하기
         obj.transform.localPosition = new(0, 0, 0);             // 부모에게 정확히 붙도록 로컬을 0,0,0으로 설정
         ps = obj.GetComponent<ParticleSystem>();                // 파티클 시스템 갱신
+        weaponCollider = obj.GetComponent<CapsuleCollider>();
         equipItemSlot = weaponSlot;                             // 장비한 아이템 표시
         equipItemSlot.ItemEquiped = true;
     }
@@ -314,9 +317,33 @@ public class Player : MonoBehaviour, IHealth, IMana, IBattle, IEquipTarget
     {
         equipItemSlot.ItemEquiped = false;
         equipItemSlot = null;   // 장비가 해재됬다는 것을 표시하기 위함(IsWeaponEquiped 변경용)
+        weaponCollider = null;
         ps = null;          // 파티클 시스템 비우기
         Transform weaponChild = weapon.transform.GetChild(0);   
         weaponChild.parent = null;          // 무기가 붙는 장소에 있는 자식 지우기
         Destroy(weaponChild.gameObject);    // 무기 디스트로이
+    }
+
+    public void WeaponColliderOn()
+    {
+        if (weaponCollider != null)
+        {
+            weaponCollider.enabled = true;
+        }
+    }
+
+    public void WeaponColliderOff()
+    {
+        if (weaponCollider != null)
+        {
+            weaponCollider.enabled = false;
+        }
+    }
+
+
+    public void Test()
+    {
+        inven.AddItem(ItemIDCode.OneHandSword1);
+        EquipWeapon(inven[0]);        
     }
 }

@@ -300,8 +300,13 @@ public class Enemy : MonoBehaviour, IHealth, IBattle
 
     void ItemDrop()
     {
-        float randomSelect = Random.Range(0.0f, 1.0f);
-        if( randomSelect < 0.1f )
+        float randomSelect = Random.Range(0.0f, 1.0f);        
+        
+        if( randomSelect < 0.001f)
+        {
+            ItemFactory.MakeItem(ItemIDCode.OneHandSword2);
+        }
+        else if( randomSelect < 0.1f )
         {
             ItemFactory.MakeItem(ItemIDCode.Coin_Gold, transform.position, true);            
         }
@@ -309,12 +314,18 @@ public class Enemy : MonoBehaviour, IHealth, IBattle
         {
             ItemFactory.MakeItem(ItemIDCode.Coin_Silver, transform.position, true);
         }
+        else if (randomSelect < 0.4f)
+        {
+            ItemFactory.MakeItem(ItemIDCode.HealingPotion, transform.position, true);
+        }
+        else if (randomSelect < 0.5f)
+        {
+            ItemFactory.MakeItem(ItemIDCode.ManaPotion, transform.position, true);
+        }
         else
         {
             ItemFactory.MakeItem(ItemIDCode.Coin_Copper, transform.position, true);
         }
-
-
     }
 
     IEnumerator DeadEffect()
