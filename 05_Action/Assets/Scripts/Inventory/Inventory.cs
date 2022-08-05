@@ -299,10 +299,11 @@ public class Inventory
             {
                 // 다른 종류의 아이템이다. => 아이템과 아이템 갯수를 서로 스왑한다.
                 ItemData tempItemData = toSlot.SlotItemData;    // 임시 저장
-                uint tempItemCount = toSlot.ItemCount;
+                uint tempItemCount = toSlot.ItemCount;                
                 toSlot.AssignSlotItem(fromSlot.SlotItemData, fromSlot.ItemCount);   // to에다 from의 정보 넣기
-                fromSlot.AssignSlotItem(tempItemData, tempItemCount);               // from에다가 임시로 저장한 to의 정보 넣기
+                fromSlot.AssignSlotItem(tempItemData, tempItemCount);               // from에다가 임시로 저장한 to의 정보 넣기                                
             }
+            (toSlot.ItemEquiped, fromSlot.ItemEquiped) = (fromSlot.ItemEquiped, toSlot.ItemEquiped);
         }        
     }
 

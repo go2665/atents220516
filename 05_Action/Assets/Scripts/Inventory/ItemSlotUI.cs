@@ -83,7 +83,7 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
         id = newID;
         itemSlot = targetSlot;
-        itemSlot.onSlotItemChage = Refresh; // ItemSlot에 아이템이 변경될 경우 실행될 델리게이트에 함수 등록        
+        itemSlot.onSlotItemChange = Refresh; // ItemSlot에 아이템이 변경될 경우 실행될 델리게이트에 함수 등록        
     }
 
     /// <summary>
@@ -97,6 +97,7 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             itemImage.sprite = itemSlot.SlotItemData.itemIcon;  // 아이콘 이미지 설정하고
             itemImage.color = Color.white;  // 불투명하게 만들기
             countText.text = itemSlot.ItemCount.ToString();
+            equipMark.gameObject.SetActive(itemSlot.ItemEquiped);
         }
         else
         {
@@ -225,15 +226,11 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
                         // 아이템 장비 시도
                         bool isEquiped = ItemSlot.EquipSlotItem(GameManager.Inst.MainPlayer.gameObject);
-                        if(isEquiped)
+                        if (isEquiped)
                         {
                             invenUI.ClearAllEquipMark();
-                            equipMark.gameObject.SetActive(true);
                         }
-                        else
-                        {
-                            equipMark.gameObject.SetActive(false);
-                        }
+                        ItemSlot.ItemEquiped = isEquiped;
                     }
                 }
             }

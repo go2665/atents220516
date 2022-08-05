@@ -20,8 +20,9 @@ public class TempItemSlotUI : ItemSlotUI
     protected override void Awake()
     {
         itemImage = GetComponent<Image>();  // 이미지 찾아오기
-        countText = GetComponentInChildren<TextMeshProUGUI>();
-        
+        countText = transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+        equipMark = transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+
     }
 
     private void Start()

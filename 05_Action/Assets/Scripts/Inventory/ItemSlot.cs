@@ -10,6 +10,9 @@ public class ItemSlot
     // 아이템 갯수(int)
     uint itemCount = 0;
 
+    // 아이템 장비여부
+    bool itemEquiped = false;
+
     // 프로퍼티 ------------------------------------------------------------------------------------
 
     /// <summary>
@@ -20,10 +23,10 @@ public class ItemSlot
         get => slotItemData;
         private set
         {
-            if( slotItemData != value )
+            if (slotItemData != value)
             {
                 slotItemData = value;
-                onSlotItemChage?.Invoke();  // 변경이 일어나면 델리게이트 실행(주로 화면 갱신용)
+                onSlotItemChange?.Invoke();  // 변경이 일어나면 델리게이트 실행(주로 화면 갱신용)
             }
         }
     }
@@ -37,7 +40,17 @@ public class ItemSlot
         private set
         {
             itemCount = value;
-            onSlotItemChage?.Invoke();  // 변경이 일어나면 델리게이트 실행(주로 화면 갱신용)
+            onSlotItemChange?.Invoke();  // 변경이 일어나면 델리게이트 실행(주로 화면 갱신용)
+        }
+    }
+
+    public bool ItemEquiped
+    {
+        get => itemEquiped;
+        set
+        {
+            itemEquiped = value;
+            onSlotItemChange?.Invoke();
         }
     }
 
@@ -45,7 +58,7 @@ public class ItemSlot
     /// <summary>
     /// 슬롯에 들어있는 아이템의 종류나 갯수가 변경될 때 실행되는 델리게이트
     /// </summary>
-    public System.Action onSlotItemChage;
+    public System.Action onSlotItemChange;
 
     // 함수 ---------------------------------------------------------------------------------------
 
