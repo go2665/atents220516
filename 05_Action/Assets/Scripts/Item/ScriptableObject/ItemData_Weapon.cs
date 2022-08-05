@@ -18,7 +18,7 @@ public class ItemData_Weapon : ItemData, IEquipItem
     /// <param name="target">아이템을 장비할 대상</param>
     public void EquipItem(IEquipTarget target)
     {
-        target.EquipWeapon(this);
+        //target.EquipWeapon(this);
     }
 
     /// <summary>
@@ -27,14 +27,14 @@ public class ItemData_Weapon : ItemData, IEquipItem
     /// <param name="target">아이템을 토글할 대상</param>
     public void ToggleEquipItem(IEquipTarget target)
     {
-        if(target.IsWeaponEquiped)
-        {
-            target.UnEquipWeapon();     // 장비되어있으면 해제하고
-        }
-        else
-        {
-            target.EquipWeapon(this);   // 장비안되어있으면 장비
-        }
+        //if(target.IsWeaponEquiped)
+        //{
+        //    target.UnEquipWeapon();     // 장비되어있으면 해제하고
+        //}
+        //else
+        //{
+        //    target.EquipWeapon(this);   // 장비안되어있으면 장비
+        //}
     }
 
     /// <summary>
@@ -43,6 +43,6 @@ public class ItemData_Weapon : ItemData, IEquipItem
     /// <param name="target">아이템을 해제할 대상</param>
     public void UnEquipItem(IEquipTarget target)
     {
-        target.UnEquipWeapon();
+        //target.UnEquipWeapon();
     }
 }
