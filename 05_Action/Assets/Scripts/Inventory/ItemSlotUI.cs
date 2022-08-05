@@ -105,6 +105,7 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             itemImage.sprite = null;        // 아이콘 이미지 제거하고
             itemImage.color = Color.clear;  // 투명하게 만들기
             countText.text = "";
+            equipMark.gameObject.SetActive(false);
         }
     }
 
