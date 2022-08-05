@@ -178,6 +178,7 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             {
                 if (!temp.IsEmpty())  // temp에 ItemSlot이 들어있다 => 아이템을 덜어낸 상황이다.                
                 {
+                    bool isEquipItem = temp.ItemSlot.ItemEquiped;
                     // 들고 있던 임시 아이템을 슬롯에 넣기                
                     if (ItemSlot.IsEmpty())
                     {
@@ -215,7 +216,13 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
                         temp.ItemSlot.AssignSlotItem(itemSlot.SlotItemData, itemSlot.ItemCount);
                         itemSlot.AssignSlotItem(tempData, tempCount);
                         (temp.ItemSlot.ItemEquiped, itemSlot.ItemEquiped) = (itemSlot.ItemEquiped, temp.ItemSlot.ItemEquiped);
-                    }                   
+                    }  
+
+                    if(isEquipItem) // 장비중인 아이템을 옮기는 상황이면 일단 해제하고 다시 장비
+                    {
+                        GameManager.Inst.MainPlayer.UnEquipWeapon();    
+                        GameManager.Inst.MainPlayer.EquipWeapon(ItemSlot);
+                    }
 
                     detailUI.IsPause = false;   // 상세정보창 일시정지 풀기
                 }
