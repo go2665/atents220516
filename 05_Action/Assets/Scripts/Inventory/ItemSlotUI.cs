@@ -176,15 +176,16 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             }
             else
             {
-                // 분할된 아이템을 슬롯에 넣기                
                 if (!temp.IsEmpty())  // temp에 ItemSlot이 들어있다 => 아이템을 덜어낸 상황이다.                
                 {
+                    // 들고 있던 임시 아이템을 슬롯에 넣기                
                     if (ItemSlot.IsEmpty())
                     {
                         // 클릭한 슬롯이 빈칸이다.
 
                         // temp에 있는 내용을 이 슬롯에 다 넣기
                         itemSlot.AssignSlotItem(temp.ItemSlot.SlotItemData, temp.ItemSlot.ItemCount);
+                        (temp.ItemSlot.ItemEquiped, itemSlot.ItemEquiped) = (itemSlot.ItemEquiped, temp.ItemSlot.ItemEquiped);
                         temp.Close();   // temp칸 비우기
                     }
                     else if (temp.ItemSlot.SlotItemData == ItemSlot.SlotItemData)
@@ -199,11 +200,12 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
                         ItemSlot.IncreaseSlotItem(small);
                         temp.ItemSlot.DecreaseSlotItem(small);
+                        (temp.ItemSlot.ItemEquiped, itemSlot.ItemEquiped) = (itemSlot.ItemEquiped, temp.ItemSlot.ItemEquiped);
 
                         if (temp.ItemSlot.ItemCount < 1)    // 임시 슬롯에 있던 것을 전부 넣었을 때만 닫아라
                         {
                             temp.Close();
-                        }
+                        }                        
                     }
                     else
                     {
@@ -213,7 +215,7 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
                         temp.ItemSlot.AssignSlotItem(itemSlot.SlotItemData, itemSlot.ItemCount);
                         itemSlot.AssignSlotItem(tempData, tempCount);
                         (temp.ItemSlot.ItemEquiped, itemSlot.ItemEquiped) = (itemSlot.ItemEquiped, temp.ItemSlot.ItemEquiped);
-                    }
+                    }                   
 
                     detailUI.IsPause = false;   // 상세정보창 일시정지 풀기
                 }
