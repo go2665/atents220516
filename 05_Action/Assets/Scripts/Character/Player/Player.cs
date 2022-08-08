@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 
 public class Player : MonoBehaviour, IHealth, IMana, IBattle, IEquipTarget
 {
@@ -149,6 +151,13 @@ public class Player : MonoBehaviour, IHealth, IMana, IBattle, IEquipTarget
         if (target != null)
         {
             float damage = AttackPower;
+
+            if(EquipItemSlot != null && EquipItemSlot.ItemEquiped)
+            {
+                ItemData_Weapon weapon = EquipItemSlot.SlotItemData as ItemData_Weapon;
+                damage += weapon.attackPower;
+            }
+
             if (Random.Range(0.0f, 1.0f) < criticalRate)
             {
                 damage *= 2.0f;
@@ -219,16 +228,24 @@ public class Player : MonoBehaviour, IHealth, IMana, IBattle, IEquipTarget
                 }
             }
 
-            lockOnTarget = nearest.transform;   // 가장 가까이 있는 대상을 락온 대상으로 설정
-            //Debug.Log($"Lock on : {lockOnTarget.name}");
+            if (lockOnTarget?.gameObject != nearest.gameObject) // 다른 대상을 락온 할 때만 실생
+            {
+                if( LockOnTarget != null )
+                {
+                    LockOff();  // LockOff 델리게이트 연결 해제용
+                }
 
-            lockOnTarget.gameObject.GetComponent<Enemy>().OnDead += LockOff;
+                lockOnTarget = nearest.transform;   // 가장 가까이 있는 대상을 락온 대상으로 설정
+                                                    //Debug.Log($"Lock on : {lockOnTarget.name}");
 
-            lockOnEffect.transform.position = lockOnTarget.position;    // 락온 이팩트를 락온 대상의 위치로 이동
-            lockOnEffect.transform.parent = lockOnTarget;               // 락온 이팩트의 부모를 락온 대상으로 설정
-            lockOnEffect.SetActive(true);                               // 락온 이팩트 보여주기
+                lockOnTarget.gameObject.GetComponent<Enemy>().OnDead += LockOff;
 
-            result = true;
+                lockOnEffect.transform.position = lockOnTarget.position;    // 락온 이팩트를 락온 대상의 위치로 이동
+                lockOnEffect.transform.parent = lockOnTarget;               // 락온 이팩트의 부모를 락온 대상으로 설정
+                lockOnEffect.SetActive(true);                               // 락온 이팩트 보여주기
+
+                result = true;
+            }
         }
 
         return result;
@@ -236,6 +253,7 @@ public class Player : MonoBehaviour, IHealth, IMana, IBattle, IEquipTarget
 
     void LockOff()
     {
+        lockOnTarget.gameObject.GetComponent<Enemy>().OnDead -= LockOff;
         lockOnTarget = null;                    // 락온 대상 null
         lockOnEffect.transform.parent = null;   // 락온 이팩트의 부모 제거
         lockOnEffect.SetActive(false);          // 락온 이팩트 보이지 않게 하기
@@ -287,6 +305,7 @@ public class Player : MonoBehaviour, IHealth, IMana, IBattle, IEquipTarget
         return result;
     }
 
+#if UNITY_EDITOR
     private void OnDrawGizmos()
     {
         Handles.color = Color.white;
@@ -294,6 +313,7 @@ public class Player : MonoBehaviour, IHealth, IMana, IBattle, IEquipTarget
         Handles.color = Color.yellow;
         Handles.DrawWireDisc(transform.position, transform.up, itemPickupRange);
     }
+#endif
 
     /// <summary>
     /// 아이템 장비

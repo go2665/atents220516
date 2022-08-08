@@ -2,7 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 
 public class Enemy : MonoBehaviour, IHealth, IBattle
 {
@@ -350,6 +353,7 @@ public class Enemy : MonoBehaviour, IHealth, IBattle
         Destroy(this.gameObject, 5.0f);
     }
 
+#if UNITY_EDITOR
     private void OnDrawGizmos()
     {
         //Gizmos.color = Color.blue;
@@ -373,6 +377,7 @@ public class Enemy : MonoBehaviour, IHealth, IBattle
 
         Handles.DrawWireArc(transform.position, transform.up, q2 * transform.forward, sightAngle, sightRange, 5.0f);// 전체 시야범위
     }
+#endif
 
     /// <summary>
     /// 플레이어가 시야각도(sightAngle) 안에 있으면 true를 리턴

@@ -18,3 +18,5 @@ MonoBehaviour:
   prefab: {fileID: 3534616405655526111, guid: d283da0f2cf92434caaf113428a4a376, type: 3}
   value: 1000
   maxStackCount: 1
+  attackPower: 100
+  attackSpeed: 1
