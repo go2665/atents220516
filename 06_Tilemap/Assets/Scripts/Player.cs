@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering.Universal;
 
 public class Player : MonoBehaviour
 {
@@ -27,11 +28,14 @@ public class Player : MonoBehaviour
     /// </summary>
     Vector2 dir;
 
+    Light2D spotLight;
+
     private void Awake()
     {
         // 컴포넌트 가져오고
         rigid = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+        spotLight = transform.GetChild(1).GetComponent<Light2D>();
 
         // 인풋 액션 만들기
         inputActions = new PlayerInputActions();
@@ -72,6 +76,11 @@ public class Player : MonoBehaviour
         {
             dir = dir.normalized;
         }
+
+        // 바라보는 방향으로 스포트라이트 회전시키기
+        //float angle = Vector3.SignedAngle(Vector3.up, (Vector3)dir, Vector3.forward);
+        //spotLight.transform.rotation = Quaternion.Euler(0, 0, angle);
+        spotLight.transform.up = dir;
 
         // 애니메이터의 파라메터도 갱신
         anim.SetBool("IsMove", true);   // Move로 트랜지션이 일어나게 만들기

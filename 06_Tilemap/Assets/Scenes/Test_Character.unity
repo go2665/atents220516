@@ -4034,8 +4034,8 @@ MonoBehaviour:
   m_ApplyToSortingLayers: 00000000399475a80b0b3bedb15dc81b
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
-  m_LightOrder: 0
-  m_OverlapOperation: 0
+  m_LightOrder: 1
+  m_OverlapOperation: 1
   m_NormalMapDistance: 3
   m_NormalMapQuality: 2
   m_UseNormalMap: 0
@@ -4247,8 +4247,8 @@ MonoBehaviour:
   m_ApplyToSortingLayers: 00000000399475a80b0b3bedb15dc81b
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
-  m_LightOrder: 0
-  m_OverlapOperation: 0
+  m_LightOrder: 2
+  m_OverlapOperation: 1
   m_NormalMapDistance: 3
   m_NormalMapQuality: 2
   m_UseNormalMap: 0
