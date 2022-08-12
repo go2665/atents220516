@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Sword
-  m_Shader: {fileID: -6465566751694194690, guid: 4bc04ccf575881a4bb42d0028ce69b58, type: 3}
+  m_Name: OutLine
+  m_Shader: {fileID: -6465566751694194690, guid: ad18e31eb7cb31447adf1203d5df8377, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -20,10 +20,6 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - _Emession:
-        m_Texture: {fileID: 2800000, guid: 8a8e9397baa7c3243b5738f27a0c9453, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 2800000, guid: 81c46c4aad26f0649aee77badafe764a, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -41,7 +37,8 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
-    m_Floats: []
+    m_Floats:
+    - _Tickness: 0.005
     m_Colors:
-    - _Color: {r: 0.19430864, g: 1, b: 0, a: 0}
+    - _Color: {r: 4, g: 0, b: 0.2277755, a: 0}
   m_BuildTextureStacks: []
