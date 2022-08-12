@@ -46,6 +46,7 @@ public class Player : MonoBehaviour
         // 인풋 액션과 함수 연결
         inputActions.Player.Move.performed += OnMove;
         inputActions.Player.Move.canceled += OnStop;
+        inputActions.Player.Attack.performed += OnAttack;
         
         // 인풋 액션의 Player 액션맵 활성화
         inputActions.Player.Enable();
@@ -54,6 +55,7 @@ public class Player : MonoBehaviour
     private void OnDisable()
     {
         // 연결했던 것 해제
+        inputActions.Player.Attack.performed -= OnAttack;
         inputActions.Player.Move.canceled -= OnStop;
         inputActions.Player.Move.performed -= OnMove;
 
@@ -65,6 +67,11 @@ public class Player : MonoBehaviour
     {
         // 입력 받은 방향에 따라 리지드바드를 이용해 움직이기
         rigid.MovePosition(rigid.position + Time.fixedDeltaTime * speed * dir);
+    }
+
+    private void OnAttack(InputAction.CallbackContext _)
+    {
+        anim.SetTrigger("Attack");
     }
 
     private void OnMove(InputAction.CallbackContext context)

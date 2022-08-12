@@ -482,7 +482,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: chara_hero_18
+      name: hero_attack_down_0
       rect:
         serializedVersion: 2
         x: 0
@@ -503,7 +503,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: chara_hero_19
+      name: hero_attack_down_1
       rect:
         serializedVersion: 2
         x: 48
@@ -524,7 +524,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: chara_hero_20
+      name: hero_attack_down_2
       rect:
         serializedVersion: 2
         x: 96
@@ -545,7 +545,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: chara_hero_21
+      name: hero_attack_down_3
       rect:
         serializedVersion: 2
         x: 144
@@ -566,7 +566,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: chara_hero_22
+      name: hero_attack_right_0
       rect:
         serializedVersion: 2
         x: 0
@@ -587,7 +587,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: chara_hero_23
+      name: hero_attack_right_1
       rect:
         serializedVersion: 2
         x: 48
@@ -608,7 +608,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: chara_hero_24
+      name: hero_attack_right_2
       rect:
         serializedVersion: 2
         x: 96
@@ -629,7 +629,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: chara_hero_25
+      name: hero_attack_right_3
       rect:
         serializedVersion: 2
         x: 144
@@ -650,7 +650,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: chara_hero_26
+      name: hero_attack_up_0
       rect:
         serializedVersion: 2
         x: 0
@@ -671,7 +671,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: chara_hero_27
+      name: hero_attack_up_1
       rect:
         serializedVersion: 2
         x: 48
@@ -692,7 +692,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: chara_hero_28
+      name: hero_attack_up_2
       rect:
         serializedVersion: 2
         x: 96
@@ -713,7 +713,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: chara_hero_29
+      name: hero_attack_up_3
       rect:
         serializedVersion: 2
         x: 144
@@ -996,48 +996,48 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      hero_idle_0: -45978804
-      chara_hero_26: 1108287760
+      hero_move_down_3: 1770543211
+      hero_attack_down_1: -445420803
+      hero_attack_right_0: -1626193208
+      hero_attack_up_0: 1108287760
+      hero_attack_right_1: -1514318103
+      hero_attack_up_1: -2068585225
       hero_move_down_1: 1373244234
-      chara_hero_22: -1626193208
       chara_hero_30: 1120975223
-      chara_hero_21: 124022470
+      chara_hero_38: 1368133735
+      chara_hero_39: -966034525
       chara_hero_37: -79451913
       chara_hero_33: 1298047551
       hero_move_down_2: -937394892
-      chara_hero_29: -1567723298
+      hero_attack_up_3: -1567723298
       chara_hero_34: -447903541
       hero_move_right_0: -726607383
-      chara_hero_38: 1368133735
       chara_hero_40: -909637435
       chara_hero_35: -1708980237
-      chara_hero_23: -1514318103
       hero_move_up_2: 652067977
-      chara_hero_39: -966034525
       chara_hero_41: -794646781
       chara_hero_5: 1478077616
-      chara_hero_18: 547998905
       hero_idle_2: 1925622083
-      chara_hero_28: -1068570256
       chara_hero_36: -1444812571
+      hero_attack_right_3: 2129705078
       hero_move_up_1: 2104587004
-      chara_hero_20: 1946853273
+      hero_attack_right_2: -1934269882
       chara_hero_4: -1773711155
       hero_move_right_3: 699873033
+      hero_attack_down_3: 124022470
       hero_move_right_2: -1405587206
       hero_move_down_0: -50532379
       chara_hero_32: -2100980454
-      chara_hero_24: -1934269882
       hero_idle_1: 386539878
       chara_hero_3: -922338172
-      chara_hero_25: 2129705078
-      chara_hero_19: -445420803
-      hero_move_up_0: -885370790
-      chara_hero_27: -2068585225
       hero_move_up_3: -670974084
+      hero_move_up_0: -885370790
+      hero_attack_up_2: -1068570256
       hero_move_right_1: 400594604
+      hero_attack_down_0: 547998905
+      hero_attack_down_2: 1946853273
       chara_hero_31: 594059440
-      hero_move_down_3: 1770543211
+      hero_idle_0: -45978804
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
