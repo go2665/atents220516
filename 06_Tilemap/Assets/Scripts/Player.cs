@@ -5,13 +5,22 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering.Universal;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 public class Player : MonoBehaviour
 {
     /// <summary>
     /// 이동 속도
     /// </summary>
     public float speed = 3.0f;
-    
+
+    // 시야범위
+    public float sightRange = 3.0f;
+    public float sightAngle = 90.0f;
+    Slime seenSlime;
+
     /// <summary>
     /// 미리 캐싱해놓을 컴포넌트들
     /// </summary>
@@ -27,6 +36,7 @@ public class Player : MonoBehaviour
     /// 마지막으로 입력 된 방향
     /// </summary>
     Vector2 dir;
+    Vector2 oldDir = Vector2.down;
 
     Light2D spotLight;
 
@@ -36,6 +46,9 @@ public class Player : MonoBehaviour
         rigid = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         spotLight = transform.GetChild(1).GetComponent<Light2D>();
+
+        CircleCollider2D circle = GetComponent<CircleCollider2D>();
+        circle.radius = sightRange;
 
         // 인풋 액션 만들기
         inputActions = new PlayerInputActions();
@@ -84,6 +97,8 @@ public class Player : MonoBehaviour
             dir = dir.normalized;
         }
 
+        oldDir = dir;
+
         // 바라보는 방향으로 스포트라이트 회전시키기
         //float angle = Vector3.SignedAngle(Vector3.up, (Vector3)dir, Vector3.forward);
         //spotLight.transform.rotation = Quaternion.Euler(0, 0, angle);
@@ -98,7 +113,72 @@ public class Player : MonoBehaviour
     private void OnStop(InputAction.CallbackContext context)
     {
         //dir = context.ReadValue<Vector2>();
+        oldDir = dir;
         dir = Vector2.zero;             // 방향을 제거
         anim.SetBool("IsMove", false);  // Idle로 트랜지션이 일어나게 만들기
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.CompareTag("Enemy"))
+        {            
+            if(IsInSight(collision.transform.position))
+            {
+                Debug.Log("적이 보인다!");
+                seenSlime = collision.gameObject.GetComponent<Slime>();
+                seenSlime.OutlineOnOff(true);
+            }  
+            else
+            {
+                seenSlime?.OutlineOnOff(false);
+            }
+        }
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Enemy"))
+        {
+            if (IsInSight(collision.transform.position))
+            {
+                Debug.Log("적이 계속 보인다!");
+                seenSlime = collision.gameObject.GetComponent<Slime>();
+                seenSlime?.OutlineOnOff(true);
+            }
+            else
+            {
+                seenSlime?.OutlineOnOff(false);
+            }
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Enemy"))
+        {
+            seenSlime?.OutlineOnOff(false);
+            seenSlime = null;
+        }
+    }
+
+    bool IsInSight(Vector3 targetPos)
+    {
+        float angle = Vector2.Angle(oldDir, (targetPos - transform.position));
+        return angle <= sightAngle * 0.5f;
+    }
+
+#if UNITY_EDITOR
+    private void OnDrawGizmos()
+    {
+        Handles.color = Color.yellow;
+        Handles.DrawWireDisc(transform.position, transform.forward, sightRange);
+        Handles.color = Color.red;
+        Handles.DrawWireArc(transform.position, transform.forward, 
+            Quaternion.Euler(0, 0, -sightAngle*0.5f) * oldDir, sightAngle, sightRange, 3f);
+        Handles.DrawLine(transform.position, 
+            transform.position + Quaternion.Euler(0, 0, -sightAngle * 0.5f) * oldDir * sightRange, 3.0f);
+        Handles.DrawLine(transform.position, 
+            transform.position + Quaternion.Euler(0, 0, sightAngle * 0.5f) * oldDir * sightRange, 3.0f);
+    }
+#endif
 }
