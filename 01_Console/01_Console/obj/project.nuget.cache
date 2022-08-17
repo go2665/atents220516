@@ -1,8 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "Qty5H0g2ZEad3unjxDpkRUX55jHuo6pIQ38f+SZLJHN2HMt4uj2GMSVAH5pOWxXMmQGuuQljsxiD/Ublwc5BgQ==",
+  "dgSpecHash": "NXsOyiCMPZE2RNCB+L6JedRxPNzzpwK9Src8jSyGKKa/J9dRSbcxRFvH0hCZcWxrrk7sIYe0/e2Bdq5j7X/CLQ==",
   "success": true,
   "projectFilePath": "D:\\Go\\Repository\\atents220516\\01_Console\\01_Console\\01_Console.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\강사_고병조\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\3.1.28\\microsoft.netcore.app.host.win-x64.3.1.28.nupkg.sha512",
+    "C:\\Users\\강사_고병조\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\3.1.10\\microsoft.aspnetcore.app.ref.3.1.10.nupkg.sha512",
+    "C:\\Users\\강사_고병조\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\3.1.0\\microsoft.windowsdesktop.app.ref.3.1.0.nupkg.sha512",
+    "C:\\Users\\강사_고병조\\.nuget\\packages\\microsoft.netcore.app.ref\\3.1.0\\microsoft.netcore.app.ref.3.1.0.nupkg.sha512"
+  ],
   "logs": []
 }
