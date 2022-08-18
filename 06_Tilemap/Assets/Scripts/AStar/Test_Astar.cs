@@ -8,7 +8,25 @@ public class Test_Astar : MonoBehaviour
     {
         //TestMap1();
         //TestMap2();
+        //TestMap3();
 
+        GridMap gridMap = new GridMap(3, 3);
+        Node node;
+        node = gridMap.GetNode(0, 1);
+        node.moveable = false;
+        node = gridMap.GetNode(1, 1);
+        node.moveable = false;
+        node = gridMap.GetNode(2, 1);
+        node.moveable = false;
+
+        List<Vector2Int> path = AStar.PathFind(gridMap, new(0, 0), new(0, 2));
+
+        int i = 0;
+
+    }
+
+    private static void TestMap3()
+    {
         GridMap gridMap = new GridMap(11, 6);
         Node node;
         node = gridMap.GetNode(2, 4);
@@ -35,9 +53,6 @@ public class Test_Astar : MonoBehaviour
         node.moveable = false;
 
         List<Vector2Int> path = AStar.PathFind(gridMap, new(1, 1), new(9, 4));
-
-        int i = 0;
-
     }
 
     private static void TestMap2()
