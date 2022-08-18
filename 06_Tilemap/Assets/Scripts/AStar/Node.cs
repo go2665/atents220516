@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,8 +6,8 @@ using UnityEngine;
 public class Node : System.IComparable<Node>
 {
     // 위치값
-    int x;
-    int y;
+    public int x;
+    public int y;
 
     public bool moveable;   // 이동할 수 있는 지역인지 여부(true면 이동 가능)
 
@@ -21,8 +22,8 @@ public class Node : System.IComparable<Node>
         this.x = x;
         this.y = y;
         this.moveable = moveable;
-        G = 0;
-        H = 0;
+        G = float.MaxValue;
+        H = float.MaxValue;
         parent = null;
     }
 
@@ -36,6 +37,18 @@ public class Node : System.IComparable<Node>
             return 1;
 
         return F.CompareTo(other.F);
+    }
+
+    public override bool Equals(object obj)
+    {
+        return obj is Node node &&
+               x == node.x &&
+               y == node.y;
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(x, y);
     }
 
     public static bool operator ==(Node op1, Vector2Int op2)
