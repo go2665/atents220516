@@ -8,8 +8,11 @@ public class Test_Astar : MonoBehaviour
 {
     public Tilemap background;
     public Tilemap obstacle;
+    public LineRenderer line;
+
     Mouse mouse = Mouse.current;
     Camera mainCam;
+    GridMap gridmap;
 
     void Start()
     {
@@ -18,11 +21,16 @@ public class Test_Astar : MonoBehaviour
         Debug.Log($"Background size : {background.size}");
         Debug.Log($"Obstacle size : {obstacle.size}");
 
+        gridmap = new GridMap(background, obstacle);
 
-        //TestMap1();
-        //TestMap2();
-        //TestMap3();
-        //TestMap4_NoPath();
+        List<Vector2Int> list = AStar.PathFind(gridmap, new(-9, -5), new(8, 4));
+        line.positionCount = list.Count;
+        int index = 0;
+        foreach(var pos in list)
+        {
+            line.SetPosition(index, new(pos.x+0.5f, pos.y+0.5f, 1));
+            index++;
+        }
 
         int i = 0;
     }
@@ -35,6 +43,19 @@ public class Test_Astar : MonoBehaviour
             Vector3 worldPos = mainCam.ScreenToWorldPoint(screenPos);
             Vector3Int cellPos = background.WorldToCell(worldPos);
             Debug.Log($"Cell Pos : {cellPos}");
+
+            Node node = gridmap.GetNode((Vector2Int)cellPos);
+            if( node != null)
+            {
+                if( node.moveable )
+                {
+                    Debug.Log("가능");
+                }
+                else
+                {
+                    Debug.Log("불가능");
+                }
+            }
         }
     }
 
