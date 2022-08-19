@@ -1,15 +1,46 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
+using UnityEngine.InputSystem;
 
 public class Test_Astar : MonoBehaviour
-{    
+{
+    public Tilemap background;
+    public Tilemap obstacle;
+    Mouse mouse = Mouse.current;
+    Camera mainCam;
+
     void Start()
     {
+        mainCam = Camera.main;
+
+        Debug.Log($"Background size : {background.size}");
+        Debug.Log($"Obstacle size : {obstacle.size}");
+
+
         //TestMap1();
         //TestMap2();
         //TestMap3();
+        //TestMap4_NoPath();
 
+        int i = 0;
+    }
+
+    void Update()
+    {
+        if(mouse.leftButton.wasPressedThisFrame)
+        {
+            Vector2 screenPos = mouse.position.ReadValue();
+            Vector3 worldPos = mainCam.ScreenToWorldPoint(screenPos);
+            Vector3Int cellPos = background.WorldToCell(worldPos);
+            Debug.Log($"Cell Pos : {cellPos}");
+        }
+    }
+
+
+    private static void TestMap4_NoPath()
+    {
         GridMap gridMap = new GridMap(3, 3);
         Node node;
         node = gridMap.GetNode(0, 1);
@@ -20,9 +51,6 @@ public class Test_Astar : MonoBehaviour
         node.moveable = false;
 
         List<Vector2Int> path = AStar.PathFind(gridMap, new(0, 0), new(0, 2));
-
-        int i = 0;
-
     }
 
     private static void TestMap3()
@@ -83,9 +111,5 @@ public class Test_Astar : MonoBehaviour
         List<Vector2Int> path = AStar.PathFind(gridMap, new(0, 0), new(0, 2));
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    
 }
