@@ -127,4 +127,15 @@ public class GridMap
     {
         return IsValidPosition(pos.x, pos.y);
     }
+
+    /// <summary>
+    /// 맵안의 노드들의 A* 데이터 초기화(G,H,parent)
+    /// </summary>
+    public void ClearAStarData()
+    {
+        foreach(var node in nodes)
+        {
+            node.ClearAStarData();
+        }
+    }
 }

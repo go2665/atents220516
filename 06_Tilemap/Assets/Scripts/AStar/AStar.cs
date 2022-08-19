@@ -17,6 +17,7 @@ public static class AStar
     /// <returns>시작위치에서 도착위치로 가는 경로. 리스트가 비어있으면 경로를 찾지 못한 상황</returns>
     public static List<Vector2Int> PathFind(GridMap gridMap, Vector2Int start, Vector2Int end)
     {
+        gridMap.ClearAStarData();   // 이전에 길찾기를 했을 때를 대비해 초기화
         List<Vector2Int> path = new List<Vector2Int>(); // 최종 경로가 저장될 리스트
 
         // 시작지점과 도착지점이 맵 안에 있는지 확인

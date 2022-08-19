@@ -33,6 +33,14 @@ public class Node : System.IComparable<Node>
         this.x = x;
         this.y = y;
         this.moveable = moveable;
+        ClearAStarData();
+    }
+
+    /// <summary>
+    /// A*용 데이터 초기화
+    /// </summary>
+    public void ClearAStarData()
+    {
         G = float.MaxValue;     // 초기값으로 가장 큰 수
         H = float.MaxValue;
         parent = null;          // 부모는 일단 없음
