@@ -45,15 +45,18 @@ public class Player : MonoBehaviour
     Vector2 offset = Vector2.zero;
     public Vector2Int CurrentMap
     {
+        get => currentMap;
         set
         {
             if(currentMap != value)
             {
                 currentMap = value;
                 Debug.Log($"현재 맵의 위치 : {currentMap}");
+                onMapChange?.Invoke(currentMap);
             }
         }
     }
+    public System.Action<Vector2Int> onMapChange;
 
 
     Light2D spotLight;

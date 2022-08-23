@@ -48,16 +48,23 @@ public class GameManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
     {
+        // 한번에 한씬만 사용할 때는 문제가 없었으나 씬이 Additive로 추가되면서 예상치 못한 상황에서 실행이됨.
+        // 그래서 Inittialize가 여러번 호출된다.
+        // 그것을 해결하기 위해 한번 실행되면 다시 실행안되도록 델리게이트 등록 해제
+        SceneManager.sceneLoaded -= OnSceneLoaded;  // 한번만 실행하기 위해
         Initialize();
     }   
 
-    private void Initialize()
+    /// <summary>
+    /// 초기화 함수라 무조건 한번만 실행될 것으로 가정하고 만든 함수
+    /// </summary>
+    public void Initialize()
     {
         //map = new GridMap(background, obstacle);    // 그리드 맵 생성
 
         player = FindObjectOfType<Player>();    // mapManager의 초기화보다 앞에 있어야 한다.
 
-        if (mapManager == null)
+        if (mapManager == null)     // 없으면 찾는다.
         {
             mapManager = GetComponent<MapManager>();
         }

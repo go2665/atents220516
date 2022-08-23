@@ -8,36 +8,7 @@ using UnityEngine.SceneManagement;
 
 public class Test_Seamless : MonoBehaviour
 {
-    private const int Height = 3;
-    private const int Width = 3;
-
-    AsyncOperation[,] asyncs;
-    string[,] scenenNames;
-    bool[,] sceneLoaded;    // true면 로딩 되었음. false면 되지 않음
-
-    void Start()
-    {
-        for(int i=0;i<3;i++)
-        {
-            for(int j=0;j<3;j++)
-            {
-                GameManager.Inst.MapManager.RequestAsyncSceneLoad(i, j);
-            }
-        }
-    }
-
-    private void Update()
-    {
-        if( Keyboard.current.digit1Key.wasPressedThisFrame )
-        {
-            GameManager.Inst.MapManager.RequestAsyncSceneLoad(2, 2);
-        }
-
-        if (Keyboard.current.digit2Key.wasPressedThisFrame)
-        {
-            GameManager.Inst.MapManager.RequestAsyncSceneUnload(1, 0);
-        }
-    }
+    
 
     private void Test_Code()
     {
