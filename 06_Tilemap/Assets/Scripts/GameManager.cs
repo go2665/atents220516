@@ -22,6 +22,9 @@ public class GameManager : MonoBehaviour
     public MapManager MapManager => mapManager;
     //--------------------------------------------------------------------------------------------------------------
 
+    Player player;
+    public Player Player => player;
+
 
     static GameManager instance = null;
     public static GameManager Inst => instance;
@@ -52,11 +55,12 @@ public class GameManager : MonoBehaviour
     {
         //map = new GridMap(background, obstacle);    // 그리드 맵 생성
 
-        if(mapManager == null)
+        player = FindObjectOfType<Player>();    // mapManager의 초기화보다 앞에 있어야 한다.
+
+        if (mapManager == null)
         {
             mapManager = GetComponent<MapManager>();
         }
-
         mapManager.Initialize();
     }    
 

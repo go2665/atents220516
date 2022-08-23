@@ -70,6 +70,9 @@ public class Player : MonoBehaviour
 
         // 인풋 액션 만들기
         inputActions = new PlayerInputActions();
+
+        // 월드 원점에서 맵이 얼마나 이동해 있는가? => offset으로 저장
+        offset = new Vector2(mapSize.x * mapCount.x * -0.5f, mapSize.y * mapCount.y * -0.5f);
     }
 
     private void OnEnable()
@@ -98,6 +101,9 @@ public class Player : MonoBehaviour
     {
         // 입력 받은 방향에 따라 리지드바드를 이용해 움직이기
         rigid.MovePosition(rigid.position + Time.fixedDeltaTime * speed * dir);
+
+        Vector2 pos = (Vector2)transform.position - offset; // 맵의 왼쪽 아래가 원점이라고 가정했을 때 나의 위치
+        CurrentMap = new Vector2Int((int)(pos.x / mapSize.x), (int)(pos.y / mapSize.y));    // 위치를 맵 하나의 크기로 나누어서 (,)맵인지 계산
     }
 
     private void OnAttack(InputAction.CallbackContext _)

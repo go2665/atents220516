@@ -12,6 +12,8 @@ public class MapManager : MonoBehaviour
 
     string[,] sceneNames;
 
+    Player player;
+
     enum SceneLoadState : byte
     {
         Unload = 0,
@@ -23,6 +25,8 @@ public class MapManager : MonoBehaviour
 
     public void Initialize()
     {
+        player = GameManager.Inst.Player;
+
         sceneNames = new string[Height, Width];
         sceneLoadState = new SceneLoadState[Height, Width];
 
@@ -35,6 +39,12 @@ public class MapManager : MonoBehaviour
                 sceneLoadState[y, x] = SceneLoadState.Unload;
             }
         }
+    }
+
+    public void RefreshScenes(Vector2Int current)
+    {
+        // 이웃 구하기 -> RequestAsyncSceneLoad
+        // 이웃이 아닌 곳 구하기 -> RequestAsyncSceneUnload
     }
 
     public void RequestAsyncSceneLoad(int x, int y)

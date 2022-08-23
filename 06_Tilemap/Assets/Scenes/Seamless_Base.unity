@@ -424,6 +424,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 1065368509565905752, guid: ba722626f59c425458cdaf063a05f5e4, type: 3}
+      propertyPath: speed
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 1065368509565905755, guid: ba722626f59c425458cdaf063a05f5e4, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -586,7 +590,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!43 &636503467
+--- !u!43 &1158189186
 Mesh:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
