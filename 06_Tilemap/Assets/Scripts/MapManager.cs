@@ -11,12 +11,20 @@ public class MapManager : MonoBehaviour
     private const int Width = 3;
 
     string[,] sceneNames;
-    bool[,] sceneLoaded;    // true면 로딩 되었음. false면 되지 않음
+
+    enum SceneLoadState : byte
+    {
+        Unload = 0,
+        PendingLoad,
+        PendingUnload,
+        Loaded
+    }
+    SceneLoadState[,] sceneLoadState;    // true면 로딩 되었음. false면 되지 않음
 
     public void Initialize()
     {
         sceneNames = new string[Height, Width];
-        sceneLoaded = new bool[Height, Width];
+        sceneLoadState = new SceneLoadState[Height, Width];
 
         for (int y = 0; y < Height; y++)
         {
@@ -24,28 +32,39 @@ public class MapManager : MonoBehaviour
             {
                 string temp = $"{SceneNameBase}_{x}_{y}";
                 sceneNames[y, x] = temp;
-                sceneLoaded[y, x] = false;
+                sceneLoadState[y, x] = SceneLoadState.Unload;
             }
         }
     }
 
     public void RequestAsyncSceneLoad(int x, int y)
     {
-        if(!sceneLoaded[y, x])
+        if(sceneLoadState[y, x] == SceneLoadState.Unload)
         {
+            Debug.Log("씬 로드 요청 완료");
             AsyncOperation async = SceneManager.LoadSceneAsync(sceneNames[y, x], LoadSceneMode.Additive);
-            //async.completed
-            sceneLoaded[y, x] = true;
+            async.completed += (_) => sceneLoadState[y, x] = SceneLoadState.Loaded;
+            sceneLoadState[y, x] = SceneLoadState.PendingLoad;
+        }
+        else
+        {
+            Debug.Log("씬 로드 요청 불가");
         }
     }
 
     public void RequestAsyncSceneUnload(int x, int y)
     {
-        if(sceneLoaded[y,x])
+        if(sceneLoadState[y,x] == SceneLoadState.Loaded)
         {
+            Debug.Log("씬 언로드 요청 완료");
             AsyncOperation async = SceneManager.UnloadSceneAsync(sceneNames[y, x]);
-            //async.completed
-            // sceneLoaded[y, x] 언로드 상태로 변경
+            async.completed += (_) => sceneLoadState[y, x] = SceneLoadState.Unload;
+            sceneLoadState[y, x] = SceneLoadState.PendingUnload;
+        }
+
+        else
+        {
+            Debug.Log("씬 언로드 요청 불가");
         }
     }
 

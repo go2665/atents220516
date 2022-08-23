@@ -38,6 +38,24 @@ public class Player : MonoBehaviour
     Vector2 dir;
     Vector2 oldDir = Vector2.down;
 
+
+    Vector2Int currentMap = Vector2Int.one;     // 플레이어가 존재하는 맵의 번호
+    Vector2 mapSize = new Vector2(20, 20);      // 맵 하나의 크기
+    Vector2Int mapCount = new Vector2Int(3, 3); // 맵의 갯수(가로,세로)
+    Vector2 offset = Vector2.zero;
+    public Vector2Int CurrentMap
+    {
+        set
+        {
+            if(currentMap != value)
+            {
+                currentMap = value;
+                Debug.Log($"현재 맵의 위치 : {currentMap}");
+            }
+        }
+    }
+
+
     Light2D spotLight;
 
     private void Awake()
