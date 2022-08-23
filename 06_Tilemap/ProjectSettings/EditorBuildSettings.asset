@@ -9,33 +9,33 @@ EditorBuildSettings:
     path: Assets/Scenes/Test_Tilemap.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1
-    path: Assets/Scenes/Test_Seamless_0_0.unity
+    path: Assets/Scenes/Seamless_0_0.unity
     guid: fd01bf3f389ce2e49b83b3deb297e0b8
   - enabled: 1
-    path: Assets/Scenes/Test_Seamless_0_1.unity
+    path: Assets/Scenes/Seamless_0_1.unity
     guid: 3d653e93e0b39ff43b2d40e14f7177cf
   - enabled: 1
-    path: Assets/Scenes/Test_Seamless_0_2.unity
+    path: Assets/Scenes/Seamless_0_2.unity
     guid: f977430b126dda749a52ee3ed54e1254
   - enabled: 1
-    path: Assets/Scenes/Test_Seamless_1_0.unity
+    path: Assets/Scenes/Seamless_1_0.unity
     guid: f5a907ab7b7465b47aa754d0c800ddfa
   - enabled: 1
-    path: Assets/Scenes/Test_Seamless_1_1.unity
+    path: Assets/Scenes/Seamless_1_1.unity
     guid: f484445b26073fd449f135739f833efe
   - enabled: 1
-    path: Assets/Scenes/Test_Seamless_1_2.unity
+    path: Assets/Scenes/Seamless_1_2.unity
     guid: a70dfa5af4994f340b8701b5f6724c1d
   - enabled: 1
-    path: Assets/Scenes/Test_Seamless_2_0.unity
+    path: Assets/Scenes/Seamless_2_0.unity
     guid: a28825a829fef3249b37f67ea2f909fe
   - enabled: 1
-    path: Assets/Scenes/Test_Seamless_2_1.unity
+    path: Assets/Scenes/Seamless_2_1.unity
     guid: d7ab0944b799b384cbf920c25f811372
   - enabled: 1
-    path: Assets/Scenes/Test_Seamless_2_2.unity
+    path: Assets/Scenes/Seamless_2_2.unity
     guid: d5161abc2a16a7a46a86a6a685aa5aeb
   - enabled: 1
-    path: Assets/Scenes/Test_Seamless_Base.unity
+    path: Assets/Scenes/Seamless_Base.unity
     guid: 4098a1dca8e47754bbe54a8f3f4afbeb
   m_configObjects: {}

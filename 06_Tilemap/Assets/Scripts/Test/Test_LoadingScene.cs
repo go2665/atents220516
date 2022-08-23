@@ -112,5 +112,6 @@ public class Test_LoadingScene : MonoBehaviour
 
         yield return new WaitForSeconds(1.0f);  // 1초 뒤에 점찍는 것도 멈추기
         StopCoroutine(loadingTextCoroutine);
+        loadingText.text = "Loading Complete.";
     }
 }
