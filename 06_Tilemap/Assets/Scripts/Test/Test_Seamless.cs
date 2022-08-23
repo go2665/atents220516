@@ -8,13 +8,20 @@ using UnityEngine.SceneManagement;
 
 public class Test_Seamless : MonoBehaviour
 {
-    
-
     private void Test_Code()
     {
+        const int Height = 3;
+        const int Width = 3;
+
+        AsyncOperation[,] asyncs;
+        string[,] scenenNames;
+        bool[,] sceneLoaded;    // true면 로딩 되었음. false면 되지 않음
+
+
         string sceneNameBase = "Seamless";
         asyncs = new AsyncOperation[Height, Width];
         scenenNames = new string[Height, Width];
+        sceneLoaded = new bool[Height, Width];
 
         asyncs[1, 1] = SceneManager.LoadSceneAsync($"{sceneNameBase}_1_1", LoadSceneMode.Additive);
         asyncs[1, 1].completed += (AsyncOperation _) => Debug.Log($"{sceneNameBase}_1_1");
