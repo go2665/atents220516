@@ -9,6 +9,8 @@ public class Slime : MonoBehaviour
     public float moveSpeed = 2.0f;  // 이동 속도
     public bool showPath = true;    // 이동 경로 표시 여부
     List<Vector2Int> path;          // 이동 할 경로
+    
+    public Vector2Int Position => GameManager.Inst.WorldToGrid(transform.position);
 
     Material mainMat;
     private void Start()
@@ -32,7 +34,7 @@ public class Slime : MonoBehaviour
     public void Move(Vector2Int target)
     {
         path.Clear();   // 이전 경로 지우기
-        path = AStar.PathFind(GameManager.Inst.Map, GameManager.Inst.WorldToGrid(transform.position), target);  // 경로 찾기
+        path = AStar.PathFind(GameManager.Inst.Map, Position, target);  // 경로 찾기
         if (showPath)
         {
             GameManager.Inst.DrawPath(path);    // 경로 그리기
