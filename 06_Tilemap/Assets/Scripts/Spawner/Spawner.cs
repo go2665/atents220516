@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using System.Threading;
+using UnityEngine.UIElements;
 
 public class Spawner : MonoBehaviour
 {
@@ -16,6 +18,16 @@ public class Spawner : MonoBehaviour
     float delayCount = 0.0f;
 
     SceneMonsterManager monsterManager;
+
+    public Vector2Int WorldToGrid(Vector3 postion)
+    {
+        return monsterManager.WorldToGrid(postion);
+    }
+
+    public Vector2 GridToWorld(Vector2Int gridPos)
+    {
+        return monsterManager.GridToWorld(gridPos);
+    }
 
     private void Start()
     {
@@ -39,7 +51,7 @@ public class Spawner : MonoBehaviour
                         Random.Range(spawnAreaMin.y, spawnAreaMax.y + 1));
                 }
                 while (!IsEmptyPostion(randomPos));
-                
+
                 GameObject obj = Instantiate(monsterPrefab, this.transform);    // 생성하고
                 Slime slime = obj.GetComponent<Slime>();
                 slime.onDead += MonsterDead;    // 죽었을 때 currentSpawn의 수를 줄이는 함수 실행
@@ -50,11 +62,19 @@ public class Spawner : MonoBehaviour
             }
         }
     }
-
+    // 7시 30분까지. 함수 완성하기
     // pos 그리드 위치에 다른 슬라임이 없으면 true, 있으면 false
+    //
     bool IsEmptyPostion(Vector2Int pos)
     {
         Slime[] slimes = GetComponentsInChildren<Slime>();
+        foreach (Slime slime in slimes)
+        {
+            if (pos == slime.Position)
+            {
+                return false;
+            }
+        }
 
         return true;
     }

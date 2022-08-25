@@ -10,9 +10,11 @@ public class Slime : MonoBehaviour
     public bool showPath = true;    // 이동 경로 표시 여부
     List<Vector2Int> path;          // 이동 할 경로
 
+    Spawner spawner;
+
     public System.Action onDead;
     
-    public Vector2Int Position => GameManager.Inst.WorldToGrid(transform.position);
+    public Vector2Int Position => spawner.WorldToGrid(transform.position);
 
     Material mainMat;
     private void Start()
@@ -23,6 +25,7 @@ public class Slime : MonoBehaviour
         mainMat.SetFloat("_Tickness", 0);
 
         path = new List<Vector2Int>();
+        spawner = GetComponentInParent<Spawner>();
     }
 
     public void OutlineOnOff(bool on)
@@ -59,7 +62,7 @@ public class Slime : MonoBehaviour
         //}
         if( path.Count > 0 )    // 경로에 남은 노드가 있으면
         {
-            Vector3 targetPos = GameManager.Inst.GridToWorld(path[0]);  // 남은 경로의 첫번째 위치 가져오기
+            Vector3 targetPos = spawner.GridToWorld(path[0]);  // 남은 경로의 첫번째 위치 가져오기
             Vector3 dir = targetPos - transform.position;   // 방향 계산하기
             if( dir.sqrMagnitude < 0.001f ) // 목표지점에 도착했는지 확인
             {

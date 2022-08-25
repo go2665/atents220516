@@ -71,25 +71,25 @@ public class GameManager : MonoBehaviour
         mapManager.Initialize();
     }    
 
-    /// <summary>
-    /// 월드좌표를 그리드맵의 그리드 좌표로 변경해주는 함수
-    /// </summary>
-    /// <param name="postion">변환할 월드좌표</param>
-    /// <returns>변환된 그리드 좌표</returns>
-    public Vector2Int WorldToGrid(Vector3 postion)
-    {
-        return (Vector2Int)background.WorldToCell(postion);
-    }
-
-    /// <summary>
-    /// 그리드맵의 그리드 좌표를 월드좌표로 변경해주는 함수
-    /// </summary>
-    /// <param name="gridPos">그리드맵에서의 위치</param>
-    /// <returns>변환된 월드좌표</returns>
-    public Vector2 GridToWorld(Vector2Int gridPos)
-    {
-        return background.CellToWorld((Vector3Int)gridPos) + new Vector3(0.5f, 0.5f);   // 0.5는 그리드의 가운데 위치
-    }
+    // SceneMonsterManager로 옮겨졌음
+    ///// <summary>
+    ///// 월드좌표를 그리드맵의 그리드 좌표로 변경해주는 함수
+    ///// </summary>
+    ///// <param name="postion">변환할 월드좌표</param>
+    ///// <returns>변환된 그리드 좌표</returns>
+    //public Vector2Int WorldToGrid(Vector3 postion)
+    //{
+    //    return (Vector2Int)background.WorldToCell(postion);
+    //}
+    ///// <summary>
+    ///// 그리드맵의 그리드 좌표를 월드좌표로 변경해주는 함수
+    ///// </summary>
+    ///// <param name="gridPos">그리드맵에서의 위치</param>
+    ///// <returns>변환된 월드좌표</returns>
+    //public Vector2 GridToWorld(Vector2Int gridPos)
+    //{
+    //    return background.CellToWorld((Vector3Int)gridPos) + new Vector3(0.5f, 0.5f);   // 0.5는 그리드의 가운데 위치
+    //}
 
     /// <summary>
     /// 길찾기 경로 표시용 함수
