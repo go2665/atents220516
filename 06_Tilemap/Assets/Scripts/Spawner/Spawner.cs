@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEditor;
 using System.Threading;
 using UnityEngine.UIElements;
+using static UnityEditor.ShaderData;
 
 public class Spawner : MonoBehaviour
 {
@@ -18,6 +19,8 @@ public class Spawner : MonoBehaviour
     float delayCount = 0.0f;
 
     SceneMonsterManager monsterManager;
+    List<Vector2Int> spawnPositions;
+    List<Slime> spawnMonsters;
 
     public Vector2Int WorldToGrid(Vector3 postion)
     {
@@ -32,6 +35,8 @@ public class Spawner : MonoBehaviour
     private void Start()
     {
         monsterManager = transform.GetComponentInParent<SceneMonsterManager>();
+        spawnPositions = monsterManager.SpawnablePostions(spawnAreaMin, spawnAreaMax);
+        spawnMonsters = new List<Slime>();
     }
 
     // 현재 이 스포너에서 생성되고 살아남은 몬스터의 수가 maxSpawn보다 작으면 spawnDelay초 후에 몬스터를 생성한다.
@@ -50,21 +55,31 @@ public class Spawner : MonoBehaviour
                     randomPos = new(Random.Range(spawnAreaMin.x, spawnAreaMax.x + 1),
                         Random.Range(spawnAreaMin.y, spawnAreaMax.y + 1));
                 }
-                while (!IsEmptyPostion(randomPos));
+                while (!IsEmptyPostion(randomPos)); // 랜덤으로 위치를 고르고 사용할 수 있는 위치면 넘어간다.
 
                 GameObject obj = Instantiate(monsterPrefab, this.transform);    // 생성하고
                 Slime slime = obj.GetComponent<Slime>();
                 slime.onDead += MonsterDead;    // 죽었을 때 currentSpawn의 수를 줄이는 함수 실행
-
                 slime.transform.position = monsterManager.GridToWorld(randomPos);   // 위치 변경
+                spawnMonsters.Add(slime);
 
                 delayCount = 0.0f; // 딜레이용 카운트 다운 초기화
             }
         }
     }
-    // 7시 30분까지. 함수 완성하기
+
+    List<Vector2Int> ShufflePositions()
+    {
+        List<Vector2Int> result = new List<Vector2Int>();
+        
+        // result에는 spawnPositions에 있는 위치들 중 spawnMonsters가 없는 위치만 result에 들어가야 한다.
+        // spawnPositions에 변경이 있어서는 안된다.
+
+
+        return result;
+    }
+
     // pos 그리드 위치에 다른 슬라임이 없으면 true, 있으면 false
-    //
     bool IsEmptyPostion(Vector2Int pos)
     {
         Slime[] slimes = GetComponentsInChildren<Slime>();
@@ -75,7 +90,6 @@ public class Spawner : MonoBehaviour
                 return false;
             }
         }
-
         return true;
     }
 

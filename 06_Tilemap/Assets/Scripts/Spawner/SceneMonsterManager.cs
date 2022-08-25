@@ -15,7 +15,7 @@ public class SceneMonsterManager : MonoBehaviour
 
     List<Slime> monsterList;
 
-    private void Start()
+    private void Awake()
     {
         Transform gridTransform = transform.parent;
         background = gridTransform.Find("Background").GetComponent<Tilemap>();
@@ -42,5 +42,10 @@ public class SceneMonsterManager : MonoBehaviour
     public Vector2 GridToWorld(Vector2Int gridPos)
     {
         return background.CellToWorld((Vector3Int)gridPos) + new Vector3(0.5f, 0.5f);   // 0.5는 그리드의 가운데 위치
+    }
+
+    public List<Vector2Int> SpawnablePostions(Vector2Int min, Vector2Int max)
+    {
+        return gridMap.SpawnablePostions(min, max);
     }
 }

@@ -138,4 +138,21 @@ public class GridMap
             node.ClearAStarData();
         }
     }
+
+    public List<Vector2Int> SpawnablePostions(Vector2Int min, Vector2Int max)
+    {
+        List<Vector2Int> result = new List<Vector2Int>();
+        for (int y = min.y; y < max.y + 1; y++)
+        {
+            for (int x = min.x; x < max.x + 1; x++)
+            {
+                Node node = GetNode(x, y);
+                if (node.moveable )
+                {
+                    result.Add(new(x, y));
+                }
+            }
+        }
+        return result;
+    }
 }

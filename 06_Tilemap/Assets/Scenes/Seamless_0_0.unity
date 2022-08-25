@@ -5033,6 +5033,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: MonsterManager
       objectReference: {fileID: 0}
+    - target: {fileID: 2650073024698572490, guid: 85ebcb3e892afa14fa34d436397ca68a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2650073024698572501, guid: 85ebcb3e892afa14fa34d436397ca68a, type: 3}
       propertyPath: m_RootOrder
       value: 2
