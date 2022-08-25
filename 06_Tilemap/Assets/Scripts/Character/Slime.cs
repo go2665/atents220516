@@ -9,6 +9,8 @@ public class Slime : MonoBehaviour
     public float moveSpeed = 2.0f;  // 이동 속도
     public bool showPath = true;    // 이동 경로 표시 여부
     List<Vector2Int> path;          // 이동 할 경로
+
+    public System.Action onDead;
     
     public Vector2Int Position => GameManager.Inst.WorldToGrid(transform.position);
 
@@ -65,5 +67,10 @@ public class Slime : MonoBehaviour
             }
             transform.Translate(Time.deltaTime * moveSpeed * dir.normalized);   // 실제 이동하기            
         }
+    }
+
+    void Dead()
+    {
+        onDead?.Invoke();
     }
 }

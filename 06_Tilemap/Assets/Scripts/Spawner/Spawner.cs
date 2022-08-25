@@ -13,12 +13,41 @@ public class Spawner : MonoBehaviour
     public Vector2Int spawnAreaMax;
 
     int currentSpawn = 0;           // 현재 몬스터 생성 수
+    float delayCount = 0.0f;
 
     SceneMonsterManager monsterManager;
 
     private void Start()
     {
         monsterManager = transform.GetComponentInParent<SceneMonsterManager>();
+    }
+
+    // 현재 이 스포너에서 생성되고 살아남은 몬스터의 수가 maxSpawn보다 작으면 spawnDelay초 후에 몬스터를 생성한다.
+    private void Update()
+    {
+        if(currentSpawn < maxSpawn)
+        {
+            delayCount += Time.deltaTime;
+            if( delayCount > spawnDelay )
+            {
+                currentSpawn++;
+
+                GameObject obj = Instantiate(monsterPrefab, this.transform);
+                Slime slime = obj.GetComponent<Slime>();
+                slime.onDead += MonsterDead;
+
+                Vector2Int randomPos = new( Random.Range(spawnAreaMin.x, spawnAreaMax.x + 1), 
+                    Random.Range(spawnAreaMin.y, spawnAreaMax.y + 1));
+                slime.transform.position = monsterManager.GridToWorld(randomPos);
+
+                delayCount = 0.0f;
+            }
+        }
+    }
+
+    private void MonsterDead()
+    {
+        currentSpawn--;
     }
 
     private void OnDrawGizmos()
