@@ -25,29 +25,43 @@ public class Spawner : MonoBehaviour
     // 현재 이 스포너에서 생성되고 살아남은 몬스터의 수가 maxSpawn보다 작으면 spawnDelay초 후에 몬스터를 생성한다.
     private void Update()
     {
-        if(currentSpawn < maxSpawn)
+        if(currentSpawn < maxSpawn)         // 최대 스폰 수보다 생성되어 있는 슬라임의 수가 적으면
         {
-            delayCount += Time.deltaTime;
-            if( delayCount > spawnDelay )
+            delayCount += Time.deltaTime;   // 카운트다운
+            if( delayCount > spawnDelay )   // 원래 딜레이시간보다 커지면
             {
-                currentSpawn++;
-
-                GameObject obj = Instantiate(monsterPrefab, this.transform);
+                currentSpawn++; // 이 스포너가 생성한 슬라임 수
+                
+                Vector2Int randomPos;
+                do
+                {
+                    randomPos = new(Random.Range(spawnAreaMin.x, spawnAreaMax.x + 1),
+                        Random.Range(spawnAreaMin.y, spawnAreaMax.y + 1));
+                }
+                while (!IsEmptyPostion(randomPos));
+                
+                GameObject obj = Instantiate(monsterPrefab, this.transform);    // 생성하고
                 Slime slime = obj.GetComponent<Slime>();
-                slime.onDead += MonsterDead;
+                slime.onDead += MonsterDead;    // 죽었을 때 currentSpawn의 수를 줄이는 함수 실행
 
-                Vector2Int randomPos = new( Random.Range(spawnAreaMin.x, spawnAreaMax.x + 1), 
-                    Random.Range(spawnAreaMin.y, spawnAreaMax.y + 1));
-                slime.transform.position = monsterManager.GridToWorld(randomPos);
+                slime.transform.position = monsterManager.GridToWorld(randomPos);   // 위치 변경
 
-                delayCount = 0.0f;
+                delayCount = 0.0f; // 딜레이용 카운트 다운 초기화
             }
         }
     }
 
+    // pos 그리드 위치에 다른 슬라임이 없으면 true, 있으면 false
+    bool IsEmptyPostion(Vector2Int pos)
+    {
+        Slime[] slimes = GetComponentsInChildren<Slime>();
+
+        return true;
+    }
+
     private void MonsterDead()
     {
-        currentSpawn--;
+        currentSpawn--; // 몬스터가 죽으면 갯수 감소
     }
 
     private void OnDrawGizmos()
