@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+//using UnityEngine.Tilemaps;
 using UnityEngine.SceneManagement;
 
 public class MapManager : MonoBehaviour
@@ -22,6 +23,8 @@ public class MapManager : MonoBehaviour
         Loaded          // 로딩 완료
     }
     SceneLoadState[,] sceneLoadState;    // 각 씬의 로딩 상태
+    
+    SubMapManager[,] subMaps;
 
     /// <summary>
     /// 초기화 함수
@@ -128,5 +131,4 @@ public class MapManager : MonoBehaviour
     {
         return (x > -1 && x < Width && y > -1 && y < Height);   // 0보다 크거나 같고 가로 또는 세로 폭보다 작다
     }
-
 }

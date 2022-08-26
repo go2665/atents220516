@@ -37,19 +37,19 @@ public class Test_Astar : MonoBehaviour
             Vector3Int cellPos = background.WorldToCell(worldPos);
             //Debug.Log($"Cell Pos : {cellPos}");
 
-            Node node = GameManager.Inst.Map.GetNode((Vector2Int)cellPos);
-            if ( node != null)
-            {
-                if( node.moveable )
-                {
-                    Debug.Log("가능");
-                    slime.Move((Vector2Int)cellPos);
-                }
-                else
-                {
-                    Debug.Log("불가능");
-                }
-            }
+            //Node node = GameManager.Inst.Map.GetNode((Vector2Int)cellPos);
+            //if ( node != null)
+            //{
+            //    if( node.moveable )
+            //    {
+            //        Debug.Log("가능");
+            //        slime.Move((Vector2Int)cellPos);
+            //    }
+            //    else
+            //    {
+            //        Debug.Log("불가능");
+            //    }
+            //}
         }
     }
 

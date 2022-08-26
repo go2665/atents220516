@@ -155,4 +155,18 @@ public class GridMap
         }
         return result;
     }
+
+    public Vector2Int RandomMovablePostion()
+    {
+        Vector2Int randomPos = new Vector2Int();
+        do
+        {
+            randomPos.x = Random.Range(0, width);
+            randomPos.y = Random.Range(0, height);
+
+        } while (!nodes[randomPos.y,randomPos.x].moveable);
+
+        //randomPos = Vector2Int.zero;    // 테스트 용도
+        return randomPos + offset;
+    }
 }

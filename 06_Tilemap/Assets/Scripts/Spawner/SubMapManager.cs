@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class SceneMonsterManager : MonoBehaviour
+public class SubMapManager : MonoBehaviour
 {
     // 몬스터 위치 정보(같은 칸에 몬스터 중복 방지용)   
     //  - spawner는 몬스터를 생성할 때 SceneMonsterManager에게 생성된 몬스터를 알린다.
@@ -13,7 +13,9 @@ public class SceneMonsterManager : MonoBehaviour
     Tilemap background;
     Tilemap obstacle;
 
-    List<Slime> monsterList;
+    Spawner[] spawners;
+
+    public GridMap GridMap => gridMap;
 
     private void Awake()
     {
@@ -22,6 +24,8 @@ public class SceneMonsterManager : MonoBehaviour
         obstacle = gridTransform.Find("Obstacle").GetComponent<Tilemap>();
 
         gridMap = new(background, obstacle);
+
+        spawners = GetComponentsInChildren<Spawner>();
     }
 
     /// <summary>
@@ -47,5 +51,10 @@ public class SceneMonsterManager : MonoBehaviour
     public List<Vector2Int> SpawnablePostions(Vector2Int min, Vector2Int max)
     {
         return gridMap.SpawnablePostions(min, max);
+    }
+
+    public Vector2Int RandomMovablePotion()
+    {
+        return gridMap.RandomMovablePostion();
     }
 }

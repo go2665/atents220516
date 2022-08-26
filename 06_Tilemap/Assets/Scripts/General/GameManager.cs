@@ -9,12 +9,12 @@ using UnityEngine.Tilemaps;
 public class GameManager : MonoBehaviour
 {
     // A* 용 -------------------------------------------------------------------------------------------------------
-    public Tilemap background;  // 타일맵들의 전체 크기를 확인할 타일맵(무조건 background가 가장 큰 타일맵이라는 전제)
-    public Tilemap obstacle;    // 장애물이 배치되어있는 타일맵
-    public LineRenderer line;   // 경로 표시용 라인 랜더러
-    GridMap map;                // A* 알고리즘에서 사용하기 위한 그리드 맵
+    //public Tilemap background;  // 타일맵들의 전체 크기를 확인할 타일맵(무조건 background가 가장 큰 타일맵이라는 전제)
+    //public Tilemap obstacle;    // 장애물이 배치되어있는 타일맵
+    //public LineRenderer line;   // 경로 표시용 라인 랜더러
+    //GridMap map;                // A* 알고리즘에서 사용하기 위한 그리드 맵
 
-    public GridMap Map => map;
+    //public GridMap Map => map;
     //--------------------------------------------------------------------------------------------------------------
 
     // 심리스용 -----------------------------------------------------------------------------------------------------
@@ -69,7 +69,7 @@ public class GameManager : MonoBehaviour
             mapManager = GetComponent<MapManager>();
         }
         mapManager.Initialize();
-    }    
+    }
 
     // SceneMonsterManager로 옮겨졌음
     ///// <summary>
@@ -91,26 +91,5 @@ public class GameManager : MonoBehaviour
     //    return background.CellToWorld((Vector3Int)gridPos) + new Vector3(0.5f, 0.5f);   // 0.5는 그리드의 가운데 위치
     //}
 
-    /// <summary>
-    /// 길찾기 경로 표시용 함수
-    /// </summary>
-    /// <param name="path">길찾기로 찾은 경로</param>
-    public void DrawPath(List<Vector2Int> path)
-    {
-        if (path != null && path.Count > 1) // 최소 2개의 위치는 필요함
-        {
-            line.gameObject.SetActive(true);
-            line.positionCount = path.Count;
-            int index = 0;
-            foreach (var pos in path)
-            {
-                line.SetPosition(index, new(pos.x + 0.5f, pos.y + 0.5f, 1));
-                index++;
-            }
-        }
-        else
-        {
-            line.gameObject.SetActive(false);
-        }
-    }
+    
 }

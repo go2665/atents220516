@@ -4,6 +4,10 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+// 슬라임은 생성되면 자기 씬 내의 랜덤한 지역으로 이동한다.
+// 슬라임 옆칸에 플레이어가 있으면 이동을 멈추고 공격한다.
+// 슬라임 옆칸에 플레이어가 없으면 다시 랜덤한 지역으로 이동한다.
+
 public class Slime : MonoBehaviour
 {    
     public float moveSpeed = 2.0f;  // 이동 속도
@@ -17,15 +21,23 @@ public class Slime : MonoBehaviour
     public Vector2Int Position => spawner.WorldToGrid(transform.position);
 
     Material mainMat;
-    private void Start()
+
+    public LineRenderer linePrefab;
+    LineRenderer line;
+
+    private void Awake()
     {
+        path = new List<Vector2Int>();
+
         Renderer renderer = GetComponent<SpriteRenderer>();
         mainMat = renderer.material;
         mainMat.SetColor("_Color", Color.red * 5);
         mainMat.SetFloat("_Tickness", 0);
+    }
 
-        path = new List<Vector2Int>();
-        spawner = GetComponentInParent<Spawner>();
+    public void Initialize(Spawner parent)
+    {
+        spawner = parent;
     }
 
     public void OutlineOnOff(bool on)
@@ -39,15 +51,10 @@ public class Slime : MonoBehaviour
     public void Move(Vector2Int target)
     {
         path.Clear();   // 이전 경로 지우기
-        path = AStar.PathFind(GameManager.Inst.Map, Position, target);  // 경로 찾기
-        if (showPath)
-        {
-            GameManager.Inst.DrawPath(path);    // 경로 그리기
-        }
-        else
-        {
-            GameManager.Inst.DrawPath(null);    // 경로를 지우기
-        }
+
+        path = AStar.PathFind(spawner.GridMap, Position, target);  // 경로 찾기
+        //path = AStar.PathFind(spawner.GridMap, Position, new(-10,-10));
+        DrawPath();
     }
 
     private void Update()
@@ -70,10 +77,55 @@ public class Slime : MonoBehaviour
             }
             transform.Translate(Time.deltaTime * moveSpeed * dir.normalized);   // 실제 이동하기            
         }
+        else
+        {
+            // 최종 위치 도착
+            if (line != null)
+            {
+                line.gameObject.SetActive(false);
+            }
+
+            do
+            {                
+                Move(spawner.RandomMovablePotion());                
+            }
+            while (path.Count <= 0);
+        }
     }
 
     void Dead()
     {
         onDead?.Invoke(this);
+    }
+
+    /// <summary>
+    /// 길찾기 경로 표시용 함수
+    /// </summary>
+    /// <param name="path">길찾기로 찾은 경로</param>
+    void DrawPath()
+    {
+        if(showPath && path != null && path.Count > 1)  // 최소 2개의 위치는 필요함
+        {
+            if (line == null)
+            {
+                line = Instantiate(linePrefab);
+            }
+            line.gameObject.SetActive(true);
+            line.positionCount = path.Count;
+            int index = 0;
+            foreach (var pos in path)
+            {
+                Vector2 worldPos = spawner.GridToWorld(pos);
+                line.SetPosition(index, new(worldPos.x, worldPos.y, 1));
+                index++;
+            }
+        }
+        else
+        {
+            if(line != null)
+            {
+                line.gameObject.SetActive(false);
+            }
+        }
     }
 }

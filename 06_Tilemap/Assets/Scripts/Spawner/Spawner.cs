@@ -18,24 +18,26 @@ public class Spawner : MonoBehaviour
     int currentSpawn = 0;           // 현재 몬스터 생성 수
     float delayCount = 0.0f;
 
-    SceneMonsterManager monsterManager;
+    SubMapManager subMapManager;
     List<Vector2Int> spawnPositions;    // 몬스터가 스폰 가능한 지역의 목록
     List<Slime> spawnMonsters;
 
+    public GridMap GridMap => subMapManager.GridMap;
+
     public Vector2Int WorldToGrid(Vector3 postion)
     {
-        return monsterManager.WorldToGrid(postion);
+        return subMapManager.WorldToGrid(postion);
     }
 
     public Vector2 GridToWorld(Vector2Int gridPos)
     {
-        return monsterManager.GridToWorld(gridPos);
+        return subMapManager.GridToWorld(gridPos);
     }
 
     private void Start()
     {
-        monsterManager = transform.GetComponentInParent<SceneMonsterManager>();
-        spawnPositions = monsterManager.SpawnablePostions(spawnAreaMin, spawnAreaMax);
+        subMapManager = transform.GetComponentInParent<SubMapManager>();
+        spawnPositions = subMapManager.SpawnablePostions(spawnAreaMin, spawnAreaMax);
         maxSpawn = Mathf.Min(maxSpawn, spawnPositions.Count);
         spawnMonsters = new List<Slime>();
     }
@@ -59,13 +61,22 @@ public class Spawner : MonoBehaviour
                     GameObject obj = Instantiate(monsterPrefab, this.transform);        // 생성하고
                     Slime slime = obj.GetComponent<Slime>();
                     slime.onDead += MonsterDead;    // 죽었을 때 currentSpawn의 수를 줄이는 함수 실행
-                    slime.transform.position = monsterManager.GridToWorld(randomPos);   // 위치 변경
+                    slime.transform.position = subMapManager.GridToWorld(randomPos);   // 위치 변경
+                    slime.Initialize(this);
                     spawnMonsters.Add(slime);
+
+                    Vector2Int randomTarget = subMapManager.RandomMovablePotion();
+                    slime.Move(randomTarget);    // 생성되면 같은 맵의 적당한 위치로 이동
                 }
 
                 delayCount = 0.0f; // 딜레이용 카운트 다운 초기화
             }
         }
+    }
+
+    public Vector2Int RandomMovablePotion()
+    {
+        return subMapManager.RandomMovablePotion();
     }
 
     List<Vector2Int> ShufflePositions()
@@ -123,10 +134,10 @@ public class Spawner : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        if(monsterManager !=null)
+        if(subMapManager !=null)
         {
-            Vector3 min = monsterManager.GridToWorld(spawnAreaMin) - new Vector2(0.5f,0.5f);
-            Vector3 max = monsterManager.GridToWorld(spawnAreaMax) + new Vector2(0.5f, 0.5f);
+            Vector3 min = subMapManager.GridToWorld(spawnAreaMin) - new Vector2(0.5f,0.5f);
+            Vector3 max = subMapManager.GridToWorld(spawnAreaMax) + new Vector2(0.5f, 0.5f);
             Vector3 p2 = new(max.x, min.y);
             Vector3 p3 = new(min.x, max.y);
                         

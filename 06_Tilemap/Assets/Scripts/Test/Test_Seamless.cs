@@ -8,6 +8,13 @@ using UnityEngine.SceneManagement;
 
 public class Test_Seamless : MonoBehaviour
 {
+
+    private void Start()
+    {
+        //GameManager.Inst.MapManager.Test_SceneMonsterManager();
+    }
+
+
     private void Test_Code()
     {
         const int Height = 3;
