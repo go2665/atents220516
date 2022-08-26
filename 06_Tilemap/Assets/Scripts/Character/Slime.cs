@@ -12,7 +12,7 @@ public class Slime : MonoBehaviour
 
     Spawner spawner;
 
-    public System.Action onDead;
+    public System.Action<Slime> onDead;
     
     public Vector2Int Position => spawner.WorldToGrid(transform.position);
 
@@ -74,6 +74,6 @@ public class Slime : MonoBehaviour
 
     void Dead()
     {
-        onDead?.Invoke();
+        onDead?.Invoke(this);
     }
 }

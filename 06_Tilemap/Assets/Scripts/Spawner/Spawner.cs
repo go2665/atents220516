@@ -19,7 +19,7 @@ public class Spawner : MonoBehaviour
     float delayCount = 0.0f;
 
     SceneMonsterManager monsterManager;
-    List<Vector2Int> spawnPositions;
+    List<Vector2Int> spawnPositions;    // 몬스터가 스폰 가능한 지역의 목록
     List<Slime> spawnMonsters;
 
     public Vector2Int WorldToGrid(Vector3 postion)
@@ -36,6 +36,7 @@ public class Spawner : MonoBehaviour
     {
         monsterManager = transform.GetComponentInParent<SceneMonsterManager>();
         spawnPositions = monsterManager.SpawnablePostions(spawnAreaMin, spawnAreaMax);
+        maxSpawn = Mathf.Min(maxSpawn, spawnPositions.Count);
         spawnMonsters = new List<Slime>();
     }
 
@@ -50,18 +51,17 @@ public class Spawner : MonoBehaviour
                 currentSpawn++; // 이 스포너가 생성한 슬라임 수
                 
                 Vector2Int randomPos;
-                do
+                List<Vector2Int> shuffleList = ShufflePositions();
+                if (shuffleList.Count > 0)
                 {
-                    randomPos = new(Random.Range(spawnAreaMin.x, spawnAreaMax.x + 1),
-                        Random.Range(spawnAreaMin.y, spawnAreaMax.y + 1));
-                }
-                while (!IsEmptyPostion(randomPos)); // 랜덤으로 위치를 고르고 사용할 수 있는 위치면 넘어간다.
+                    randomPos = shuffleList[0];
 
-                GameObject obj = Instantiate(monsterPrefab, this.transform);    // 생성하고
-                Slime slime = obj.GetComponent<Slime>();
-                slime.onDead += MonsterDead;    // 죽었을 때 currentSpawn의 수를 줄이는 함수 실행
-                slime.transform.position = monsterManager.GridToWorld(randomPos);   // 위치 변경
-                spawnMonsters.Add(slime);
+                    GameObject obj = Instantiate(monsterPrefab, this.transform);        // 생성하고
+                    Slime slime = obj.GetComponent<Slime>();
+                    slime.onDead += MonsterDead;    // 죽었을 때 currentSpawn의 수를 줄이는 함수 실행
+                    slime.transform.position = monsterManager.GridToWorld(randomPos);   // 위치 변경
+                    spawnMonsters.Add(slime);
+                }
 
                 delayCount = 0.0f; // 딜레이용 카운트 다운 초기화
             }
@@ -70,12 +70,33 @@ public class Spawner : MonoBehaviour
 
     List<Vector2Int> ShufflePositions()
     {
-        List<Vector2Int> result = new List<Vector2Int>();
+        List<Vector2Int> temp = new List<Vector2Int>(spawnPositions); // spawnPositions안에 들어있는 값들을 가지는 리스트를 새로 만든다.
+
+        foreach (var monster in spawnMonsters)
+        {
+            temp.Remove(monster.Position);
+        }
+
+        //// 리스트 크기 만큼 랜덤으로 인덱스 구해서 리무브앳(인덱스)해서 다른 리스트에 모으기
+        //List<Vector2Int> result = new List<Vector2Int>();
+        //while( temp.Count > 0 )
+        //{
+        //    int index = Random.Range(0, temp.Count - 1);
+        //    result.Add(temp[index]);
+        //    temp.RemoveAt(index);
+        //}
+
+        Vector2Int[] tempArray = temp.ToArray();
+
+        // 피셔-예이츠 알고리즘
+        for (int i = 0; i < tempArray.Length - 1; i++)
+        {
+            int index = Random.Range(i + 1, tempArray.Length);
+            (tempArray[i], tempArray[index]) = (tempArray[index], tempArray[i]);
+        }
+
+        List<Vector2Int> result = new List<Vector2Int>(tempArray);
         
-        // result에는 spawnPositions에 있는 위치들 중 spawnMonsters가 없는 위치만 result에 들어가야 한다.
-        // spawnPositions에 변경이 있어서는 안된다.
-
-
         return result;
     }
 
@@ -93,9 +114,11 @@ public class Spawner : MonoBehaviour
         return true;
     }
 
-    private void MonsterDead()
+    private void MonsterDead(Slime slime)
     {
+        spawnMonsters.Remove(slime);
         currentSpawn--; // 몬스터가 죽으면 갯수 감소
+
     }
 
     private void OnDrawGizmos()
