@@ -14,32 +14,41 @@ public class Slime : MonoBehaviour
     public bool showPath = true;    // 이동 경로 표시 여부
     List<Vector2Int> path;          // 이동 할 경로
 
-    Spawner spawner;
+    Spawner spawner;                // 다른 클래스에 접근 할 용도로 가지고 있음
 
-    public System.Action<Slime> onDead;
+    public System.Action<Slime> onDead; // 사망시 실행될 델리게이트
     
-    public Vector2Int Position => spawner.WorldToGrid(transform.position);
+    public Vector2Int Position => spawner.WorldToGrid(transform.position);  // 슬라임의 그리드 좌표
 
-    Material mainMat;
+    Material mainMat;               // 쉐이더 처리 때문에 가지고 있는 머티리얼
 
-    public LineRenderer linePrefab;
-    LineRenderer line;
+    public LineRenderer linePrefab; // 경로 표시용 프리팹(없을 때 만들기 위한 용도)
+    LineRenderer line;              // 실제 경로 표시용 라인 랜더러
 
     private void Awake()
     {
-        path = new List<Vector2Int>();
+        path = new List<Vector2Int>();  // 움직일 경로
 
+        // 셰이더 프로퍼티 설정용
         Renderer renderer = GetComponent<SpriteRenderer>();
         mainMat = renderer.material;
-        mainMat.SetColor("_Color", Color.red * 5);
+        mainMat.SetColor("_Color", Color.red * 5);  
         mainMat.SetFloat("_Tickness", 0);
     }
 
+    /// <summary>
+    /// 스포너 설정을 위한 초기화
+    /// </summary>
+    /// <param name="parent">이 슬라임이 생성된 스포너</param>
     public void Initialize(Spawner parent)
     {
         spawner = parent;
     }
 
+    /// <summary>
+    /// 아웃라인 표시 on/off
+    /// </summary>
+    /// <param name="on">true면 아웃라인 표시, false면 끄기</param>
     public void OutlineOnOff(bool on)
     {
         if( on )
@@ -48,13 +57,17 @@ public class Slime : MonoBehaviour
             mainMat.SetFloat("_Tickness", 0.0f);
     }
 
+    /// <summary>
+    /// 슬라임 이동
+    /// </summary>
+    /// <param name="target">이동할 위치</param>
     public void Move(Vector2Int target)
     {
         path.Clear();   // 이전 경로 지우기
 
         path = AStar.PathFind(spawner.GridMap, Position, target);  // 경로 찾기
         //path = AStar.PathFind(spawner.GridMap, Position, new(-10,-10));
-        DrawPath();
+        DrawPath();     // 경로 그리기
     }
 
     private void Update()
@@ -67,6 +80,7 @@ public class Slime : MonoBehaviour
         //{
         //    OutlineOnOff(false);
         //}
+        // 경로에 따른 이동 처리
         if( path.Count > 0 )    // 경로에 남은 노드가 있으면
         {
             Vector3 targetPos = spawner.GridToWorld(path[0]);  // 남은 경로의 첫번째 위치 가져오기
@@ -82,17 +96,20 @@ public class Slime : MonoBehaviour
             // 최종 위치 도착
             if (line != null)
             {
-                line.gameObject.SetActive(false);
+                line.gameObject.SetActive(false);       // 라인렌더러 비활성화
             }
 
             do
             {                
-                Move(spawner.RandomMovablePotion());                
+                Move(spawner.RandomMovablePotion());    // 다음 위치 구하기
             }
-            while (path.Count <= 0);
+            while (path.Count <= 0);    // 갈 수 없는 지역을 선택했을 때의 대비용
         }
     }
 
+    /// <summary>
+    /// 사망처리 함수
+    /// </summary>
     void Dead()
     {
         onDead?.Invoke(this);
@@ -108,7 +125,7 @@ public class Slime : MonoBehaviour
         {
             if (line == null)
             {
-                line = Instantiate(linePrefab);
+                line = Instantiate(linePrefab); // 라인 랜더러가 없으면 생성
             }
             line.gameObject.SetActive(true);
             line.positionCount = path.Count;
@@ -116,7 +133,7 @@ public class Slime : MonoBehaviour
             foreach (var pos in path)
             {
                 Vector2 worldPos = spawner.GridToWorld(pos);
-                line.SetPosition(index, new(worldPos.x, worldPos.y, 1));
+                line.SetPosition(index, new(worldPos.x, worldPos.y, 1));    // 경로를 이용해서 라인랜더러가 그려질 위치 결정
                 index++;
             }
         }

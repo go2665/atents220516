@@ -139,6 +139,12 @@ public class GridMap
         }
     }
 
+    /// <summary>
+    /// 스폰 가능한 위치 찾기
+    /// </summary>
+    /// <param name="min">최소 그리드 좌표</param>
+    /// <param name="max">최대 그리드 좌표</param>
+    /// <returns>스폰 가능한 위치의 목록</returns>
     public List<Vector2Int> SpawnablePostions(Vector2Int min, Vector2Int max)
     {
         List<Vector2Int> result = new List<Vector2Int>();
@@ -147,7 +153,7 @@ public class GridMap
             for (int x = min.x; x < max.x + 1; x++)
             {
                 Node node = GetNode(x, y);
-                if (node.moveable )
+                if (node.moveable)  // 이동 가능한 노드면 결과 리스트에 추가
                 {
                     result.Add(new(x, y));
                 }
@@ -156,6 +162,10 @@ public class GridMap
         return result;
     }
 
+    /// <summary>
+    /// 그리드맵에서 랜덤한 이동 가능 위치 찾기
+    /// </summary>
+    /// <returns>랜덤 이동 가능한 위치</returns>
     public Vector2Int RandomMovablePostion()
     {
         Vector2Int randomPos = new Vector2Int();
@@ -163,10 +173,9 @@ public class GridMap
         {
             randomPos.x = Random.Range(0, width);
             randomPos.y = Random.Range(0, height);
-
-        } while (!nodes[randomPos.y,randomPos.x].moveable);
+        } while (!nodes[randomPos.y,randomPos.x].moveable); // 이동 가능한 위치가 나올 때까지 무한 반복
 
         //randomPos = Vector2Int.zero;    // 테스트 용도
-        return randomPos + offset;
+        return randomPos + offset;  // 랜덤으로 구한 결과를 offset과 더해서 리턴
     }
 }

@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-//using UnityEngine.Tilemaps;
 using UnityEngine.SceneManagement;
 
 public class MapManager : MonoBehaviour
@@ -24,8 +23,6 @@ public class MapManager : MonoBehaviour
     }
     SceneLoadState[,] sceneLoadState;    // 각 씬의 로딩 상태
     
-    SubMapManager[,] subMaps;
-
     /// <summary>
     /// 초기화 함수
     /// </summary>
