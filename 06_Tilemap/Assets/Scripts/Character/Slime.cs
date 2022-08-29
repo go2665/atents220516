@@ -59,16 +59,21 @@ public class Slime : MonoBehaviour
     }
 
     /// <summary>
-    /// 슬라임 이동
+    /// 이동할 위치 지정
     /// </summary>
     /// <param name="target">이동할 위치</param>
-    public void Move(Vector2Int target)
+    public void SetMoveDestination(Vector2Int target)
     {
         path.Clear();   // 이전 경로 지우기
 
         path = AStar.PathFind(subMapManager.GridMap, Position, target);  // 경로 찾기
         //path = AStar.PathFind(spawner.GridMap, Position, new(-10,-10));
         DrawPath();     // 경로 그리기
+    }
+
+    public void MoveUpdate()
+    {
+        // 실제 이동 함수
     }
 
     //private void Update()

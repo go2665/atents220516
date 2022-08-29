@@ -17,11 +17,15 @@ public class Spawner : MonoBehaviour
     int currentSpawn = 0;               // 현재 생성된 몬스터 수
     float delayCount = 0.0f;            // 생성용 시간 카운터(spawnDelay보다 커지면 몬스터 생성)
 
-    public System.Action<Spawner> onRequestSpawn;   // 서브맵 메니저에게 스폰 요청을 보내는 델리게이트
+    public System.Action onRequestSpawn;   // 서브맵 메니저에게 스폰 요청을 보내는 델리게이트
     
+    /// <summary>
+    /// 몬스터를 생성하는 함수. 내부에서 직접 호출 할 일은 없음.
+    /// </summary>
+    /// <returns>생성한 몬스터</returns>
     public Slime Spawn()
     {
-        currentSpawn++;
+        currentSpawn++; // 생성 카운팅용 숫자 증가
         GameObject obj = Instantiate(monsterPrefab, transform);
         Slime slime = obj.GetComponent<Slime>();
         slime.onDead += MonsterDead;
@@ -29,15 +33,21 @@ public class Spawner : MonoBehaviour
         return slime;
     }
 
-    // 몬스터 사망시 해야 할 일
+    /// <summary>
+    /// 몬스터 사망시 호출될 함수
+    /// </summary>
+    /// <param name="_">사용안함</param>
     private void MonsterDead(Slime _)
     {
-        currentSpawn--; // 몬스터가 죽으면 갯수 감소
+        currentSpawn--; // 생성 카운팅용 숫자 감소
     }
 
+    /// <summary>
+    /// SubmapManager에게 생성 요청을 위한 함수
+    /// </summary>
     private void RequestSpawn()
     {
-        onRequestSpawn?.Invoke(this);
+        onRequestSpawn?.Invoke();
     }
 
     private void Update()
@@ -48,7 +58,7 @@ public class Spawner : MonoBehaviour
             if (delayCount > spawnDelay)    // 원래 딜레이시간보다 커지면
             {
                 RequestSpawn();             // SubmapManager에게 생성 요청
-                delayCount = 0.0f; // 딜레이용 카운트 다운 초기화
+                delayCount = 0.0f;          // 딜레이용 카운트 다운 초기화
             }
         }
     }
@@ -57,7 +67,7 @@ public class Spawner : MonoBehaviour
     {
         // 스폰 위치 씬창에 그리기
         Vector3 pos = transform.position;
-        pos.x = Mathf.Floor(pos.x);
+        pos.x = Mathf.Floor(pos.x);     // 그리드 칸 맞추기 위해 소수점 내림
         pos.y = Mathf.Floor(pos.y);
 
         Vector3 p0 = pos;

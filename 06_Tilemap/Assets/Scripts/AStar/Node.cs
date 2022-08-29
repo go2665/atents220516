@@ -13,7 +13,14 @@ public class Node : System.IComparable<Node>
     public int y;
 
     // 이동할 수 있는 지역인지 여부(true면 이동 가능, false면 이동 불가)
-    public bool moveable;   
+    //public bool moveable;  
+    public enum GridType
+    {
+        Plain = 0,
+        Wall,
+        Monster
+    }
+    public GridType gridType = GridType.Plain;
 
     // A* 알고리즘을 위한 G,H,F
     public float G;             // 시작점에서 이 노드까지 오는데 걸린 거리(부모를 따라 움직였을 때의 거리)
@@ -28,11 +35,12 @@ public class Node : System.IComparable<Node>
     /// <param name="x">위치</param>
     /// <param name="y">위치</param>
     /// <param name="moveable">이동 가능 여부. 디폴트로 true.</param>
-    public Node(int x, int y, bool moveable = true)
+    //public Node(int x, int y, bool moveable = true)
+    public Node(int x, int y, GridType gridType = GridType.Plain)
     {
         this.x = x;
         this.y = y;
-        this.moveable = moveable;
+        this.gridType = gridType;
         ClearAStarData();
     }
 

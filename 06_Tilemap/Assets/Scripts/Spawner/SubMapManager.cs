@@ -8,15 +8,13 @@ using UnityEngine.Tilemaps;
 /// </summary>
 public class SubMapManager : MonoBehaviour
 {
-    // 몬스터 위치 정보(같은 칸에 몬스터 중복 방지용)   
-    //  - spawner는 몬스터를 생성할 때 SceneMonsterManager에게 생성된 몬스터를 알린다.
-    //  - 몬스터는 죽을 때 spawner와 SceneMonsterManager에게 사망 사실을 알린다.
-
     GridMap gridMap;        // 그리드맵(A* 길찾기 + 스폰 위치 찾는 용도)
     Tilemap background;     // 배경용 타일맵(기본 배경)
     Tilemap obstacle;       // 장애물용 타일맵(이동 및 스폰 불가 지역)
 
-    Spawner[] spawners;     // 몬스터 스포너
+    Spawner[] spawners;     // 서브맵의 전체 몬스터 스포너
+    List<Slime> monsterList;// 이 씬이 가지는 모든 몬스터 스포너에서 생성된 모든 적
+    Queue<Spawner> spawnRequests;   // 몬스터 스폰을 요청한 스포너 큐(노드 하나당 스폰 1회)
 
     public GridMap GridMap => gridMap;  // 그리드맵 읽기전용 프로퍼티
 
@@ -28,8 +26,38 @@ public class SubMapManager : MonoBehaviour
 
         gridMap = new(background, obstacle);    // 타일맵 찾아서 그리드맵 생성
 
+        monsterList = new List<Slime>();
+        spawnRequests = new Queue<Spawner>();
         spawners = GetComponentsInChildren<Spawner>();  // 모든 스포너 찾아놓기
+
+        foreach(var spawner in spawners)
+        {
+            spawner.onRequestSpawn += () => spawnRequests.Enqueue(spawner);
+        }
     }
+
+    private void Update()
+    {
+        List<Vector2Int> enemyPosList = new List<Vector2Int>();
+        List<Vector2Int> enemyOldPosList = new List<Vector2Int>();
+        foreach(var slime in monsterList)
+        {
+            enemyOldPosList.Add(WorldToGrid(slime.transform.position));
+            slime.MoveUpdate();
+            enemyPosList.Add(WorldToGrid(slime.transform.position));
+        }
+
+        gridMap.UpdateMonsters(enemyOldPosList, enemyPosList);
+
+        //spawnRequests에 있는 것들 생성
+
+    }
+
+
+
+
+
+
 
     /// <summary>
     /// 월드좌표를 그리드맵의 그리드 좌표로 변경해주는 함수

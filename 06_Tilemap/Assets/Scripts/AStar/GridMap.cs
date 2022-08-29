@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using static UnityEditor.PlayerSettings;
 
 /// <summary>
 /// A*로 길찾기를 진행할 맵
@@ -76,7 +77,8 @@ public class GridMap
                 if (tile != null)   // 타일이 있으면 그 위치는 못가는 지역
                 {
                     Node node = GetNode(x, y);  // 노드 가져와서
-                    node.moveable = false;      // 못가는 지역이라고 표시
+                    //node.moveable = false;      // 못가는 지역이라고 표시
+                    node.gridType = Node.GridType.Wall;
                 }
             }
         }
@@ -153,7 +155,8 @@ public class GridMap
             for (int x = min.x; x < max.x + 1; x++)
             {
                 Node node = GetNode(x, y);
-                if (node.moveable)  // 이동 가능한 노드면 결과 리스트에 추가
+                //if (node.moveable)  // 이동 가능한 노드면 결과 리스트에 추가
+                if( node.gridType == Node.GridType.Plain )
                 {
                     result.Add(new(x, y));
                 }
@@ -173,9 +176,31 @@ public class GridMap
         {
             randomPos.x = Random.Range(0, width);
             randomPos.y = Random.Range(0, height);
-        } while (!nodes[randomPos.y,randomPos.x].moveable); // 이동 가능한 위치가 나올 때까지 무한 반복
+            //} while (!nodes[randomPos.y,randomPos.x].moveable); // 이동 가능한 위치가 나올 때까지 무한 반복
+        } while (nodes[randomPos.y, randomPos.x].gridType == Node.GridType.Wall); // 이동 가능한 위치가 나올 때까지 무한 반복(Plain이나 Monster)
 
         //randomPos = Vector2Int.zero;    // 테스트 용도
         return randomPos + offset;  // 랜덤으로 구한 결과를 offset과 더해서 리턴
     }
+
+    public void UpdateMonsters(List<Vector2Int> pre, List<Vector2Int> post)
+    {
+        foreach(var pos in pre)
+        {
+            nodes[height - 1 - pos.y + offset.y, pos.x - offset.x].gridType = Node.GridType.Plain;
+        }
+        foreach (var pos in post)
+        {
+            nodes[height - 1 - pos.y + offset.y, pos.x - offset.x].gridType = Node.GridType.Monster;
+        }
+    }
+
+    //bool IsMonsterThere(int x, int y)
+    //{
+    //    if(IsValidPosition(x,y))
+    //    {
+    //        return (nodes[height - 1 - y + offset.y, x - offset.x].gridType == Node.GridType.Monster);
+    //    }
+    //    return false;
+    //}
 }
