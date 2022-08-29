@@ -5107,6 +5107,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 920389531}
     m_Modifications:
+    - target: {fileID: 2097444300762680729, guid: 85ebcb3e892afa14fa34d436397ca68a, type: 3}
+      propertyPath: maxSpawn
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2097444300762680729, guid: 85ebcb3e892afa14fa34d436397ca68a, type: 3}
+      propertyPath: spawnArea.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2097444300762680729, guid: 85ebcb3e892afa14fa34d436397ca68a, type: 3}
+      propertyPath: spawnArea.y
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 2650073024698572490, guid: 85ebcb3e892afa14fa34d436397ca68a, type: 3}
       propertyPath: m_Name
       value: SubMapManager
@@ -5158,6 +5170,14 @@ PrefabInstance:
     - target: {fileID: 2650073024698572501, guid: 85ebcb3e892afa14fa34d436397ca68a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7676121630136850791, guid: 85ebcb3e892afa14fa34d436397ca68a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 7676121630136850791, guid: 85ebcb3e892afa14fa34d436397ca68a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.58
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 85ebcb3e892afa14fa34d436397ca68a, type: 3}
