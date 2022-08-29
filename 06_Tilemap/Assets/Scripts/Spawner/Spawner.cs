@@ -56,11 +56,14 @@ public class Spawner : MonoBehaviour
     private void OnDrawGizmos()
     {
         // 스폰 위치 씬창에 그리기
+        Vector3 pos = transform.position;
+        pos.x = Mathf.Floor(pos.x);
+        pos.y = Mathf.Floor(pos.y);
 
-        Vector3 p0 = transform.position;
-        Vector3 p1 = transform.position + new Vector3(spawnArea.x, 0);
-        Vector3 p2 = transform.position + new Vector3(spawnArea.x, spawnArea.y);
-        Vector3 p3 = transform.position + new Vector3(0, spawnArea.y);
+        Vector3 p0 = pos;
+        Vector3 p1 = pos + new Vector3(spawnArea.x, 0);
+        Vector3 p2 = pos + new Vector3(spawnArea.x, spawnArea.y);
+        Vector3 p3 = pos + new Vector3(0, spawnArea.y);
 
         Handles.color = Color.red;
         Handles.DrawLine(p0, p1, 5.0f);
