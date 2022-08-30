@@ -52,7 +52,7 @@ public class Spawner : MonoBehaviour
 
     private void Update()
     {
-        if (currentSpawn < maxSpawn)         // 최대 스폰 수보다 생성되어 있는 슬라임의 수가 적으면
+        if (currentSpawn < maxSpawn)        // 최대 스폰 수보다 생성되어 있는 슬라임의 수가 적으면
         {
             delayCount += Time.deltaTime;   // 카운트다운
             if (delayCount > spawnDelay)    // 원래 딜레이시간보다 커지면

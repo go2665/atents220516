@@ -66,6 +66,7 @@ public class SubMapManager : MonoBehaviour
                 Slime monster = spawner.Spawn();    // 몬스터 실제 생성
                 monster.Initialize(this);           // 몬스터 초기화
                 monster.transform.position = GridToWorld(posList[0]);   // 몬스터의 위치를 변경
+                monster.onDead += MonsterDead;
                 monsterList.Add(monster);           // 몬스터 목록에 추가
             }
         }
@@ -159,5 +160,19 @@ public class SubMapManager : MonoBehaviour
         // 최종 결과를 리스트로 만들어서 리턴
         List<Vector2Int> result = new List<Vector2Int>(tempArray);
         return result;
+    }
+
+    private void MonsterDead(Slime monster)
+    {
+        Vector2Int gridPos = WorldToGrid(monster.transform.position);
+        Node node = gridMap.GetNode(gridPos);
+        node.gridType = Node.GridType.Plain;
+        monsterList.Remove(monster);
+    }
+
+    public void Test_KillMonster()
+    {
+        int index = Random.Range(0, monsterList.Count);
+        monsterList[index].Die();
     }
 }

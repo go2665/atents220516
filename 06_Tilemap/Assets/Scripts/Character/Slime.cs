@@ -113,11 +113,14 @@ public class Slime : MonoBehaviour
     }
 
     /// <summary>
-    /// 사망처리 함수
+    /// 사망용 함수
     /// </summary>
-    void Dead()
+    public void Die()
     {
         onDead?.Invoke(this);
+        Destroy(line.gameObject);
+        
+        Destroy(this.gameObject, 0.1f);
     }
 
     /// <summary>

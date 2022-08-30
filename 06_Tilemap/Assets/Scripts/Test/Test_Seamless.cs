@@ -14,6 +14,15 @@ public class Test_Seamless : MonoBehaviour
         //GameManager.Inst.MapManager.Test_SceneMonsterManager();
     }
 
+    private void Update()
+    {
+        if( Keyboard.current.digit1Key.wasPressedThisFrame )
+        {
+            SubMapManager sub = FindObjectOfType<SubMapManager>();
+            sub.Test_KillMonster();
+        }
+    }
+
 
     private void Test_Code()
     {
