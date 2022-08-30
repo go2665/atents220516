@@ -110,6 +110,7 @@ public class Slime : MonoBehaviour
                 failCount++;    
             }
             while (path.Count <= 0 && failCount < 100);    // 갈 수 없는 지역을 선택했을 때의 대비용
+            pathWaitTime = 0.0f;
         }
     }
 
