@@ -5109,15 +5109,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2097444300762680729, guid: 85ebcb3e892afa14fa34d436397ca68a, type: 3}
       propertyPath: maxSpawn
-      value: 5
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2097444300762680729, guid: 85ebcb3e892afa14fa34d436397ca68a, type: 3}
       propertyPath: spawnArea.x
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2097444300762680729, guid: 85ebcb3e892afa14fa34d436397ca68a, type: 3}
       propertyPath: spawnArea.y
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2650073024698572490, guid: 85ebcb3e892afa14fa34d436397ca68a, type: 3}
       propertyPath: m_Name
@@ -5173,11 +5173,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7676121630136850791, guid: 85ebcb3e892afa14fa34d436397ca68a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.27
+      value: -1.49
       objectReference: {fileID: 0}
     - target: {fileID: 7676121630136850791, guid: 85ebcb3e892afa14fa34d436397ca68a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.57
+      value: 4.55
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 85ebcb3e892afa14fa34d436397ca68a, type: 3}

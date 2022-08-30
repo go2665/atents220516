@@ -50,6 +50,18 @@ public class SubMapManager : MonoBehaviour
         gridMap.UpdateMonsters(enemyOldPosList, enemyPosList);
 
         //spawnRequests에 있는 것들 생성
+        while(spawnRequests.Count > 0)
+        {
+            Spawner spawner = spawnRequests.Dequeue();
+            List<Vector2Int> posList = SpawnablePostions(spawner);
+            if (posList.Count > 0)
+            {
+                posList = ShuffleList(posList);
+                Slime monster = spawner.Spawn();
+                monsterList.Add(monster);
+                monster.transform.position = GridToWorld(posList[0]);
+            }
+        }
 
     }
 
@@ -85,8 +97,16 @@ public class SubMapManager : MonoBehaviour
     /// <param name="min">사각형의 최소위치</param>
     /// <param name="max">사각형의 최대위치</param>
     /// <returns>스폰 가능한 그리드 좌표의 목록</returns>
-    public List<Vector2Int> SpawnablePostions(Vector2Int min, Vector2Int max)
+    private List<Vector2Int> SpawnablePostions(Vector2Int min, Vector2Int max)
     {
+        return gridMap.SpawnablePostions(min, max);
+    }
+
+    private List<Vector2Int> SpawnablePostions(Spawner spawner)
+    {
+        Vector2Int min = WorldToGrid(transform.position);
+        Vector2Int max = WorldToGrid(transform.position + (Vector3)spawner.spawnArea);
+
         return gridMap.SpawnablePostions(min, max);
     }
 
@@ -94,8 +114,24 @@ public class SubMapManager : MonoBehaviour
     /// 이동 가능한 랜덤 위치찾기(Gridmap 랩핑함수)
     /// </summary>
     /// <returns>이동 가능한 랜덤 위치</returns>
-    public Vector2Int RandomMovablePotion()
+    private Vector2Int RandomMovablePotion()
     {
         return gridMap.RandomMovablePostion();
+    }
+
+    List<Vector2Int> ShuffleList(List<Vector2Int> list)
+    {
+        Vector2Int[] tempArray = list.ToArray();
+
+        // 피셔-예이츠 알고리즘(셔플)
+        for (int i = 0; i < tempArray.Length - 1; i++)
+        {
+            int index = Random.Range(i + 1, tempArray.Length);
+            (tempArray[i], tempArray[index]) = (tempArray[index], tempArray[i]);
+        }
+
+        // 최종 결과를 리스트로 만들어서 리턴
+        List<Vector2Int> result = new List<Vector2Int>(tempArray);
+        return result;
     }
 }
