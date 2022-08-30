@@ -4,10 +4,6 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-// 슬라임은 생성되면 자기 씬 내의 랜덤한 지역으로 이동한다.
-// 슬라임 옆칸에 플레이어가 있으면 이동을 멈추고 공격한다.
-// 슬라임 옆칸에 플레이어가 없으면 다시 랜덤한 지역으로 이동한다.
-
 public class Slime : MonoBehaviour
 {
     public float moveSpeed = 2.0f;  // 이동 속도
@@ -15,10 +11,9 @@ public class Slime : MonoBehaviour
     List<Vector2Int> path;          // 이동 할 경로
     
     private float pathWaitTime = 0.0f;      // 길막으로 현재 기다린 시간
-    private const float MaxWaitTime = 5.0f; // 길막으로 최대 기다리는 시간
+    private const float MaxWaitTime = 1.0f; // 길막으로 최대 기다리는 시간
 
-    //Spawner spawner;                // 다른 클래스에 접근 할 용도로 가지고 있음
-    SubMapManager subMapManager;    // 단순 유틸리티 용도
+    SubMapManager subMapManager;        // 단순 유틸리티 용도
 
     public System.Action<Slime> onDead; // 사망시 실행될 델리게이트
     
@@ -74,10 +69,13 @@ public class Slime : MonoBehaviour
         DrawPath();     // 경로 그리기
     }
 
+    /// <summary>
+    /// 슬라임의 실제 이동처리
+    /// </summary>
     public void MoveUpdate()
     {
         // 경로에 따른 이동 처리
-        if (path.Count > 0 && pathWaitTime < MaxWaitTime)    // 경로에 남은 노드가 있으면 이동처리
+        if (path.Count > 0 && pathWaitTime < MaxWaitTime)    // 경로에 남은 노드가 있고 오래 기다리지 않았으면 이동처리
         {
             if (!subMapManager.IsMonsterThere(path[0])
                 || (Position == path[0] && subMapManager.IsMonsterThere(path[0])))  // 내가 아닌 다른 몬스터가 길을 막고 있으면 스킵
@@ -89,11 +87,11 @@ public class Slime : MonoBehaviour
                     path.RemoveAt(0);   // 목표지점에 도착했으면 경로의 첫번째 노드 삭제
                 }
                 transform.Translate(Time.deltaTime * moveSpeed * dir.normalized);   // 실제 이동하기            
-                pathWaitTime = 0.0f;
+                pathWaitTime = 0.0f;            // 이동했으니까 대기시간 초기화
             }
             else
             {
-                pathWaitTime += Time.deltaTime;
+                pathWaitTime += Time.deltaTime; // 대기시간 누적하기
             }
         }
         else
@@ -104,52 +102,15 @@ public class Slime : MonoBehaviour
                 line.gameObject.SetActive(false);       // 라인렌더러 비활성화
             }            
             int failCount = 0;  // 다음 위치 찾기 실패 회수
-            do
+            do // 갈 수 없는 지역을 선택했을 때의 대비 용
             {
                 SetMoveDestination(subMapManager.RandomMovablePotion());    // 다음 위치 구하기
-                failCount++;    
+                failCount++;    // 찾을 때마다 실패 회수 기록
             }
-            while (path.Count <= 0 && failCount < 100);    // 갈 수 없는 지역을 선택했을 때의 대비용
-            pathWaitTime = 0.0f;
+            while (path.Count <= 0 && failCount < 100);     // 경로가 안나오고 실패가 100번 미만이면 다시 시도
+            pathWaitTime = 0.0f;                            // 새 경로를 만들어졌으면 대기시간 초기화
         }
     }
-
-    //private void Update()
-    //{
-    //    //if (Keyboard.current.digit1Key.wasPressedThisFrame)
-    //    //{
-    //    //    OutlineOnOff(true);
-    //    //}
-    //    //if (Keyboard.current.digit2Key.wasPressedThisFrame)
-    //    //{
-    //    //    OutlineOnOff(false);
-    //    //}
-    //    // 경로에 따른 이동 처리
-    //    if( path.Count > 0 )    // 경로에 남은 노드가 있으면
-    //    {
-    //        Vector3 targetPos = subMapManager.GridToWorld(path[0]);  // 남은 경로의 첫번째 위치 가져오기
-    //        Vector3 dir = targetPos - transform.position;   // 방향 계산하기
-    //        if( dir.sqrMagnitude < 0.001f ) // 목표지점에 도착했는지 확인
-    //        {
-    //            path.RemoveAt(0);   // 목표지점에 도착했으면 경로의 첫번째 노드 삭제
-    //        }
-    //        transform.Translate(Time.deltaTime * moveSpeed * dir.normalized);   // 실제 이동하기            
-    //    }
-    //    else
-    //    {
-    //        // 최종 위치 도착
-    //        if (line != null)
-    //        {
-    //            line.gameObject.SetActive(false);       // 라인렌더러 비활성화
-    //        }
-
-    //        do
-    //        {                
-    //            Move(subMapManager.RandomMovablePotion());    // 다음 위치 구하기
-    //        }
-    //        while (path.Count <= 0);    // 갈 수 없는 지역을 선택했을 때의 대비용
-    //    }
-    //}
 
     /// <summary>
     /// 사망처리 함수
@@ -169,20 +130,22 @@ public class Slime : MonoBehaviour
         {
             if (line == null)
             {
-                line = Instantiate(linePrefab); // 라인 랜더러가 없으면 생성
+                line = Instantiate(linePrefab, subMapManager.transform);    // 라인 랜더러가 없으면 생성
             }
-            line.gameObject.SetActive(true);
-            line.positionCount = path.Count;
+            line.gameObject.SetActive(true);    // 라인랜더러 겨코
+            line.positionCount = path.Count;    // 점 갯수 설정
             int index = 0;
             foreach (var pos in path)
             {
-                Vector2 worldPos = subMapManager.GridToWorld(pos);
-                line.SetPosition(index, new(worldPos.x, worldPos.y, 1));    // 경로를 이용해서 라인랜더러가 그려질 위치 결정
+                Vector2 worldPos = subMapManager.GridToWorld(pos);          // 그리드 좌표를 월드좌표로 변경
+                line.SetPosition(index, new(worldPos.x - subMapManager.transform.position.x, 
+                    worldPos.y - subMapManager.transform.position.y, 1));   // 경로를 이용해서 라인랜더러가 그려질 위치 결정
                 index++;
             }
         }
         else
         {
+            // 그려질 선이 없으면 비활성화
             if(line != null)
             {
                 line.gameObject.SetActive(false);

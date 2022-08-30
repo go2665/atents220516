@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using static UnityEditor.PlayerSettings;
 
 /// <summary>
 /// A*로 길찾기를 진행할 맵
@@ -76,9 +75,8 @@ public class GridMap
                 TileBase tile = obstacle.GetTile(new(x, y));    // 장애물용 타일맵의 해당 위치에 타일이 있는지 확인
                 if (tile != null)   // 타일이 있으면 그 위치는 못가는 지역
                 {
-                    Node node = GetNode(x, y);  // 노드 가져와서
-                    //node.moveable = false;      // 못가는 지역이라고 표시
-                    node.gridType = Node.GridType.Wall;
+                    Node node = GetNode(x, y);          // 노드 가져와서
+                    node.gridType = Node.GridType.Wall; // 못가는 지역이라고 표시
                 }
             }
         }
@@ -183,18 +181,31 @@ public class GridMap
         return randomPos + offset;  // 랜덤으로 구한 결과를 offset과 더해서 리턴
     }
 
+    /// <summary>
+    /// 몬스터들의 위치를 그리드로 업데이트
+    /// </summary>
+    /// <param name="pre">이전에 몬스터들이 있던 위치</param>
+    /// <param name="post">이동 후에 몬스터들이 있는 위치</param>
     public void UpdateMonsters(List<Vector2Int> pre, List<Vector2Int> post)
     {
+        // 이전에 몬스터들이 있던 위치는 전부 원상 복구(될 수 있는게 평지밖에 없음)
         foreach(var pos in pre)
         {
             nodes[height - 1 - pos.y + offset.y, pos.x - offset.x].gridType = Node.GridType.Plain;
         }
+
+        // 새롭게 몬스터들이 존재하고 있는 곳을 표시
         foreach (var pos in post)
         {
             nodes[height - 1 - pos.y + offset.y, pos.x - offset.x].gridType = Node.GridType.Monster;
         }
     }
 
+    /// <summary>
+    /// 특정 위치에 몬스터가 있는지 없는지 확인하는 함수
+    /// </summary>
+    /// <param name="pos">확인할 위치</param>
+    /// <returns>몬스터 존재 여부. true면 몬스터가 있다.</returns>
     public bool IsMonsterThere(Vector2Int pos)
     {
         return (nodes[height - 1 - pos.y + offset.y, pos.x - offset.x].gridType == Node.GridType.Monster);

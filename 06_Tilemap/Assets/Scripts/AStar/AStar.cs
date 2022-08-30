@@ -55,15 +55,11 @@ public static class AStar
                                 continue;
                             if (node == current)    // 노드가 current면 스킵
                                 continue;
-                            //if (!node.moveable)     // 벽이면 스킵
                             if( node.gridType == Node.GridType.Wall)  // 벽이면 스킵 
                                 continue;
                             if (close.Exists( iter => iter == node )) // close 리스트에 들어있으면 스킵
                                 continue;
-                            bool isDiagonal = (Mathf.Abs(x) == Mathf.Abs(y));   // 대각선 방향인지 확인. true면 대각선
-                            //if ( isDiagonal && 
-                            //    (gridMap.GetNode(x + current.x, current.y).moveable 
-                            //    || !gridMap.GetNode(current.x, y + current.y).moveable) )   // 대각선 이동시 벽에 걸리면 스킵
+                            bool isDiagonal = (Mathf.Abs(x) == Mathf.Abs(y));   // 대각선 방향인지 확인. true면 대각선                            
                             if( isDiagonal &&       // 대각선 이동시 벽에 걸리면 스킵
                                 (gridMap.GetNode(x + current.x, current.y).gridType == Node.GridType.Wall
                                 || gridMap.GetNode(current.x, y + current.y).gridType == Node.GridType.Wall) )

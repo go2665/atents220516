@@ -92,5 +92,4 @@ MonoBehaviour:
   monsterPrefab: {fileID: 4649955948088436910, guid: 1933abcde159996438e3fea61d4883b7, type: 3}
   maxSpawn: 1
   spawnDelay: 1
-  spawnAreaMin: {x: -1, y: -1}
-  spawnAreaMax: {x: 1, y: 1}
+  spawnArea: {x: 1, y: 1}

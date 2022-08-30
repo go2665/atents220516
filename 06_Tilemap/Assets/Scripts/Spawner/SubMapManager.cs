@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 
 /// <summary>
-/// 서브맵에서 스포너와 타일맵 길찾기 관리하는 클래스
+/// 서브맵에서 스포너와 타일맵 길찾기, 몬스터 관리하는 클래스
 /// </summary>
 public class SubMapManager : MonoBehaviour
 {
@@ -20,47 +20,53 @@ public class SubMapManager : MonoBehaviour
 
     private void Awake()
     {
+        // 타일맵 가져오기
         Transform gridTransform = transform.parent;
         background = gridTransform.Find("Background").GetComponent<Tilemap>();
         obstacle = gridTransform.Find("Obstacle").GetComponent<Tilemap>();
 
-        gridMap = new(background, obstacle);    // 타일맵 찾아서 그리드맵 생성
+        // 타일맵 찾아서 그리드맵 생성
+        gridMap = new(background, obstacle);    
 
-        monsterList = new List<Slime>();
-        spawnRequests = new Queue<Spawner>();
+        monsterList = new List<Slime>();        // 전체 몬스터 이동 업데이트 용도
+        spawnRequests = new Queue<Spawner>();   // 몬스터 생성 요청 기록용 큐
         spawners = GetComponentsInChildren<Spawner>();  // 모든 스포너 찾아놓기
 
         foreach(var spawner in spawners)
         {
+            // 스포너가 생성을 요청할 때 실행되는 onRequestSpawn 델리게이트에 함수 등록하기(큐에 추가 용도)
             spawner.onRequestSpawn += () => spawnRequests.Enqueue(spawner);
         }
     }
 
+    /// <summary>
+    /// 몬스터 위치 업데이트와 몬스터 생성 처리
+    /// </summary>
     private void Update()
     {
-        List<Vector2Int> enemyPosList = new List<Vector2Int>();
-        List<Vector2Int> enemyOldPosList = new List<Vector2Int>();
-        foreach(var slime in monsterList)
+        List<Vector2Int> enemyPosList = new List<Vector2Int>();     // 적의 현재 위치
+        List<Vector2Int> enemyOldPosList = new List<Vector2Int>();  // 적의 옛날 위치
+        foreach(var monster in monsterList)
         {
-            enemyOldPosList.Add(WorldToGrid(slime.transform.position));
-            slime.MoveUpdate();
-            enemyPosList.Add(WorldToGrid(slime.transform.position));
+            enemyOldPosList.Add(WorldToGrid(monster.transform.position));   // 몬스터의 현재 위치를 그리드로 바꿔 enemyOldPosList에 추가
+            monster.MoveUpdate();   // 실제 이동
+            enemyPosList.Add(WorldToGrid(monster.transform.position));  // 몬스터가 이동한 위치를 기준으로 enemyPosList에 기록
         }
 
-        gridMap.UpdateMonsters(enemyOldPosList, enemyPosList);
+        gridMap.UpdateMonsters(enemyOldPosList, enemyPosList);  // 기록한 위치를 기반으로 그리드에 몬스터 위치 업데이트
 
         //spawnRequests에 있는 것들 생성
         while(spawnRequests.Count > 0)
         {
-            Spawner spawner = spawnRequests.Dequeue();
-            List<Vector2Int> posList = SpawnablePostions(spawner);
-            if (posList.Count > 0)
+            Spawner spawner = spawnRequests.Dequeue();  // 하나씩 꺼내서
+            List<Vector2Int> posList = SpawnablePostions(spawner);  // 생성 가능한 위치 다 계산하기
+            if (posList.Count > 0)  // 생성 가능한 위치가 하나라도 있으면
             {
-                posList = ShuffleList(posList);
-                Slime monster = spawner.Spawn();
-                monster.Initialize(this);
-                monster.transform.position = GridToWorld(posList[0]);
-                monsterList.Add(monster);
+                posList = ShuffleList(posList);     // 리스트 섞기
+                Slime monster = spawner.Spawn();    // 몬스터 실제 생성
+                monster.Initialize(this);           // 몬스터 초기화
+                monster.transform.position = GridToWorld(posList[0]);   // 몬스터의 위치를 변경
+                monsterList.Add(monster);           // 몬스터 목록에 추가
             }
         }
     }
@@ -96,10 +102,17 @@ public class SubMapManager : MonoBehaviour
         return gridMap.SpawnablePostions(min, max);
     }
 
+    /// <summary>
+    /// 스폰 가능한 지역 목록 만들기(Gridmap 랩핑함수)
+    /// </summary>
+    /// <param name="spawner">몬스터를 생성할 스포너</param>
+    /// <returns>스폰 가능한 그리드 좌표의 목록</returns>
     private List<Vector2Int> SpawnablePostions(Spawner spawner)
     {
+        // ist<Vector2Int> SpawnablePostions(Vector2Int min, Vector2Int max)를 사용하기 위해 최소값 최대값 구하기
         Vector2Int min = WorldToGrid(spawner.transform.position);
         Vector2Int max = WorldToGrid(spawner.transform.position + ((Vector3)spawner.spawnArea - (Vector3)Vector2.one));
+        // -1을 한 이유는 월드 좌표를 그리드 좌표로 변경할 때 가로 세로가 1개씩 더 포함이 되기 때문에
 
         return gridMap.SpawnablePostions(min, max);
     }
@@ -113,16 +126,30 @@ public class SubMapManager : MonoBehaviour
         return gridMap.RandomMovablePostion();
     }
 
+    /// <summary>
+    /// 해당 지역에 몬스터가 있는지 확인
+    /// </summary>
+    /// <param name="pos">확인할 위치</param>
+    /// <returns>몬스터가 있으면 true</returns>
     public bool IsMonsterThere(Vector2Int pos)
     {
         return gridMap.IsMonsterThere(pos);
     }
 
+    /// <summary>
+    /// 리스트를 섞는 함수
+    /// </summary>
+    /// <param name="list">섞을 리스트</param>
+    /// <returns>다 섞은 리스트</returns>
     List<Vector2Int> ShuffleList(List<Vector2Int> list)
     {
-        Vector2Int[] tempArray = list.ToArray();
+        Vector2Int[] tempArray = list.ToArray();    // 배열이 랜덤인덱스로 접근할 때는 훨씬 더 빠르기 때문에
 
         // 피셔-예이츠 알고리즘(셔플)
+        // 제일 왼쪽의 노드를 교환 대상 노드로 지정한다.
+        // 교환 대상 노드의 오른쪽에 있는 나머지 노드들 중 임의로 하나를 골라 교환 대상 노드의 위치를 교환한다.
+        // 교환 대상 노드의 오른쪽 옆에 있는 노드를 새로운 교환 대상 노드로 지정한다.
+        // 교환 대상 노드가 제일 오른쪽 노드가 될 때까지 반복한다.
         for (int i = 0; i < tempArray.Length - 1; i++)
         {
             int index = Random.Range(i + 1, tempArray.Length);

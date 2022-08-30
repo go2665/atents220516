@@ -12,15 +12,14 @@ public class Node : System.IComparable<Node>
     public int x;
     public int y;
 
-    // 이동할 수 있는 지역인지 여부(true면 이동 가능, false면 이동 불가)
-    //public bool moveable;  
+    // 노드의 종류
     public enum GridType
     {
-        Plain = 0,
-        Wall,
-        Monster
+        Plain = 0,  // 바닥
+        Wall,       // 벽
+        Monster     // 몬스터
     }
-    public GridType gridType = GridType.Plain;
+    public GridType gridType = GridType.Plain;  // 기본값은 평지
 
     // A* 알고리즘을 위한 G,H,F
     public float G;             // 시작점에서 이 노드까지 오는데 걸린 거리(부모를 따라 움직였을 때의 거리)
