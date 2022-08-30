@@ -58,18 +58,12 @@ public class SubMapManager : MonoBehaviour
             {
                 posList = ShuffleList(posList);
                 Slime monster = spawner.Spawn();
-                monsterList.Add(monster);
+                monster.Initialize(this);
                 monster.transform.position = GridToWorld(posList[0]);
+                monsterList.Add(monster);
             }
         }
-
     }
-
-
-
-
-
-
 
     /// <summary>
     /// 월드좌표를 그리드맵의 그리드 좌표로 변경해주는 함수
@@ -104,8 +98,8 @@ public class SubMapManager : MonoBehaviour
 
     private List<Vector2Int> SpawnablePostions(Spawner spawner)
     {
-        Vector2Int min = WorldToGrid(transform.position);
-        Vector2Int max = WorldToGrid(transform.position + (Vector3)spawner.spawnArea);
+        Vector2Int min = WorldToGrid(spawner.transform.position);
+        Vector2Int max = WorldToGrid(spawner.transform.position + ((Vector3)spawner.spawnArea - (Vector3)Vector2.one));
 
         return gridMap.SpawnablePostions(min, max);
     }
@@ -114,9 +108,14 @@ public class SubMapManager : MonoBehaviour
     /// 이동 가능한 랜덤 위치찾기(Gridmap 랩핑함수)
     /// </summary>
     /// <returns>이동 가능한 랜덤 위치</returns>
-    private Vector2Int RandomMovablePotion()
+    public Vector2Int RandomMovablePotion()
     {
         return gridMap.RandomMovablePostion();
+    }
+
+    public bool IsMonsterThere(Vector2Int pos)
+    {
+        return gridMap.IsMonsterThere(pos);
     }
 
     List<Vector2Int> ShuffleList(List<Vector2Int> list)

@@ -56,7 +56,7 @@ public static class AStar
                             if (node == current)    // 노드가 current면 스킵
                                 continue;
                             //if (!node.moveable)     // 벽이면 스킵
-                            if( node.gridType != Node.GridType.Plain )  // 평지가 아니면(벽 또는 몬스터) 스킵
+                            if( node.gridType == Node.GridType.Wall)  // 벽이면 스킵 
                                 continue;
                             if (close.Exists( iter => iter == node )) // close 리스트에 들어있으면 스킵
                                 continue;

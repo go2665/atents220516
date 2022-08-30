@@ -179,7 +179,7 @@ public class GridMap
             //} while (!nodes[randomPos.y,randomPos.x].moveable); // 이동 가능한 위치가 나올 때까지 무한 반복
         } while (nodes[randomPos.y, randomPos.x].gridType == Node.GridType.Wall); // 이동 가능한 위치가 나올 때까지 무한 반복(Plain이나 Monster)
 
-        //randomPos = Vector2Int.zero;    // 테스트 용도
+        //randomPos = new Vector2Int(10,10);    // 테스트 용도
         return randomPos + offset;  // 랜덤으로 구한 결과를 offset과 더해서 리턴
     }
 
@@ -195,12 +195,8 @@ public class GridMap
         }
     }
 
-    //bool IsMonsterThere(int x, int y)
-    //{
-    //    if(IsValidPosition(x,y))
-    //    {
-    //        return (nodes[height - 1 - y + offset.y, x - offset.x].gridType == Node.GridType.Monster);
-    //    }
-    //    return false;
-    //}
+    public bool IsMonsterThere(Vector2Int pos)
+    {
+        return (nodes[height - 1 - pos.y + offset.y, pos.x - offset.x].gridType == Node.GridType.Monster);
+    }
 }

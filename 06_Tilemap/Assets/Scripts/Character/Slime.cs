@@ -9,10 +9,13 @@ using UnityEngine.InputSystem;
 // 슬라임 옆칸에 플레이어가 없으면 다시 랜덤한 지역으로 이동한다.
 
 public class Slime : MonoBehaviour
-{    
+{
     public float moveSpeed = 2.0f;  // 이동 속도
     public bool showPath = true;    // 이동 경로 표시 여부
     List<Vector2Int> path;          // 이동 할 경로
+    
+    private float pathWaitTime = 0.0f;      // 길막으로 현재 기다린 시간
+    private const float MaxWaitTime = 5.0f; // 길막으로 최대 기다리는 시간
 
     //Spawner spawner;                // 다른 클래스에 접근 할 용도로 가지고 있음
     SubMapManager subMapManager;    // 단순 유틸리티 용도
@@ -37,14 +40,14 @@ public class Slime : MonoBehaviour
         mainMat.SetFloat("_Tickness", 0);
     }
 
-    ///// <summary>
-    ///// 스포너 설정을 위한 초기화
-    ///// </summary>
-    ///// <param name="parent">이 슬라임이 생성된 스포너</param>
-    //public void Initialize(Spawner parent)
-    //{
-    //    spawner = parent;
-    //}
+    /// <summary>
+    /// subMapManager 설정을 위한 초기화
+    /// </summary>
+    /// <param name="parent">이 슬라임이 생성된 서브맵(매니저)</param>
+    public void Initialize(SubMapManager submap)
+    {
+        subMapManager = submap;
+    }
 
     /// <summary>
     /// 아웃라인 표시 on/off
@@ -73,7 +76,41 @@ public class Slime : MonoBehaviour
 
     public void MoveUpdate()
     {
-        // 실제 이동 함수
+        // 경로에 따른 이동 처리
+        if (path.Count > 0 && pathWaitTime < MaxWaitTime)    // 경로에 남은 노드가 있으면 이동처리
+        {
+            if (!subMapManager.IsMonsterThere(path[0])
+                || (Position == path[0] && subMapManager.IsMonsterThere(path[0])))  // 내가 아닌 다른 몬스터가 길을 막고 있으면 스킵
+            {
+                Vector3 targetPos = subMapManager.GridToWorld(path[0]);  // 남은 경로의 첫번째 위치 가져오기
+                Vector3 dir = targetPos - transform.position;   // 방향 계산하기
+                if (dir.sqrMagnitude < 0.001f) // 목표지점에 도착했는지 확인
+                {
+                    path.RemoveAt(0);   // 목표지점에 도착했으면 경로의 첫번째 노드 삭제
+                }
+                transform.Translate(Time.deltaTime * moveSpeed * dir.normalized);   // 실제 이동하기            
+                pathWaitTime = 0.0f;
+            }
+            else
+            {
+                pathWaitTime += Time.deltaTime;
+            }
+        }
+        else
+        {
+            // 최종 위치 도착
+            if (line != null)
+            {
+                line.gameObject.SetActive(false);       // 라인렌더러 비활성화
+            }            
+            int failCount = 0;  // 다음 위치 찾기 실패 회수
+            do
+            {
+                SetMoveDestination(subMapManager.RandomMovablePotion());    // 다음 위치 구하기
+                failCount++;    
+            }
+            while (path.Count <= 0 && failCount < 100);    // 갈 수 없는 지역을 선택했을 때의 대비용
+        }
     }
 
     //private void Update()
