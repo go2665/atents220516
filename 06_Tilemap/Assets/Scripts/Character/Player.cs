@@ -38,6 +38,8 @@ public class Player : MonoBehaviour
     Vector2 dir;
     Vector2 oldDir = Vector2.down;
 
+    AttackArea attackArea;
+
 
     Vector2Int currentMap = Vector2Int.one;     // 플레이어가 존재하는 맵의 번호
     Vector2 mapSize = new Vector2(20, 20);      // 맵 하나의 크기
@@ -70,6 +72,9 @@ public class Player : MonoBehaviour
 
         CircleCollider2D circle = GetComponent<CircleCollider2D>();
         circle.radius = sightRange;
+
+        attackArea = GetComponentInChildren<AttackArea>();
+
 
         // 인풋 액션 만들기
         inputActions = new PlayerInputActions();
@@ -126,6 +131,8 @@ public class Player : MonoBehaviour
 
         oldDir = dir;
 
+        attackArea.transform.localPosition = dir * 0.8f;
+
         // 바라보는 방향으로 스포트라이트 회전시키기
         //float angle = Vector3.SignedAngle(Vector3.up, (Vector3)dir, Vector3.forward);
         //spotLight.transform.rotation = Quaternion.Euler(0, 0, angle);
@@ -151,7 +158,7 @@ public class Player : MonoBehaviour
         {            
             if(IsInSight(collision.transform.position))
             {
-                Debug.Log("적이 보인다!");
+                //Debug.Log("적이 보인다!");
                 seenSlime = collision.gameObject.GetComponent<Slime>();
                 seenSlime.OutlineOnOff(true);
             }  
@@ -168,7 +175,7 @@ public class Player : MonoBehaviour
         {
             if (IsInSight(collision.transform.position))
             {
-                Debug.Log("적이 계속 보인다!");
+                //Debug.Log("적이 계속 보인다!");
                 seenSlime = collision.gameObject.GetComponent<Slime>();
                 seenSlime?.OutlineOnOff(true);
             }

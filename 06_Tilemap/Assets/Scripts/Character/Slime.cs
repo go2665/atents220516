@@ -122,12 +122,18 @@ public class Slime : MonoBehaviour
     /// 사망용 함수
     /// </summary>
     public void Die()
-    {        
-        Destroy(line.gameObject);       // 라인랜더러 삭제
-        path.Clear();                   // 기존에 존재하던 경로 삭제
-        isDead = true;                  // 죽었다고 표시
+    {
+        if (!isDead)
+        {
+            if (line != null)
+            {
+                Destroy(line.gameObject);       // 라인랜더러 삭제
+            }
+            path.Clear();                   // 기존에 존재하던 경로 삭제
+            isDead = true;                  // 죽었다고 표시
 
-        StartCoroutine(DieProcess());
+            StartCoroutine(DieProcess());
+        }
     }       
 
     /// <summary>
