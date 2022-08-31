@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.UI;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -40,6 +41,23 @@ public class Player : MonoBehaviour
 
     AttackArea attackArea;
 
+    public Slider lifeTimeSlider;
+    public Text lifeTimeText;
+    const float MaxLifeTime = 100.0f;
+    float lifeTime = MaxLifeTime;
+
+    public float LifeTime
+    {
+        get => lifeTime;
+
+        set
+        {
+            lifeTime = Mathf.Clamp(value, 0.0f, MaxLifeTime);
+            lifeTimeSlider.value = lifeTime;
+            lifeTimeText.text = $"{lifeTime:F2} 초";
+        }
+    }
+
 
     Vector2Int currentMap = Vector2Int.one;     // 플레이어가 존재하는 맵의 번호
     Vector2 mapSize = new Vector2(20, 20);      // 맵 하나의 크기
@@ -74,6 +92,7 @@ public class Player : MonoBehaviour
         circle.radius = sightRange;
 
         attackArea = GetComponentInChildren<AttackArea>();
+        attackArea.onMonsterKill += (reward) => LifeTime += reward;
 
 
         // 인풋 액션 만들기
@@ -81,6 +100,20 @@ public class Player : MonoBehaviour
 
         // 월드 원점에서 맵이 얼마나 이동해 있는가? => offset으로 저장
         offset = new Vector2(mapSize.x * mapCount.x * -0.5f, mapSize.y * mapCount.y * -0.5f);
+    }
+
+    private void Start()
+    {
+        if (lifeTimeSlider != null)
+            lifeTimeSlider = FindObjectOfType<Slider>();
+
+        if (lifeTimeText != null)
+            lifeTimeText = FindObjectOfType<Text>();
+
+        lifeTimeSlider.minValue = 0;
+        lifeTimeSlider.maxValue = MaxLifeTime;
+        lifeTimeSlider.value = MaxLifeTime;
+        lifeTimeText.text = "100.00 초";
     }
 
     private void OnEnable()
@@ -103,6 +136,11 @@ public class Player : MonoBehaviour
 
         // 액션맵 비활성화
         inputActions.Player.Disable();
+    }
+
+    private void Update()
+    {
+        LifeTime -= Time.deltaTime;
     }
 
     private void FixedUpdate()

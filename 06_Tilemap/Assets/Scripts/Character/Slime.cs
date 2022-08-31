@@ -6,6 +6,8 @@ using UnityEngine.InputSystem;
 
 public class Slime : MonoBehaviour
 {
+    public float RewardLife => 2.0f;
+
     public float moveSpeed = 2.0f;  // 이동 속도
     public bool showPath = true;    // 이동 경로 표시 여부
     List<Vector2Int> path;          // 이동 할 경로
