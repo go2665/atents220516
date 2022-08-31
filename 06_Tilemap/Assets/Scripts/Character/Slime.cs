@@ -13,6 +13,9 @@ public class Slime : MonoBehaviour
     private float pathWaitTime = 0.0f;      // 길막으로 현재 기다린 시간
     private const float MaxWaitTime = 1.0f; // 길막으로 최대 기다리는 시간
 
+    private float dissolveTime = 2.0f;  // 죽을 때 dissolve 되는 시간
+    private bool isDead = false;        // 죽었는지 살았는지 표시(죽으면 true)
+
     SubMapManager subMapManager;        // 단순 유틸리티 용도
 
     public System.Action<Slime> onDead; // 사망시 실행될 델리게이트
@@ -74,41 +77,44 @@ public class Slime : MonoBehaviour
     /// </summary>
     public void MoveUpdate()
     {
-        // 경로에 따른 이동 처리
-        if (path.Count > 0 && pathWaitTime < MaxWaitTime)    // 경로에 남은 노드가 있고 오래 기다리지 않았으면 이동처리
+        if (!isDead)
         {
-            if (!subMapManager.IsMonsterThere(path[0])
-                || (Position == path[0] && subMapManager.IsMonsterThere(path[0])))  // 내가 아닌 다른 몬스터가 길을 막고 있으면 스킵
+            // 경로에 따른 이동 처리
+            if (path.Count > 0 && pathWaitTime < MaxWaitTime)    // 경로에 남은 노드가 있고 오래 기다리지 않았으면 이동처리
             {
-                Vector3 targetPos = subMapManager.GridToWorld(path[0]);  // 남은 경로의 첫번째 위치 가져오기
-                Vector3 dir = targetPos - transform.position;   // 방향 계산하기
-                if (dir.sqrMagnitude < 0.001f) // 목표지점에 도착했는지 확인
+                if (!subMapManager.IsMonsterThere(path[0])
+                    || (Position == path[0] && subMapManager.IsMonsterThere(path[0])))  // 내가 아닌 다른 몬스터가 길을 막고 있으면 스킵
                 {
-                    path.RemoveAt(0);   // 목표지점에 도착했으면 경로의 첫번째 노드 삭제
+                    Vector3 targetPos = subMapManager.GridToWorld(path[0]);  // 남은 경로의 첫번째 위치 가져오기
+                    Vector3 dir = targetPos - transform.position;   // 방향 계산하기
+                    if (dir.sqrMagnitude < 0.001f) // 목표지점에 도착했는지 확인
+                    {
+                        path.RemoveAt(0);   // 목표지점에 도착했으면 경로의 첫번째 노드 삭제
+                    }
+                    transform.Translate(Time.deltaTime * moveSpeed * dir.normalized);   // 실제 이동하기            
+                    pathWaitTime = 0.0f;            // 이동했으니까 대기시간 초기화
                 }
-                transform.Translate(Time.deltaTime * moveSpeed * dir.normalized);   // 실제 이동하기            
-                pathWaitTime = 0.0f;            // 이동했으니까 대기시간 초기화
+                else
+                {
+                    pathWaitTime += Time.deltaTime; // 대기시간 누적하기
+                }
             }
             else
             {
-                pathWaitTime += Time.deltaTime; // 대기시간 누적하기
+                // 최종 위치 도착
+                if (line != null)
+                {
+                    line.gameObject.SetActive(false);       // 라인렌더러 비활성화
+                }
+                int failCount = 0;  // 다음 위치 찾기 실패 회수
+                do // 갈 수 없는 지역을 선택했을 때의 대비 용
+                {
+                    SetMoveDestination(subMapManager.RandomMovablePotion());    // 다음 위치 구하기
+                    failCount++;    // 찾을 때마다 실패 회수 기록
+                }
+                while (path.Count <= 0 && failCount < 100);     // 경로가 안나오고 실패가 100번 미만이면 다시 시도
+                pathWaitTime = 0.0f;                            // 새 경로를 만들어졌으면 대기시간 초기화
             }
-        }
-        else
-        {
-            // 최종 위치 도착
-            if (line != null)
-            {
-                line.gameObject.SetActive(false);       // 라인렌더러 비활성화
-            }            
-            int failCount = 0;  // 다음 위치 찾기 실패 회수
-            do // 갈 수 없는 지역을 선택했을 때의 대비 용
-            {
-                SetMoveDestination(subMapManager.RandomMovablePotion());    // 다음 위치 구하기
-                failCount++;    // 찾을 때마다 실패 회수 기록
-            }
-            while (path.Count <= 0 && failCount < 100);     // 경로가 안나오고 실패가 100번 미만이면 다시 시도
-            pathWaitTime = 0.0f;                            // 새 경로를 만들어졌으면 대기시간 초기화
         }
     }
 
@@ -116,12 +122,34 @@ public class Slime : MonoBehaviour
     /// 사망용 함수
     /// </summary>
     public void Die()
+    {        
+        Destroy(line.gameObject);       // 라인랜더러 삭제
+        path.Clear();                   // 기존에 존재하던 경로 삭제
+        isDead = true;                  // 죽었다고 표시
+
+        StartCoroutine(DieProcess());
+    }       
+
+    /// <summary>
+    /// 사망용 이팩트 처리
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator DieProcess()
     {
-        onDead?.Invoke(this);
-        Destroy(line.gameObject);
-        
-        Destroy(this.gameObject, 0.1f);
+        float timeElipsed = 0.0f;       // dissolve 진행 시간
+        float dissolveNomalize = 1 / dissolveTime;  // dissolve의 최대값은 1이 되어야 하므로 변형해주는 작업
+
+        while (timeElipsed < dissolveTime)
+        {
+            timeElipsed += Time.deltaTime;  // 시간 누적하고
+            mainMat.SetFloat("_DissolveFade", 1 - (timeElipsed * dissolveNomalize));    // 1-누적시간으로 dissolve처리
+            yield return null;              // 다음 프레임까지 대기(매 프레임 진행)
+        }
+
+        onDead?.Invoke(this);           // 사망때 실행되어야 할 것들 실행
+        Destroy(this.gameObject, 0.1f); // 실제 자신의 오브젝트 삭제
     }
+
 
     /// <summary>
     /// 길찾기 경로 표시용 함수

@@ -172,7 +172,10 @@ public class SubMapManager : MonoBehaviour
 
     public void Test_KillMonster()
     {
-        int index = Random.Range(0, monsterList.Count);
-        monsterList[index].Die();
+        if (monsterList.Count > 0)
+        {
+            int index = Random.Range(0, monsterList.Count);
+            monsterList[index].Die();
+        }
     }
 }
