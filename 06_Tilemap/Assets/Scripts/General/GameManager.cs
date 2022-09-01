@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Rendering;
 
 public class GameManager : MonoBehaviour
 {
@@ -12,6 +13,9 @@ public class GameManager : MonoBehaviour
 
     Player player;
     public Player Player => player;
+
+    Volume postProcessVolume;
+    public Volume PostProcessVolume => postProcessVolume;
 
 
     static GameManager instance = null;
@@ -48,6 +52,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void Initialize()
     {
+        postProcessVolume = FindObjectOfType<Volume>();
         player = FindObjectOfType<Player>();    // mapManager의 초기화보다 앞에 있어야 한다.
 
         if (mapManager == null)     // 없으면 찾는다.

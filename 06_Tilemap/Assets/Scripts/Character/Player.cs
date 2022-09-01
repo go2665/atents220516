@@ -43,8 +43,10 @@ public class Player : MonoBehaviour
 
     public Slider lifeTimeSlider;
     public Text lifeTimeText;
-    const float MaxLifeTime = 100.0f;
+    const float MaxLifeTime = 10.0f;
     float lifeTime = MaxLifeTime;
+
+    Vignette vignette;
 
     public float LifeTime
     {
@@ -55,6 +57,9 @@ public class Player : MonoBehaviour
             lifeTime = Mathf.Clamp(value, 0.0f, MaxLifeTime);
             lifeTimeSlider.value = lifeTime;
             lifeTimeText.text = $"{lifeTime:F2} 초";
+
+            // 0이면 다 보이기
+            vignette.intensity.value = (MaxLifeTime - lifeTime) / MaxLifeTime;
         }
     }
 
@@ -104,6 +109,8 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
+        GameManager.Inst.PostProcessVolume.profile.TryGet<Vignette>(out vignette);
+
         if (lifeTimeSlider != null)
             lifeTimeSlider = FindObjectOfType<Slider>();
 
