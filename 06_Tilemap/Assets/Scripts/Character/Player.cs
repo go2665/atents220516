@@ -43,7 +43,7 @@ public class Player : MonoBehaviour
 
     public Slider lifeTimeSlider;
     public Text lifeTimeText;
-    const float MaxLifeTime = 5.0f;
+    const float MaxLifeTime = 10.0f;
     float lifeTime = MaxLifeTime;
     float totalLifeTime;
 
