@@ -43,10 +43,14 @@ public class Player : MonoBehaviour
 
     public Slider lifeTimeSlider;
     public Text lifeTimeText;
-    const float MaxLifeTime = 10.0f;
+    const float MaxLifeTime = 5.0f;
     float lifeTime = MaxLifeTime;
+    float totalLifeTime;
 
     Vignette vignette;
+
+    GameOverUI gameOver;
+    bool isDead = false;
 
     public float LifeTime
     {
@@ -54,12 +58,19 @@ public class Player : MonoBehaviour
 
         set
         {
-            lifeTime = Mathf.Clamp(value, 0.0f, MaxLifeTime);
-            lifeTimeSlider.value = lifeTime;
-            lifeTimeText.text = $"{lifeTime:F2} 초";
+            if(value < 0.0f && isDead == false)
+            {
+                Die();
+            }
+            else
+            {
+                lifeTime = Mathf.Clamp(value, 0.0f, MaxLifeTime);
+                lifeTimeSlider.value = lifeTime;
+                lifeTimeText.text = $"{lifeTime:F2} 초";
 
-            // 0이면 다 보이기
-            vignette.intensity.value = (MaxLifeTime - lifeTime) / MaxLifeTime;
+                // 0이면 다 보이기
+                vignette.intensity.value = (MaxLifeTime - lifeTime) / MaxLifeTime;
+            }
         }
     }
 
@@ -85,6 +96,13 @@ public class Player : MonoBehaviour
 
 
     Light2D spotLight;
+
+    void Die()
+    {
+        isDead = true;
+        gameOver.SetTotoalLifeTime(totalLifeTime);
+        gameOver.Show(true);
+    }
 
     private void Awake()
     {
@@ -121,6 +139,8 @@ public class Player : MonoBehaviour
         lifeTimeSlider.maxValue = MaxLifeTime;
         lifeTimeSlider.value = MaxLifeTime;
         lifeTimeText.text = "100.00 초";
+
+        gameOver = FindObjectOfType<GameOverUI>();
     }
 
     private void OnEnable()
@@ -148,6 +168,7 @@ public class Player : MonoBehaviour
     private void Update()
     {
         LifeTime -= Time.deltaTime;
+        totalLifeTime += Time.deltaTime;
     }
 
     private void FixedUpdate()

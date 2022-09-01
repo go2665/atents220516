@@ -17,6 +17,9 @@ public class GameManager : MonoBehaviour
     Volume postProcessVolume;
     public Volume PostProcessVolume => postProcessVolume;
 
+    const int LoadingScene_Index = 0;
+    const int Seamless_Base_Index = 1;
+
 
     static GameManager instance = null;
     public static GameManager Inst => instance;
@@ -40,11 +43,11 @@ public class GameManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
     {
-        // 한번에 한씬만 사용할 때는 문제가 없었으나 씬이 Additive로 추가되면서 예상치 못한 상황에서 실행이됨.
-        // 그래서 Inittialize가 여러번 호출된다.
-        // 그것을 해결하기 위해 한번 실행되면 다시 실행안되도록 델리게이트 등록 해제
-        SceneManager.sceneLoaded -= OnSceneLoaded;  // 한번만 실행하기 위해
-        Initialize();
+        // Seamless_Base가 로딩 되었을 때만 초기화 함수 실행
+        if (arg0.buildIndex == Seamless_Base_Index)
+        {
+            Initialize();
+        }
     }   
 
     /// <summary>

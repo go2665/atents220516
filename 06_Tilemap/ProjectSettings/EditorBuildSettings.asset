@@ -6,8 +6,11 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Test_Tilemap.unity
-    guid: 2cda990e2423bbf4892e6590ba056729
+    path: Assets/Scenes/LoadingScene.unity
+    guid: 17f6486b3d3b29d4ab15bf9b3ff842a0
+  - enabled: 1
+    path: Assets/Scenes/Seamless_Base.unity
+    guid: 4098a1dca8e47754bbe54a8f3f4afbeb
   - enabled: 1
     path: Assets/Scenes/Seamless_0_0.unity
     guid: fd01bf3f389ce2e49b83b3deb297e0b8
@@ -35,7 +38,4 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Seamless_2_2.unity
     guid: d5161abc2a16a7a46a86a6a685aa5aeb
-  - enabled: 1
-    path: Assets/Scenes/Seamless_Base.unity
-    guid: 4098a1dca8e47754bbe54a8f3f4afbeb
   m_configObjects: {}

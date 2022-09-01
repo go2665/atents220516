@@ -12,8 +12,8 @@ public class AttackArea : MonoBehaviour
         {
             Debug.Log("적을 공격!");
             Slime slime = collision.gameObject.GetComponent<Slime>();            
-            onMonsterKill?.Invoke(slime.RewardLife);
             slime.Die();
+            onMonsterKill?.Invoke(slime.RewardLife);
         }
     }
 }
