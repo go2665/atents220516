@@ -33,14 +33,13 @@ public class Node : System.IComparable<Node>
     /// </summary>
     /// <param name="x">위치</param>
     /// <param name="y">위치</param>
-    /// <param name="moveable">이동 가능 여부. 디폴트로 true.</param>
-    //public Node(int x, int y, bool moveable = true)
+    /// <param name="gridType">그리드의 종류. 디폴트로 평지설정.</param>
     public Node(int x, int y, GridType gridType = GridType.Plain)
     {
         this.x = x;
         this.y = y;
-        this.gridType = gridType;
-        ClearAStarData();
+        this.gridType = gridType;   // 노드 값 초기화
+        ClearAStarData();           // g, h, parent 초기화
     }
 
     /// <summary>

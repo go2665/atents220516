@@ -10,13 +10,13 @@ public class GridMap
 {
     // 이 맵에 있는 전체 노드
     Node[,] nodes;
-
+    
     // 맵의 가로 크기
     int width;
     // 맵의 세로 크기
     int height;
 
-    // 맵의 시작 좌표
+    // 맵의 시작 좌표 보정용
     Vector2Int offset = Vector2Int.zero;
 
     /// <summary>
@@ -153,8 +153,7 @@ public class GridMap
             for (int x = min.x; x < max.x + 1; x++)
             {
                 Node node = GetNode(x, y);
-                //if (node.moveable)  // 이동 가능한 노드면 결과 리스트에 추가
-                if( node.gridType == Node.GridType.Plain )
+                if( node.gridType == Node.GridType.Plain)  // 이동 가능한 노드면 결과 리스트에 추가
                 {
                     result.Add(new(x, y));
                 }
@@ -174,7 +173,6 @@ public class GridMap
         {
             randomPos.x = Random.Range(0, width);
             randomPos.y = Random.Range(0, height);
-            //} while (!nodes[randomPos.y,randomPos.x].moveable); // 이동 가능한 위치가 나올 때까지 무한 반복
         } while (nodes[randomPos.y, randomPos.x].gridType == Node.GridType.Wall); // 이동 가능한 위치가 나올 때까지 무한 반복(Plain이나 Monster)
 
         //randomPos = new Vector2Int(10,10);    // 테스트 용도

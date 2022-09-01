@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 
 public class Slime : MonoBehaviour
 {
-    public float RewardLife => 2.0f;
+    public float RewardLife => 2.0f;    // 이 몬스터를 잡았을 때 얻을 수 있는 수명(2초)
 
     public float moveSpeed = 2.0f;  // 이동 속도
     public bool showPath = true;    // 이동 경로 표시 여부
@@ -131,7 +131,7 @@ public class Slime : MonoBehaviour
             GetComponent<BoxCollider2D>().enabled = false;
             if (line != null)
             {
-                Destroy(line.gameObject);       // 라인랜더러 삭제
+                Destroy(line.gameObject);   // 라인랜더러 삭제
             }
             path.Clear();                   // 기존에 존재하던 경로 삭제
 
