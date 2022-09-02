@@ -162,14 +162,21 @@ public class SubMapManager : MonoBehaviour
         return result;
     }
 
+    /// <summary>
+    /// 몬스터가 죽을 때 처리
+    /// </summary>
+    /// <param name="monster">죽은 몬스터</param>
     private void MonsterDead(Slime monster)
     {
         Vector2Int gridPos = WorldToGrid(monster.transform.position);
-        Node node = gridMap.GetNode(gridPos);
-        node.gridType = Node.GridType.Plain;
-        monsterList.Remove(monster);
+        Node node = gridMap.GetNode(gridPos);   
+        node.gridType = Node.GridType.Plain;    // 그리드 맵에서 몬스터가 있던 위치를 빈곳으로 만들기
+        monsterList.Remove(monster);            // 몬스터 목록에서도 제거
     }
 
+    /// <summary>
+    /// 몬스터 죽이는 테스트 함수
+    /// </summary>
     public void Test_KillMonster()
     {
         if (monsterList.Count > 0)

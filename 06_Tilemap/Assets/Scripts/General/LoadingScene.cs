@@ -32,14 +32,14 @@ public class LoadingScene : MonoBehaviour
 
     private void OnEnable()
     {
-        inputActions.UI.Enable();
-        inputActions.UI.Press.performed += MousePress;
+        inputActions.UI.Enable();   // UI 액션맵만 활성화
+        inputActions.UI.Press.performed += MousePress;  // 마우스 누르는 액션에 함수 등록
     }
 
     private void OnDisable()
     {
-        inputActions.UI.Press.performed -= MousePress;
-        inputActions.UI.Disable();
+        inputActions.UI.Press.performed -= MousePress;  // 마우스 누르는 액션에 함수 해제
+        inputActions.UI.Disable();  // UI 액션맵도 해제
     }
 
     private void MousePress(InputAction.CallbackContext _)
@@ -62,6 +62,8 @@ public class LoadingScene : MonoBehaviour
     private void Update()
     {
         //slider.value = Mathf.Lerp(slider.value, loadRatio, Time.deltaTime * sliderUpdateSpeed);
+
+        // slider의 value가 아직 loadRatio보다 낮으면 빠르게 loadRatio까지 올리는 것이 목적
         if (slider.value < loadRatio)
         {
             // slider가 아직 loadRatio까지 도달하지 않았음.
@@ -78,7 +80,7 @@ public class LoadingScene : MonoBehaviour
         int point = 0;  // 0 ~ 5로 변경된 숫자
         while (true)
         {
-            string text = "Loading";
+            string text = "Loading";    // 가비지가 양산되는 문제는 있다.
             for(int i=0; i<point; i++)
             {
                 text += " .";
@@ -112,6 +114,6 @@ public class LoadingScene : MonoBehaviour
 
         yield return new WaitForSeconds(1.0f);  // 1초 뒤에 점찍는 것도 멈추기
         StopCoroutine(loadingTextCoroutine);
-        loadingText.text = "Loading Complete.";
+        loadingText.text = "Loading Complete. \nPress Button.";
     }
 }
