@@ -44,6 +44,15 @@ public partial class @TankInputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""NormalFire"",
+                    ""type"": ""Button"",
+                    ""id"": ""46b28ce7-5d96-42d8-ba8a-c9b8da2886e7"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -112,6 +121,17 @@ public partial class @TankInputActions : IInputActionCollection2, IDisposable
                     ""action"": ""Look"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7d003106-06ef-4b29-9e2b-da918b55f87a"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""K&M"",
+                    ""action"": ""NormalFire"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -139,6 +159,7 @@ public partial class @TankInputActions : IInputActionCollection2, IDisposable
         m_Tank = asset.FindActionMap("Tank", throwIfNotFound: true);
         m_Tank_Move = m_Tank.FindAction("Move", throwIfNotFound: true);
         m_Tank_Look = m_Tank.FindAction("Look", throwIfNotFound: true);
+        m_Tank_NormalFire = m_Tank.FindAction("NormalFire", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -200,12 +221,14 @@ public partial class @TankInputActions : IInputActionCollection2, IDisposable
     private ITankActions m_TankActionsCallbackInterface;
     private readonly InputAction m_Tank_Move;
     private readonly InputAction m_Tank_Look;
+    private readonly InputAction m_Tank_NormalFire;
     public struct TankActions
     {
         private @TankInputActions m_Wrapper;
         public TankActions(@TankInputActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Tank_Move;
         public InputAction @Look => m_Wrapper.m_Tank_Look;
+        public InputAction @NormalFire => m_Wrapper.m_Tank_NormalFire;
         public InputActionMap Get() { return m_Wrapper.m_Tank; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -221,6 +244,9 @@ public partial class @TankInputActions : IInputActionCollection2, IDisposable
                 @Look.started -= m_Wrapper.m_TankActionsCallbackInterface.OnLook;
                 @Look.performed -= m_Wrapper.m_TankActionsCallbackInterface.OnLook;
                 @Look.canceled -= m_Wrapper.m_TankActionsCallbackInterface.OnLook;
+                @NormalFire.started -= m_Wrapper.m_TankActionsCallbackInterface.OnNormalFire;
+                @NormalFire.performed -= m_Wrapper.m_TankActionsCallbackInterface.OnNormalFire;
+                @NormalFire.canceled -= m_Wrapper.m_TankActionsCallbackInterface.OnNormalFire;
             }
             m_Wrapper.m_TankActionsCallbackInterface = instance;
             if (instance != null)
@@ -231,6 +257,9 @@ public partial class @TankInputActions : IInputActionCollection2, IDisposable
                 @Look.started += instance.OnLook;
                 @Look.performed += instance.OnLook;
                 @Look.canceled += instance.OnLook;
+                @NormalFire.started += instance.OnNormalFire;
+                @NormalFire.performed += instance.OnNormalFire;
+                @NormalFire.canceled += instance.OnNormalFire;
             }
         }
     }
@@ -248,5 +277,6 @@ public partial class @TankInputActions : IInputActionCollection2, IDisposable
     {
         void OnMove(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
+        void OnNormalFire(InputAction.CallbackContext context);
     }
 }

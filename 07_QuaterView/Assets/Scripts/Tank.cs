@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -6,6 +7,9 @@ using UnityEngine.InputSystem;
 
 public class Tank : MonoBehaviour
 {
+    public GameObject shellPrefab;
+    public Transform firePosition;
+
     public float moveSpeed = 3.0f;
     public float turnSpeed = 3.0f;
     public float turretTurnSpeed = 0.05f;
@@ -24,6 +28,7 @@ public class Tank : MonoBehaviour
         inputActions = new TankInputActions();
         rigid = GetComponent<Rigidbody>();
         turret = transform.Find("TankRenderers").Find("TankTurret");
+        firePosition = turret.GetChild(0);
     }
 
     private void OnEnable()
@@ -32,10 +37,12 @@ public class Tank : MonoBehaviour
         inputActions.Tank.Move.performed += OnMove;
         inputActions.Tank.Move.canceled += OnMove;
         inputActions.Tank.Look.performed += OnMouseMove;
+        inputActions.Tank.NormalFire.performed += OnNormalFire;
     }
 
     private void OnDisable()
     {
+        inputActions.Tank.NormalFire.performed -= OnNormalFire;
         inputActions.Tank.Look.performed -= OnMouseMove;
         inputActions.Tank.Move.canceled -= OnMove;
         inputActions.Tank.Move.performed -= OnMove;
@@ -60,6 +67,11 @@ public class Tank : MonoBehaviour
             lookDir = lookDir.normalized;
             turretTargetRotation = Quaternion.LookRotation(lookDir);
         }
+    }
+
+    private void OnNormalFire(InputAction.CallbackContext _)
+    {
+        Instantiate(shellPrefab, firePosition.position, firePosition.rotation);
     }
 
     void TurretTurn()

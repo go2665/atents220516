@@ -22,8 +22,10 @@ public class Shell : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        Instantiate(explosionPrefab, collision.contacts[0].point, Quaternion.identity);
-        Time.timeScale = 0.1f;
+        GameObject obj = Instantiate(explosionPrefab, 
+            collision.contacts[0].point,                            // 충돌지점
+            Quaternion.LookRotation(collision.contacts[0].normal)); // 충돌지점의 노멀백터를 forward로 지정
+
         Destroy(this.gameObject);
     }
 }
