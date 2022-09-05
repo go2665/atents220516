@@ -8,8 +8,11 @@ public class Tank : MonoBehaviour
 {
     public float moveSpeed = 3.0f;
     public float turnSpeed = 3.0f;
+    public float turretTurnSpeed = 0.05f;
 
-    Transform turret;
+    private Transform turret;
+    private Quaternion turretTargetRotation = Quaternion.identity;
+
     TankInputActions inputActions;
 
     Vector2 inputDir = Vector2.zero;
@@ -50,16 +53,28 @@ public class Tank : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(screenPos);
         if( Physics.Raycast(ray, out RaycastHit hit, 1000.0f, LayerMask.GetMask("Ground")) )
         {
-            //Debug.Log("ÇÇÅ·");
-            //hit.point;    // ¸¶¿ì½º°¡ °¡¸®Å°´Â ¶¥ À§Ä¡
-
-            turret.LookAt(hit.point);
+            //Debug.Log("í”¼í‚¹");
+            //hit.point;    // ë§ˆìš°ìŠ¤ê°€ ê°€ë¦¬í‚¤ëŠ” ë•… ìœ„ì¹˜
+            Vector3 lookDir = hit.point - turret.transform.position;
+            lookDir.y = 0.0f;
+            lookDir = lookDir.normalized;
+            turretTargetRotation = Quaternion.LookRotation(lookDir);
         }
+    }
+
+    void TurretTurn()
+    {
+        turret.rotation = Quaternion.Slerp(turret.rotation, turretTargetRotation, turretTurnSpeed * Time.deltaTime);
+    }
+
+    private void Update()
+    {
+        TurretTurn();
     }
 
     private void FixedUpdate()
     {
         rigid.AddForce(inputDir.y * moveSpeed * transform.forward);
-        rigid.AddTorque(inputDir.x * turnSpeed * transform.up);
+        rigid.AddTorque(inputDir.x * turnSpeed * transform.up);        
     }
 }
