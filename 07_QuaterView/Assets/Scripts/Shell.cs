@@ -7,6 +7,7 @@ public class Shell : MonoBehaviour
 {
     public float initialSpeed = 5.0f;       // 생성되면 즉시 적용될 속도
     public GameObject explosionPrefab;      // 폭팔 이팩트 프리팝
+    public float damage;
 
     Rigidbody rigid;
 
@@ -26,6 +27,12 @@ public class Shell : MonoBehaviour
         Instantiate(explosionPrefab, 
             collision.contacts[0].point,                            // 생성 위치는 충돌지점
             Quaternion.LookRotation(collision.contacts[0].normal)); // 생성될 때의 회전은 충돌지점의 노멀백터를 forward로 지정하는 회전
+
+        IHit hitTarget = collision.gameObject.GetComponent<IHit>();
+        if(hitTarget != null)
+        {
+            hitTarget.HP -= damage;
+        }
 
         Destroy(this.gameObject);   // 포탄 삭제
     }
