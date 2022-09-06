@@ -28,6 +28,7 @@ public class Shell : MonoBehaviour
             collision.contacts[0].point,                            // 생성 위치는 충돌지점
             Quaternion.LookRotation(collision.contacts[0].normal)); // 생성될 때의 회전은 충돌지점의 노멀백터를 forward로 지정하는 회전
 
+        // 맞은 대상이 HP가 깎일 수 있는 대상이면 HP를 감소시킨다.
         IHit hitTarget = collision.gameObject.GetComponent<IHit>();
         if(hitTarget != null)
         {
