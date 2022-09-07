@@ -27,3 +27,7 @@
 1. Shell_BadZone이 BadEffect를 생성할 때 damagePerSecond를 effectDuration과 damage를 이용하여 설정하라.
 2. BadEffect가 여러 적에게 대미지를 줄 수 있도록 수정하라.
    시간 : 6시까지
+
+3. Shell_Cluster를 발사하면 위로 서서히 올라가게 만들기
+  3.1. 포탄의 각도를 자연스럽게 만들기
+  시간 : 7시 50분까지

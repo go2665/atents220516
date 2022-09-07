@@ -43,6 +43,9 @@ public class Shell_BadZone : Shell
         }
         pss[0].Play();
 
+        BadEffect bedEffect = obj.GetComponent<BadEffect>();
+        bedEffect.damagePerSecond = damage / effectDuration;    // 전체 데미지 / 전체시간
+
         Destroy(this.gameObject);
     }
 }
