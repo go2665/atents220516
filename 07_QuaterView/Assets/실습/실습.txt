@@ -22,3 +22,8 @@
    1.3. 적 탱크는 사망 후에 바닥에 닿으면 서서히 가라 앉는다.
    1.4. 적 탱크는 사망 후에 일정 시간이 지나면 사라진다.
    시간 : 6시 20분까지
+
+9/7
+1. Shell_BadZone이 BadEffect를 생성할 때 damagePerSecond를 effectDuration과 damage를 이용하여 설정하라.
+2. BadEffect가 여러 적에게 대미지를 줄 수 있도록 수정하라.
+   시간 : 6시까지

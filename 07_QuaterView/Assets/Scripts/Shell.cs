@@ -11,17 +11,17 @@ public class Shell : MonoBehaviour
 
     Rigidbody rigid;
 
-    private void Awake()
+    protected virtual void Awake()
     {
         rigid = GetComponent<Rigidbody>();
     }
 
-    private void Start()
+    protected virtual void Start()
     {
         rigid.velocity = transform.forward * initialSpeed;  // 시작하면 앞쪽 방향으로 initialSpeed만큼의 속도로 나간다.
     }
 
-    private void OnCollisionEnter(Collision collision)
+    protected virtual void OnCollisionEnter(Collision collision)
     {
         // 충돌하면 폭팔 이팩트 생성
         Instantiate(explosionPrefab, 
