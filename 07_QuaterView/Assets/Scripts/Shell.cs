@@ -9,7 +9,7 @@ public class Shell : MonoBehaviour
     public GameObject explosionPrefab;      // 폭팔 이팩트 프리팝
     public float damage;
 
-    Rigidbody rigid;
+    protected Rigidbody rigid;
 
     protected virtual void Awake()
     {

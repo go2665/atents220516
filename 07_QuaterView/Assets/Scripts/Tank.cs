@@ -73,6 +73,7 @@ public class Tank : MonoBehaviour
 
     private void OnNormalFire(InputAction.CallbackContext _)
     {
+        //Time.timeScale = 0.1f;
         Instantiate(shellPrefab, firePosition.position, firePosition.rotation); // 일반 포탄 발사
     }
 
