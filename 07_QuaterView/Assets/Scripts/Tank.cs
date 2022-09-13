@@ -7,8 +7,15 @@ using UnityEngine.InputSystem;
 
 public class Tank : MonoBehaviour
 {
-    public GameObject shellPrefab;      // 포탄용 프리팹
-    public Transform firePosition;      // 발사 위치
+    enum ShellType
+    {
+        Normal = 0,
+        BadZone,
+        Cluster
+    }
+
+    public GameObject[] shellPrefabs;       // 포탄용 프리팹
+    public Transform firePosition;          // 발사 위치
 
     public float moveSpeed = 3.0f;          // 이동 속도
     public float turnSpeed = 3.0f;          // 회전 속도
@@ -16,6 +23,8 @@ public class Tank : MonoBehaviour
 
     private Transform turret;               // 포탑의 트랜스폼
     private Quaternion turretTargetRotation = Quaternion.identity;  // 포탑의 회전
+
+    FireData[] fireDatas;
 
     TankInputActions inputActions;          // 액션맵
 
@@ -29,6 +38,13 @@ public class Tank : MonoBehaviour
         rigid = GetComponent<Rigidbody>();      // 리지드바디 가져오기
         turret = transform.Find("TankRenderers").Find("TankTurret");    // 포탑 찾고
         firePosition = turret.GetChild(0);      // 발사 위치 찾기
+        
+        fireDatas = new FireData[shellPrefabs.Length];
+        for(int i=0;i<shellPrefabs.Length;i++)
+        {
+            Shell shell = shellPrefabs[i].GetComponent<Shell>();
+            fireDatas[i] = new FireData(shell.data);
+        }
     }
 
     private void OnEnable()
@@ -39,16 +55,35 @@ public class Tank : MonoBehaviour
         inputActions.Tank.Move.canceled += OnMove;
         inputActions.Tank.Look.performed += OnMouseMove;
         inputActions.Tank.NormalFire.performed += OnNormalFire;
+        inputActions.Tank.SpecialFire.performed += OnSpecialFire;
     }
 
     private void OnDisable()
     {
         // 입력 액션과 함수 연결 해제
+        inputActions.Tank.SpecialFire.performed -= OnSpecialFire;
         inputActions.Tank.NormalFire.performed -= OnNormalFire;
         inputActions.Tank.Look.performed -= OnMouseMove;
         inputActions.Tank.Move.canceled -= OnMove;
         inputActions.Tank.Move.performed -= OnMove;
         inputActions.Tank.Disable();
+    }
+
+    private void Update()
+    {
+        foreach (var data in fireDatas)
+        {
+            data.CurrentCoolTime -= Time.deltaTime;
+        }
+
+        TurretTurn();   // 포탑만 돌리기
+    }
+
+    private void FixedUpdate()
+    {
+        // 이동 처리        
+        rigid.AddForce(inputDir.y * moveSpeed * transform.forward);
+        rigid.AddTorque(inputDir.x * turnSpeed * transform.up);
     }
 
     void OnMove(InputAction.CallbackContext context)
@@ -73,8 +108,21 @@ public class Tank : MonoBehaviour
 
     private void OnNormalFire(InputAction.CallbackContext _)
     {
-        //Time.timeScale = 0.1f;
-        Instantiate(shellPrefab, firePosition.position, firePosition.rotation); // 일반 포탄 발사
+        Fire(ShellType.Normal);
+    }
+
+    private void OnSpecialFire(InputAction.CallbackContext _)
+    {
+        Fire(ShellType.Cluster);
+    }
+
+    private void Fire(ShellType type)
+    {
+        if (fireDatas[(int)type].IsFireReady)
+        {
+            Instantiate(shellPrefabs[(int)type], firePosition.position, firePosition.rotation); // 지정된 포탄 발사
+            fireDatas[(int)type].ResetCoolTime();
+        }
     }
 
     void TurretTurn()
@@ -84,15 +132,4 @@ public class Tank : MonoBehaviour
         turret.rotation = Quaternion.Slerp(turret.rotation, turretTargetRotation, turretTurnSpeed * Time.deltaTime);
     }
 
-    private void Update()
-    {
-        TurretTurn();   // 포탑만 돌리기
-    }
-
-    private void FixedUpdate()
-    {
-        // 이동 처리        
-        rigid.AddForce(inputDir.y * moveSpeed * transform.forward);
-        rigid.AddTorque(inputDir.x * turnSpeed * transform.up);        
-    }
 }
