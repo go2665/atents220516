@@ -7,8 +7,6 @@ public class Shell_Cluster : Shell
 {
     Shell_Subminuation[] subminuations;
 
-    public float upPower = 10.0f;
-    public float lifeTime = 1.0f;
 
     protected override void Awake()
     {
@@ -22,30 +20,30 @@ public class Shell_Cluster : Shell
     }
 
     // 첫번째 업데이트가 실행되기 직전에 호출
-    protected override void Start()
-    {
-        base.Start();
-        StartCoroutine(TimeOut());
-    }
+    //protected override void Start()
+    //{
+    //    base.Start();
+    //    StartCoroutine(TimeOut());
+    //}
 
-    private void FixedUpdate()
-    {
-        rigid.AddForce(Vector3.up * upPower);
-        //Quaternion.LookRotation(rigid.velocity);    //rigid.velocity가 forward가 되는 회전만들기
-        rigid.MoveRotation(Quaternion.LookRotation(rigid.velocity));
-    }
+    //private void FixedUpdate()
+    //{
+    //    rigid.AddForce(Vector3.up * upPower);
+    //    //Quaternion.LookRotation(rigid.velocity);    //rigid.velocity가 forward가 되는 회전만들기
+    //    rigid.MoveRotation(Quaternion.LookRotation(rigid.velocity));
+    //}
 
-    IEnumerator TimeOut()
-    {
-        yield return new WaitForSeconds(lifeTime);
+    //IEnumerator TimeOut()
+    //{
+    //    yield return new WaitForSeconds(lifeTime);
 
-        Instantiate(explosionPrefab, transform.position, Quaternion.LookRotation(Vector3.up));
-        foreach (var sub in subminuations)
-        {
-            sub.gameObject.SetActive(true); // Update 함수들이 실행 됨.(다음 프레임부터)
-            sub.transform.parent = null;            
-        }
+    //    Instantiate(explosionPrefab, transform.position, Quaternion.LookRotation(Vector3.up));
+    //    foreach (var sub in subminuations)
+    //    {
+    //        sub.gameObject.SetActive(true); // Update 함수들이 실행 됨.(다음 프레임부터)
+    //        sub.transform.parent = null;            
+    //    }
 
-        Destroy(this.gameObject);
-    }
+    //    Destroy(this.gameObject);
+    //}
 }
