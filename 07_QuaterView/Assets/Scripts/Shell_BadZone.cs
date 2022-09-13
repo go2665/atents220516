@@ -19,8 +19,17 @@ public class Shell_BadZone : Shell
         }
         position += new Vector3(0, 0.1f, 0);
 
+        // 바닥에서 이팩트 터트리기
         data.Explosion(position, Vector3.up);
 
+
+        // 아래는 중복코드지만 넘어감.
+
+        // 맞은 대상이 HP가 깎일 수 있는 대상이면 HP를 감소시킨다.
+        IHit hitTarget = collision.gameObject.GetComponent<IHit>();
+        data.TakeDamage(hitTarget);
+
+        // 스스로 없어지기
         Destroy(this.gameObject);
     }
 }

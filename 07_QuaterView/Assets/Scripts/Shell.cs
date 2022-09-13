@@ -16,7 +16,7 @@ public class Shell : MonoBehaviour
         rigid = GetComponent<Rigidbody>();
         MeshRenderer meshRenderer = GetComponent<MeshRenderer>();
         material = meshRenderer.material;
-        material.SetColor("_EffectColor", data.effectColor);
+        material.SetColor("_EffectColor", data.shellColor);
     }
 
     protected virtual void Start()
