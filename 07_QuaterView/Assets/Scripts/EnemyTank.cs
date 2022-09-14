@@ -4,9 +4,17 @@ using System.Collections.Generic;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.AI;
+using static UnityEngine.GraphicsBuffer;
 
 public class EnemyTank : MonoBehaviour, IHit
 {
+    public GameObject shellPrefab;
+    public float fireAngle = 15.0f;
+    public float attackRange = 20.0f;
+
+    Transform firePosition;
+    FireData fireData;
+
     ParticleSystem ps;
     Rigidbody rigid;
     Collider tankCollider;
@@ -17,6 +25,7 @@ public class EnemyTank : MonoBehaviour, IHit
     float hp = 0.0f;
     float maxHP = 100.0f;
     bool isDead = false;
+    private Tank player;
 
     public float HP 
     { 
@@ -45,14 +54,46 @@ public class EnemyTank : MonoBehaviour, IHit
         ps = transform.GetChild(3).GetComponent<ParticleSystem>();
         tankCollider = GetComponent<Collider>();
         agent = GetComponent<NavMeshAgent>();
+        
+        Transform turret = transform.Find("TankRenderers").Find("TankTurret");    // 포탑 찾고
+        firePosition = turret.GetChild(0);
+
+        fireData = new FireData(shellPrefab.GetComponent<Shell>().data);
     }
 
     private void Start()
     {
         hp = maxHP;
+        player = FindObjectOfType<Tank>();
+    }
 
-        Tank player = FindObjectOfType<Tank>();
-        agent.SetDestination(player.transform.position);        
+    void Update()
+    {
+        if (!isDead)
+        {
+            fireData.CurrentCoolTime -= Time.deltaTime;
+
+            Vector3 playerPos = player.transform.position;
+            Vector3 dir = playerPos - transform.position;
+
+            // ( dir.sqrMagnitude < attackRange * attackRange ) 
+            // (dir.x * dir.x + dir.y * dir.y + dir.z * dir.z) < attackRange * attackRange 
+            // * 4번, + 2번, < 1번 
+
+            // ( Vector3.Angle( dir, transform.forward ) < fireAngle )
+            // acos(dir.x * transform.forward.x + dir.y * transform.forward.y + dir.z * transform.forward.z) / root(dir.x * dir.x + dir.y * dir.y + dir.z * dir.z) * root(transform.forward.x * transform.forward.x + transform.forward.y * transform.forward.y + transform.forward.z * transform.forward.z)
+            // * 9번, + 6번, / 1번, root 2번, acos 1번, < 1번
+
+            if (fireData.IsFireReady
+                && (dir.sqrMagnitude < attackRange * attackRange)
+                && (Vector3.Angle(dir, transform.forward) < fireAngle) )
+            {
+                Instantiate(shellPrefab, firePosition.position, firePosition.rotation);
+                fireData.ResetCoolTime();
+            }
+
+            agent.SetDestination(playerPos);
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
