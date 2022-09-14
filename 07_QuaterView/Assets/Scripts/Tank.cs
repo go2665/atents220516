@@ -14,6 +14,12 @@ public class Tank : MonoBehaviour
         Cluster
     }
 
+    enum ShortCutType
+    {
+        Key1 = 0,
+        Key2
+    }
+
     public GameObject[] shellPrefabs;       // 포탄용 프리팹
     public Transform firePosition;          // 발사 위치
 
@@ -27,6 +33,9 @@ public class Tank : MonoBehaviour
     FireData[] fireDatas;
 
     TankInputActions inputActions;          // 액션맵
+    Action<InputAction.CallbackContext> onShortcut1;
+    Action<InputAction.CallbackContext> onShortcut2;
+    ShellType specialShell = ShellType.BadZone;
 
     Vector2 inputDir = Vector2.zero;        // 이력받은 이동 방향
 
@@ -45,6 +54,9 @@ public class Tank : MonoBehaviour
             Shell shell = shellPrefabs[i].GetComponent<Shell>();
             fireDatas[i] = new FireData(shell.data);
         }
+
+        onShortcut1 = (_) => ShortCut(ShortCutType.Key1);
+        onShortcut2 = (_) => ShortCut(ShortCutType.Key2);
     }
 
     private void OnEnable()
@@ -56,11 +68,15 @@ public class Tank : MonoBehaviour
         inputActions.Tank.Look.performed += OnMouseMove;
         inputActions.Tank.NormalFire.performed += OnNormalFire;
         inputActions.Tank.SpecialFire.performed += OnSpecialFire;
+        inputActions.Tank.ShortCut1.performed += onShortcut1;
+        inputActions.Tank.ShortCut2.performed += onShortcut2;
     }
 
     private void OnDisable()
     {
         // 입력 액션과 함수 연결 해제
+        inputActions.Tank.ShortCut2.performed -= onShortcut2;
+        inputActions.Tank.ShortCut1.performed -= onShortcut1;
         inputActions.Tank.SpecialFire.performed -= OnSpecialFire;
         inputActions.Tank.NormalFire.performed -= OnNormalFire;
         inputActions.Tank.Look.performed -= OnMouseMove;
@@ -113,7 +129,7 @@ public class Tank : MonoBehaviour
 
     private void OnSpecialFire(InputAction.CallbackContext _)
     {
-        Fire(ShellType.Cluster);
+        Fire(specialShell);
     }
 
     private void Fire(ShellType type)
@@ -132,4 +148,18 @@ public class Tank : MonoBehaviour
         turret.rotation = Quaternion.Slerp(turret.rotation, turretTargetRotation, turretTurnSpeed * Time.deltaTime);
     }
 
+    void ShortCut(ShortCutType key)
+    {
+        switch (key)
+        {
+            case ShortCutType.Key1:
+                specialShell = ShellType.BadZone;
+                break;
+            case ShortCutType.Key2:
+                specialShell = ShellType.Cluster;
+                break;
+            default:
+                break;
+        }
+    }
 }

@@ -40,6 +40,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "ShortCut1",
+                    "type": "Button",
+                    "id": "1baf0c5b-36f7-4301-bec0-3014fc179a87",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "ShortCut2",
+                    "type": "Button",
+                    "id": "aea834bd-b5bb-439b-b6f8-41fda3710a9d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -128,6 +146,28 @@
                     "processors": "",
                     "groups": "K&M",
                     "action": "SpecialFire",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "76cf9832-7984-42f0-a095-61a4df3ce356",
+                    "path": "<Keyboard>/1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "K&M",
+                    "action": "ShortCut1",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c4fec246-13f9-4905-93d6-fae79aa69777",
+                    "path": "<Keyboard>/2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "K&M",
+                    "action": "ShortCut2",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

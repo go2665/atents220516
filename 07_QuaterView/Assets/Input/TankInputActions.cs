@@ -62,6 +62,24 @@ public partial class @TankInputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ShortCut1"",
+                    ""type"": ""Button"",
+                    ""id"": ""1baf0c5b-36f7-4301-bec0-3014fc179a87"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ShortCut2"",
+                    ""type"": ""Button"",
+                    ""id"": ""aea834bd-b5bb-439b-b6f8-41fda3710a9d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -152,6 +170,28 @@ public partial class @TankInputActions : IInputActionCollection2, IDisposable
                     ""action"": ""SpecialFire"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""76cf9832-7984-42f0-a095-61a4df3ce356"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""K&M"",
+                    ""action"": ""ShortCut1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c4fec246-13f9-4905-93d6-fae79aa69777"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""K&M"",
+                    ""action"": ""ShortCut2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -181,6 +221,8 @@ public partial class @TankInputActions : IInputActionCollection2, IDisposable
         m_Tank_Look = m_Tank.FindAction("Look", throwIfNotFound: true);
         m_Tank_NormalFire = m_Tank.FindAction("NormalFire", throwIfNotFound: true);
         m_Tank_SpecialFire = m_Tank.FindAction("SpecialFire", throwIfNotFound: true);
+        m_Tank_ShortCut1 = m_Tank.FindAction("ShortCut1", throwIfNotFound: true);
+        m_Tank_ShortCut2 = m_Tank.FindAction("ShortCut2", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -244,6 +286,8 @@ public partial class @TankInputActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_Tank_Look;
     private readonly InputAction m_Tank_NormalFire;
     private readonly InputAction m_Tank_SpecialFire;
+    private readonly InputAction m_Tank_ShortCut1;
+    private readonly InputAction m_Tank_ShortCut2;
     public struct TankActions
     {
         private @TankInputActions m_Wrapper;
@@ -252,6 +296,8 @@ public partial class @TankInputActions : IInputActionCollection2, IDisposable
         public InputAction @Look => m_Wrapper.m_Tank_Look;
         public InputAction @NormalFire => m_Wrapper.m_Tank_NormalFire;
         public InputAction @SpecialFire => m_Wrapper.m_Tank_SpecialFire;
+        public InputAction @ShortCut1 => m_Wrapper.m_Tank_ShortCut1;
+        public InputAction @ShortCut2 => m_Wrapper.m_Tank_ShortCut2;
         public InputActionMap Get() { return m_Wrapper.m_Tank; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -273,6 +319,12 @@ public partial class @TankInputActions : IInputActionCollection2, IDisposable
                 @SpecialFire.started -= m_Wrapper.m_TankActionsCallbackInterface.OnSpecialFire;
                 @SpecialFire.performed -= m_Wrapper.m_TankActionsCallbackInterface.OnSpecialFire;
                 @SpecialFire.canceled -= m_Wrapper.m_TankActionsCallbackInterface.OnSpecialFire;
+                @ShortCut1.started -= m_Wrapper.m_TankActionsCallbackInterface.OnShortCut1;
+                @ShortCut1.performed -= m_Wrapper.m_TankActionsCallbackInterface.OnShortCut1;
+                @ShortCut1.canceled -= m_Wrapper.m_TankActionsCallbackInterface.OnShortCut1;
+                @ShortCut2.started -= m_Wrapper.m_TankActionsCallbackInterface.OnShortCut2;
+                @ShortCut2.performed -= m_Wrapper.m_TankActionsCallbackInterface.OnShortCut2;
+                @ShortCut2.canceled -= m_Wrapper.m_TankActionsCallbackInterface.OnShortCut2;
             }
             m_Wrapper.m_TankActionsCallbackInterface = instance;
             if (instance != null)
@@ -289,6 +341,12 @@ public partial class @TankInputActions : IInputActionCollection2, IDisposable
                 @SpecialFire.started += instance.OnSpecialFire;
                 @SpecialFire.performed += instance.OnSpecialFire;
                 @SpecialFire.canceled += instance.OnSpecialFire;
+                @ShortCut1.started += instance.OnShortCut1;
+                @ShortCut1.performed += instance.OnShortCut1;
+                @ShortCut1.canceled += instance.OnShortCut1;
+                @ShortCut2.started += instance.OnShortCut2;
+                @ShortCut2.performed += instance.OnShortCut2;
+                @ShortCut2.canceled += instance.OnShortCut2;
             }
         }
     }
@@ -308,5 +366,7 @@ public partial class @TankInputActions : IInputActionCollection2, IDisposable
         void OnLook(InputAction.CallbackContext context);
         void OnNormalFire(InputAction.CallbackContext context);
         void OnSpecialFire(InputAction.CallbackContext context);
+        void OnShortCut1(InputAction.CallbackContext context);
+        void OnShortCut2(InputAction.CallbackContext context);
     }
 }
