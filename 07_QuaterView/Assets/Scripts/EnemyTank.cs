@@ -1,13 +1,16 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class EnemyTank : MonoBehaviour, IHit
 {
     ParticleSystem ps;
     Rigidbody rigid;
     Collider tankCollider;
+    NavMeshAgent agent;
 
     Vector3 hitPoint = Vector3.zero;
 
@@ -36,38 +39,20 @@ public class EnemyTank : MonoBehaviour, IHit
     public Action onHealthChange { get; set; }
     public Action onDead { get; set; }
 
-    public void Dead()
-    {
-        isDead = true;      // 사망 표시
-        rigid.drag = 1.0f;  // 마찰력 감소
-        rigid.angularDrag = 0.0f;   // 회전 마찰력 제거
-        rigid.constraints = RigidbodyConstraints.None;  // 회전 묶어놓았던 것을 해지
-
-        // 공격을 받은 위치의 바닥 아래에서 적 탱크 중심부로 향하는 백터
-        Vector3 forceDirection = (transform.position - hitPoint).normalized;
-        // forceDirection + 위쪽으로 가하는 힘
-        rigid.AddForce(forceDirection + Vector3.up * 10.0f, ForceMode.VelocityChange);
-        // forceDirection의 오른쪽 축을 기준으로 회전력 추가
-        rigid.AddTorque(Quaternion.Euler(0, 90, 0) * forceDirection * 5.0f, ForceMode.VelocityChange);
-
-        transform.GetChild(1).gameObject.SetActive(false);  // 흙먼지 트레일 2개 비활성화
-        transform.GetChild(2).gameObject.SetActive(false);
-        
-        ps.Play();  // 탱크 폭팔 파티클 시스템 재생        
-        //Debug.Log("사망");
-
-    }
-
     private void Awake()
     {
         rigid = GetComponent<Rigidbody>();
         ps = transform.GetChild(3).GetComponent<ParticleSystem>();
         tankCollider = GetComponent<Collider>();
+        agent = GetComponent<NavMeshAgent>();
     }
 
     private void Start()
     {
         hp = maxHP;
+
+        Tank player = FindObjectOfType<Tank>();
+        agent.SetDestination(player.transform.position);        
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -88,7 +73,34 @@ public class EnemyTank : MonoBehaviour, IHit
         }
     }
 
-    private void DestroyProcess()
+    public void Dead()
+    {
+        agent.isStopped = true;
+        agent.enabled = false;
+
+        rigid.drag = 0.0f;  // 마찰력 감소
+        rigid.angularDrag = 0.0f;   // 회전 마찰력 제거
+        rigid.constraints = RigidbodyConstraints.None;  // 회전 묶어놓았던 것을 해지
+
+        // 공격을 받은 위치의 바닥 아래에서 적 탱크 중심부로 향하는 백터
+        Vector3 forceDirection = (transform.position - hitPoint).normalized;
+        // forceDirection + 위쪽으로 가하는 힘
+        rigid.AddForceAtPosition(forceDirection + Vector3.up * 10.0f, hitPoint, ForceMode.VelocityChange);
+        
+        // forceDirection의 오른쪽 축을 기준으로 회전력 추가
+        rigid.AddTorque(Quaternion.Euler(0, 90, 0) * forceDirection * 5.0f, ForceMode.VelocityChange);
+
+        transform.GetChild(1).gameObject.SetActive(false);  // 흙먼지 트레일 2개 비활성화
+        transform.GetChild(2).gameObject.SetActive(false);
+
+        ps.Play();  // 탱크 폭팔 파티클 시스템 재생        
+        //Debug.Log("사망");
+
+        isDead = true;      // 사망 표시
+        onDead?.Invoke();   // 죽었음을 알림
+    }
+
+    void DestroyProcess()
     {
         tankCollider.enabled = false;   // 컬라이더 비할성화(반드시 여기있어야 함)
         rigid.drag = 10.0f;             // 천천히 떨어지도록 마찰력
