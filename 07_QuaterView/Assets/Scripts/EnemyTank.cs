@@ -25,7 +25,7 @@ public class EnemyTank : MonoBehaviour, IHit
     float hp = 0.0f;
     float maxHP = 100.0f;
     bool isDead = false;
-    private Tank player;
+    private PlayerTank player;
 
     public float HP 
     { 
@@ -64,7 +64,7 @@ public class EnemyTank : MonoBehaviour, IHit
     private void Start()
     {
         hp = maxHP;
-        player = FindObjectOfType<Tank>();
+        player = FindObjectOfType<PlayerTank>();
     }
 
     void Update()

@@ -10,7 +10,7 @@ public class FollowCamera : MonoBehaviour
 
     private void Start()
     {
-        target = FindObjectOfType<Tank>()?.transform;
+        target = FindObjectOfType<PlayerTank>()?.transform;
         if (target != null)
         {
             offset = transform.position - target.position;

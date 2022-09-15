@@ -18,6 +18,9 @@ public class EnemySpawner : MonoBehaviour, IHit
 
     bool waitMode = true;
 
+    public float totalRepairTime = 5.0f;
+    float repairElapsed = 0.0f;
+
     ParticleSystem fireEffect;
     ParticleSystem explosionEffect;
 
@@ -30,7 +33,7 @@ public class EnemySpawner : MonoBehaviour, IHit
         set 
         {
             hp = value;
-            Debug.Log(hp);
+            //Debug.Log(hp);
             if (hp < 0)
             {
                 hp = 0;
@@ -64,12 +67,20 @@ public class EnemySpawner : MonoBehaviour, IHit
 
     private void Update()
     {
-        if (!waitMode)
+        if (!waitMode && !isDead)
         {
             spawnTimer -= Time.deltaTime;
             if (spawnTimer < 0 && currentSpawnCount < maxSpawnCount)
             {
                 Spawn();
+            }
+        }
+        if(isDead)
+        {
+            repairElapsed += Time.deltaTime;
+            if(repairElapsed > totalRepairTime)
+            {
+                Restore();
             }
         }
     }
@@ -104,8 +115,21 @@ public class EnemySpawner : MonoBehaviour, IHit
 
     public void Dead()
     {
-        isDead = true;
+        //Debug.Log("사망");
+        isDead = true;        
+        explosionEffect.Simulate(0);    // 파티클시스템 내부의 시간 재조정
         explosionEffect.Play();
+        fireEffect.Simulate(0);
         fireEffect.Play();
+    }
+
+    void Restore()
+    {
+        //Debug.Log("부활");
+        explosionEffect.Stop();
+        fireEffect.Stop();
+        isDead = false;
+        hp = maxHP;
+        repairElapsed = 0.0f;
     }
 }

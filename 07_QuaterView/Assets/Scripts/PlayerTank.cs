@@ -5,7 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Tank : MonoBehaviour
+public class PlayerTank : MonoBehaviour, IHit
 {
     enum ShellType
     {
@@ -40,6 +40,32 @@ public class Tank : MonoBehaviour
     Vector2 inputDir = Vector2.zero;        // 이력받은 이동 방향
 
     Rigidbody rigid;
+
+    float hp;
+    public float maxHP = 100.0f;
+    bool isDead = false;
+
+    public float HP 
+    { 
+        get => hp;
+        set
+        {
+            hp = value;
+            //Debug.Log(hp);
+            if (hp < 0)
+            {
+                hp = 0;
+                if (!isDead) // HP가 0보다 작아지면 Dead함수 실행
+                    Dead();
+            }
+            hp = Mathf.Min(hp, maxHP);
+        }  
+    }
+
+    public float MaxHP { get => maxHP; }
+
+    public Action onHealthChange { get; set; }
+    public Action onDead { get; set; }
 
     private void Awake()
     {
@@ -161,5 +187,12 @@ public class Tank : MonoBehaviour
             default:
                 break;
         }
+    }
+
+    public void Dead()
+    {
+        isDead = true;
+        GetComponent<Collider>().enabled = false;
+        inputActions.Tank.Disable();
     }
 }
