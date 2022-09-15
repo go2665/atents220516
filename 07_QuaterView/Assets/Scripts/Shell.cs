@@ -26,6 +26,7 @@ public class Shell : MonoBehaviour
 
     protected virtual void OnCollisionEnter(Collision collision)
     {
+
         // 충돌하면 폭팔 이팩트 생성
         data.Explosion(collision.contacts[0].point, collision.contacts[0].normal);
 

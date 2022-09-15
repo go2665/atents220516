@@ -13,17 +13,22 @@ public class EnemySpawnerController : MonoBehaviour
 
     int spawnerIndex = 0;
 
-    //int test = 0;
-
     private void Awake()
     {
-        enemySpawners = GetComponentsInChildren<EnemySpawner>();
-        onSpawnActivate = new Action[enemySpawners.Length];
-
-        for(int i=0; i<enemySpawners.Length; i++)
+        enemySpawners = new EnemySpawner[transform.childCount];
+        onSpawnActivate = new Action[transform.childCount];
+        for ( int i=0;i<transform.childCount;i++)
         {
+            enemySpawners[i] = transform.GetChild(i).GetComponent<EnemySpawner>();
             onSpawnActivate[i] += enemySpawners[i].WaitModeOff;
         }
+
+        //enemySpawners = GetComponentsInChildren<EnemySpawner>();
+        //onSpawnActivate = new Action[enemySpawners.Length];
+        //for(int i=0; i<enemySpawners.Length; i++)
+        //{
+        //    onSpawnActivate[i] += enemySpawners[i].WaitModeOff;
+        //}
     }
 
     private void Start()
@@ -42,8 +47,8 @@ public class EnemySpawnerController : MonoBehaviour
 
     void ActivateNextSpawner()
     {
-        spawnerIndex = (spawnerIndex + 1) % onSpawnActivate.Length;
         onSpawnActivate[spawnerIndex]?.Invoke();
+        spawnerIndex = (spawnerIndex + 1) % onSpawnActivate.Length;
     }
 
 }
