@@ -16,6 +16,8 @@ public class EnemySpawner : MonoBehaviour
     private float spawnTimer = 0.0f;
     private int currentSpawnCount = 0;
 
+    bool waitMode = true;
+
     private void Start()
     {
         currentSpawnCount = 0;
@@ -24,10 +26,13 @@ public class EnemySpawner : MonoBehaviour
 
     private void Update()
     {
-        spawnTimer -= Time.deltaTime;
-        if( spawnTimer < 0 && currentSpawnCount < maxSpawnCount)
+        if (!waitMode)
         {
-            Spawn();
+            spawnTimer -= Time.deltaTime;
+            if (spawnTimer < 0 && currentSpawnCount < maxSpawnCount)
+            {
+                Spawn();
+            }
         }
     }
 
@@ -36,15 +41,26 @@ public class EnemySpawner : MonoBehaviour
         GameObject obj = Instantiate(enemyPrefab, 
             transform.position + UnityEngine.Random.insideUnitSphere * 0.1f, 
             transform.rotation);
-        IHit hitTarget = obj.GetComponent<IHit>();
-        hitTarget.onDead += ResetSpawnTimer;
-        hitTarget.onDead += () => currentSpawnCount--;
+        //IHit hitTarget = obj.GetComponent<IHit>();
+        //hitTarget.onDead += ResetSpawnTimer;
+        //hitTarget.onDead += () => currentSpawnCount--;
         currentSpawnCount++;
         ResetSpawnTimer();
+
+        if( currentSpawnCount >= maxSpawnCount )
+        {
+            waitMode = true;
+        }
     }
 
     private void ResetSpawnTimer()
     {
         spawnTimer = spawnInterval;
     }    
+
+    public void WaitModeOff()
+    {
+        waitMode = false;
+        currentSpawnCount = 0;
+    }
 }
