@@ -1,81 +1,41 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.AI;
-using static UnityEngine.GraphicsBuffer;
 
-public class EnemyTank : MonoBehaviour, IHit
+public class EnemyTank : Tank
 {
-    public GameObject shellPrefab;
-    public float fireAngle = 15.0f;
-    public float attackRange = 20.0f;
+    public float fireAngle = 15.0f;     // 발사각 (-15~+15)
+    public float attackRange = 20.0f;   // 발사 거리
 
-    Transform firePosition;
-    FireData fireData;
+    private PlayerTank player;          // 추적할 플레이어
 
-    ParticleSystem ps;
-    Rigidbody rigid;
-    Collider tankCollider;
-    NavMeshAgent agent;
+    private NavMeshAgent agent;         // 길찾기용 컴포넌트
 
-    Vector3 hitPoint = Vector3.zero;
+    protected override void Awake()
+    {
+        base.Awake();        
+        agent = GetComponent<NavMeshAgent>();
+    }
 
-    float hp = 0.0f;
-    float maxHP = 100.0f;
-    bool isDead = false;
-    private PlayerTank player;
-
-    public float HP 
-    { 
-        get => hp; 
-        set
+    protected override void Start()
+    {
+        base.Start();
+        player = FindObjectOfType<PlayerTank>();    // 플레이어 찾기
+        if (player != null)
         {
-            hp = value;
-            if (hp < 0)
-            {
-                hp = 0;
-                if(!isDead) // HP가 0보다 작아지면 Dead함수 실행
-                    Dead();
-            }
-            hp = Mathf.Min(hp, maxHP);
+            player.onDead += PlayerDead;
         }
     }
 
-    public float MaxHP { get => maxHP; }
-
-    public Action onHealthChange { get; set; }
-    public Action onDead { get; set; }
-
-    private void Awake()
+    protected override void Update()
     {
-        rigid = GetComponent<Rigidbody>();
-        ps = transform.GetChild(3).GetComponent<ParticleSystem>();
-        tankCollider = GetComponent<Collider>();
-        agent = GetComponent<NavMeshAgent>();
-        
-        Transform turret = transform.Find("TankRenderers").Find("TankTurret");    // 포탑 찾고
-        firePosition = turret.GetChild(0);
-
-        fireData = new FireData(shellPrefab.GetComponent<Shell>().data);
-    }
-
-    private void Start()
-    {
-        hp = maxHP;
-        player = FindObjectOfType<PlayerTank>();
-    }
-
-    void Update()
-    {
-        if (!isDead)
+        base.Update();
+        if (!isDead && player != null )
         {
-            fireData.CurrentCoolTime -= Time.deltaTime;
-
             Vector3 playerPos = player.transform.position;
             Vector3 dir = playerPos - transform.position;
 
+            // 연산량 비교
             // ( dir.sqrMagnitude < attackRange * attackRange ) 
             // (dir.x * dir.x + dir.y * dir.y + dir.z * dir.z) < attackRange * attackRange 
             // * 4번, + 2번, < 1번 
@@ -84,68 +44,30 @@ public class EnemyTank : MonoBehaviour, IHit
             // acos(dir.x * transform.forward.x + dir.y * transform.forward.y + dir.z * transform.forward.z) / root(dir.x * dir.x + dir.y * dir.y + dir.z * dir.z) * root(transform.forward.x * transform.forward.x + transform.forward.y * transform.forward.y + transform.forward.z * transform.forward.z)
             // * 9번, + 6번, / 1번, root 2번, acos 1번, < 1번
 
-            if (fireData.IsFireReady
-                && (dir.sqrMagnitude < attackRange * attackRange)
-                && (Vector3.Angle(dir, transform.forward) < fireAngle) )
+            if (fireDatas[0].IsFireReady                                    // 발사 쿨타임이 다 되었고
+                && (dir.sqrMagnitude < attackRange * attackRange)           // 발사 거리안에 플레이어가 있고
+                && (Vector3.Angle(dir, transform.forward) < fireAngle) )    // 발사 각도안에 플레이어가 있다.
             {
-                Instantiate(shellPrefab, firePosition.position, firePosition.rotation);
-                fireData.ResetCoolTime();
+                Instantiate(shellPrefabs[0], firePosition.position, firePosition.rotation); // 포탄 발사
+                fireDatas[0].ResetCoolTime();                               // 쿨타임 다시 돌리기
             }
 
-            agent.SetDestination(playerPos);
+            agent.SetDestination(playerPos);    // 살아있으면 무조건 플레이어쪽으로 추적
         }
-    }
+    }    
 
-    private void OnCollisionEnter(Collision collision)
-    {        
-        if( collision.gameObject.CompareTag("Shell"))
-        {
-            //Debug.Log("피격");
-
-            hitPoint = collision.contacts[0].point;
-            hitPoint.y = -1.0f;
-        }
-
-        // 사망 이후 땅에 부딪쳤을 때
-        if (isDead && collision.gameObject.CompareTag("Ground"))
-        {
-            //Debug.Log(collision.gameObject.name);
-            DestroyProcess();
-        }
-    }
-
-    public void Dead()
+    public override void Dead()
     {
-        agent.isStopped = true;
+        agent.isStopped = true;     //길찾기 중단 후 컴포넌트 비활성화
         agent.enabled = false;
 
-        rigid.drag = 0.0f;  // 마찰력 감소
-        rigid.angularDrag = 0.0f;   // 회전 마찰력 제거
-        rigid.constraints = RigidbodyConstraints.None;  // 회전 묶어놓았던 것을 해지
-
-        // 공격을 받은 위치의 바닥 아래에서 적 탱크 중심부로 향하는 백터
-        Vector3 forceDirection = (transform.position - hitPoint).normalized;
-        // forceDirection + 위쪽으로 가하는 힘
-        rigid.AddForceAtPosition(forceDirection + Vector3.up * 10.0f, hitPoint, ForceMode.VelocityChange);
-        
-        // forceDirection의 오른쪽 축을 기준으로 회전력 추가
-        rigid.AddTorque(Quaternion.Euler(0, 90, 0) * forceDirection * 5.0f, ForceMode.VelocityChange);
-
-        transform.GetChild(1).gameObject.SetActive(false);  // 흙먼지 트레일 2개 비활성화
-        transform.GetChild(2).gameObject.SetActive(false);
-
-        ps.Play();  // 탱크 폭팔 파티클 시스템 재생        
-        //Debug.Log("사망");
-
-        isDead = true;      // 사망 표시
-        onDead?.Invoke();   // 죽었음을 알림
+        base.Dead();
     }
 
-    void DestroyProcess()
+    private void PlayerDead()
     {
-        tankCollider.enabled = false;   // 컬라이더 비할성화(반드시 여기있어야 함)
-        rigid.drag = 10.0f;             // 천천히 떨어지도록 마찰력
-        rigid.angularDrag = 3.0f;       // 회전도 멈추도록
-        Destroy(this.gameObject, 5.0f); // 시간이 지나면 사라지도록 처리
+        // 플레이어 사망시 호출될 함수
+        player = null;
+        agent.isStopped = true;     // 길찾기 중단.
     }
 }

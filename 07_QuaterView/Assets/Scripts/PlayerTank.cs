@@ -5,7 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerTank : MonoBehaviour, IHit
+public class PlayerTank : Tank
 {
     enum ShellType
     {
@@ -18,70 +18,28 @@ public class PlayerTank : MonoBehaviour, IHit
     {
         Key1 = 0,
         Key2
-    }
-
-    public GameObject[] shellPrefabs;       // 포탄용 프리팹
-    public Transform firePosition;          // 발사 위치
+    }    
 
     public float moveSpeed = 3.0f;          // 이동 속도
     public float turnSpeed = 3.0f;          // 회전 속도
     public float turretTurnSpeed = 0.05f;   // 포탑 회전 속도
+    
+    private Quaternion turretTargetRotation = Quaternion.identity;  // 포탑의 회전    
 
-    private Transform turret;               // 포탑의 트랜스폼
-    private Quaternion turretTargetRotation = Quaternion.identity;  // 포탑의 회전
+    private ShellType specialShell = ShellType.BadZone;         // 특수탄(우클릭발사) 종류
 
-    FireData[] fireDatas;
+    private TankInputActions inputActions;                      // 액션맵
+    private Vector2 inputDir = Vector2.zero;                    // 입력받은 이동 방향
+    private Action<InputAction.CallbackContext> onShortcut1;    // 단축키 1번용 함수 저장용 델리게이트
+    private Action<InputAction.CallbackContext> onShortcut2;    // 단축키 2번용 함수 저장용 델리게이트
 
-    TankInputActions inputActions;          // 액션맵
-    Action<InputAction.CallbackContext> onShortcut1;
-    Action<InputAction.CallbackContext> onShortcut2;
-    ShellType specialShell = ShellType.BadZone;
-
-    Vector2 inputDir = Vector2.zero;        // 이력받은 이동 방향
-
-    Rigidbody rigid;
-
-    float hp;
-    public float maxHP = 100.0f;
-    bool isDead = false;
-
-    public float HP 
-    { 
-        get => hp;
-        set
-        {
-            hp = value;
-            //Debug.Log(hp);
-            if (hp < 0)
-            {
-                hp = 0;
-                if (!isDead) // HP가 0보다 작아지면 Dead함수 실행
-                    Dead();
-            }
-            hp = Mathf.Min(hp, maxHP);
-        }  
-    }
-
-    public float MaxHP { get => maxHP; }
-
-    public Action onHealthChange { get; set; }
-    public Action onDead { get; set; }
-
-    private void Awake()
+    // 유니티 이벤트 함수 ---------------------------------------------------------------------------------
+    protected override void Awake()
     {
-        inputActions = new TankInputActions();  // 액션맵 생성
-        rigid = GetComponent<Rigidbody>();      // 리지드바디 가져오기
-        turret = transform.Find("TankRenderers").Find("TankTurret");    // 포탑 찾고
-        firePosition = turret.GetChild(0);      // 발사 위치 찾기
-        
-        fireDatas = new FireData[shellPrefabs.Length];
-        for(int i=0;i<shellPrefabs.Length;i++)
-        {
-            Shell shell = shellPrefabs[i].GetComponent<Shell>();
-            fireDatas[i] = new FireData(shell.data);
-        }
+        base.Awake();   // 컴포넌트 찾고 FireData 만들기
 
-        onShortcut1 = (_) => ShortCut(ShortCutType.Key1);
+        inputActions = new TankInputActions();              // 액션맵 생성
+        onShortcut1 = (_) => ShortCut(ShortCutType.Key1);   // 단축키 액션과 연결하고 해재할 람다함수 저장
         onShortcut2 = (_) => ShortCut(ShortCutType.Key2);
     }
 
@@ -111,23 +69,20 @@ public class PlayerTank : MonoBehaviour, IHit
         inputActions.Tank.Disable();
     }
 
-    private void Update()
+    protected override void Update()
     {
-        foreach (var data in fireDatas)
-        {
-            data.CurrentCoolTime -= Time.deltaTime;
-        }
-
+        base.Update();  // 쿨타임 처리
         TurretTurn();   // 포탑만 돌리기
     }
 
     private void FixedUpdate()
     {
         // 이동 처리        
-        rigid.AddForce(inputDir.y * moveSpeed * transform.forward);
-        rigid.AddTorque(inputDir.x * turnSpeed * transform.up);
+        rigid.AddForce(inputDir.y * moveSpeed * transform.forward); // 전진 후진
+        rigid.AddTorque(inputDir.x * turnSpeed * transform.up);     // 좌회전 우회전
     }
 
+    // 입력 액션 바인딩 함수 -------------------------------------------------------------------------------
     void OnMove(InputAction.CallbackContext context)
     {
         inputDir = context.ReadValue<Vector2>();    // 이동 입력 받은 것 전달.
@@ -135,7 +90,7 @@ public class PlayerTank : MonoBehaviour, IHit
 
     void OnMouseMove(InputAction.CallbackContext context)
     {
-        // 마우스가 움직일 때만 실행
+        // 포탑 회전 처리용(마우스가 움직일 때만 실행)
         Vector2 screenPos = context.ReadValue<Vector2>();       // 마우스의 위치 = 마우스의 스크린좌표
         Ray ray = Camera.main.ScreenPointToRay(screenPos);      // 마우스의 스크린좌표를 이용해 레이 계산
         if( Physics.Raycast(ray, out RaycastHit hit, 1000.0f, LayerMask.GetMask("Ground")) )    // 레이를 이용해 레이케스팅
@@ -150,32 +105,39 @@ public class PlayerTank : MonoBehaviour, IHit
 
     private void OnNormalFire(InputAction.CallbackContext _)
     {
+        // 좌클릭으로 일반 포탄 발사
         Fire(ShellType.Normal);
     }
 
     private void OnSpecialFire(InputAction.CallbackContext _)
     {
+        // 우클릭으로 특수탄 발사
         Fire(specialShell);
     }
 
+    // 일반 함수들 -------------------------------------------------------------------------------------
     private void Fire(ShellType type)
     {
-        if (fireDatas[(int)type].IsFireReady)
+        if (fireDatas[(int)type].IsFireReady)       // 쿨타임 확인하고 발사 가능하면
         {
             Instantiate(shellPrefabs[(int)type], firePosition.position, firePosition.rotation); // 지정된 포탄 발사
-            fireDatas[(int)type].ResetCoolTime();
+            fireDatas[(int)type].ResetCoolTime();   // 쿨타임 다시 돌리기
         }
     }
 
     void TurretTurn()
     {
-        // Update에서 계속 실행
-        // turretTargetRotation이 될때까지 회전
-        turret.rotation = Quaternion.Slerp(turret.rotation, turretTargetRotation, turretTurnSpeed * Time.deltaTime);
+        if (!isDead)
+        {
+            // Update에서 계속 실행
+            // turretTargetRotation이 될때까지 회전        
+            turret.rotation = Quaternion.Slerp(turret.rotation, turretTargetRotation, turretTurnSpeed * Time.deltaTime);
+        }
     }
 
     void ShortCut(ShortCutType key)
     {
+        // 단축키 처리
         switch (key)
         {
             case ShortCutType.Key1:
@@ -189,10 +151,9 @@ public class PlayerTank : MonoBehaviour, IHit
         }
     }
 
-    public void Dead()
+    public override void Dead()
     {
-        isDead = true;
-        GetComponent<Collider>().enabled = false;
+        base.Dead();        
         inputActions.Tank.Disable();
     }
 }
