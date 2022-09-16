@@ -58,8 +58,11 @@ public class EnemyTank : Tank
 
     public override void Dead()
     {
-        agent.isStopped = true;     //길찾기 중단 후 컴포넌트 비활성화
-        agent.enabled = false;
+        if (!isDead)
+        {
+            agent.isStopped = true;     //길찾기 중단 후 컴포넌트 비활성화
+            agent.enabled = false;
+        }
 
         base.Dead();
     }
