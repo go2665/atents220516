@@ -12,6 +12,16 @@ public class Skill_Barrier : MonoBehaviour
     private float currentCoolTime = 0.0f;   // 현재 스킬 쿨타임. 스킬 효과가 끝나면 다시 skillCoolTime에서 시작 
     private float currentDuration = 0.0f;   // 배리어 스킬을 사용후 스킬이 유지된 시간.( skillDuration에 도달하면 스킬 끝 )
 
+    private float CurrentDuration
+    {
+        get => currentDuration;
+        set
+        {
+            currentDuration = value;
+            onDurationTimeChange?.Invoke(skillDuration - currentDuration, skillDuration);
+        }
+    }
+
     private float CurrentCoolTime 
     { 
         get => currentCoolTime; 
@@ -25,6 +35,8 @@ public class Skill_Barrier : MonoBehaviour
     public bool IsSkillActivate { get => skillEffect.activeSelf; }  // 스킬 발동 여부 확인용 프로퍼티
 
     public Action<float, float> onCoolTimeChange;
+    public Action<float, float> onDurationTimeChange;
+    public Action<bool> onDurationMode;
 
     private void Awake()
     {
@@ -34,7 +46,7 @@ public class Skill_Barrier : MonoBehaviour
     private void Start()
     {
         CurrentCoolTime = skillCoolTime;     // 현재 쿨타임 초기화
-        //CurrentCoolTime = 0.0f;            
+        CurrentCoolTime = 0.0f;            
     }
 
     private void Update()
@@ -43,8 +55,8 @@ public class Skill_Barrier : MonoBehaviour
         {
             // 스킬이 활성화 된 상태면
 
-            currentDuration += Time.deltaTime;      // 지속 시간 증가
-            if(currentDuration >= skillDuration)    // 최대 지속시간을 넘어셔면
+            CurrentDuration += Time.deltaTime;      // 지속 시간 증가
+            if(CurrentDuration >= skillDuration)    // 최대 지속시간을 넘어셔면
             {
                 skillEffect.SetActive(false);       // 스킬 비활성화
                 ResetCoolTime();                    // 쿨타임 초기화
@@ -61,6 +73,7 @@ public class Skill_Barrier : MonoBehaviour
 
     public void ResetCoolTime()
     {
+        onDurationMode?.Invoke(false);
         CurrentCoolTime = skillCoolTime;    // 쿨타임 초기화 함수
     }
 
@@ -73,7 +86,8 @@ public class Skill_Barrier : MonoBehaviour
         {
             Debug.Log("Skill - Start");
             skillEffect.SetActive(true);    // 스킬 활성화
-            currentDuration = 0.0f;         // 지속 시간 초기화
+            CurrentDuration = 0.0f;         // 지속 시간 초기화
+            onDurationMode?.Invoke(true);
         }
     }
 }

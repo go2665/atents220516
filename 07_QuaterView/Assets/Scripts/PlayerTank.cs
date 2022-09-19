@@ -24,7 +24,9 @@ public class PlayerTank : Tank
     public float moveSpeed = 3.0f;          // 이동 속도
     public float turnSpeed = 3.0f;          // 회전 속도
     public float turretTurnSpeed = 0.05f;   // 포탑 회전 속도
-    
+
+    public Action<int> onSpecialShellChange;
+
     private Quaternion turretTargetRotation = Quaternion.identity;  // 포탑의 회전    
 
     private ShellType specialShell = ShellType.BadZone;         // 특수탄(우클릭발사) 종류
@@ -35,6 +37,7 @@ public class PlayerTank : Tank
     private Vector2 inputDir = Vector2.zero;                    // 입력받은 이동 방향
     private Action<InputAction.CallbackContext> onShortcut1;    // 단축키 1번용 함수 저장용 델리게이트
     private Action<InputAction.CallbackContext> onShortcut2;    // 단축키 2번용 함수 저장용 델리게이트
+
 
     // 유니티 이벤트 함수 ---------------------------------------------------------------------------------
     protected override void Awake()
@@ -78,12 +81,14 @@ public class PlayerTank : Tank
 
     protected override void Start()
     {
-        //CoolTimeSlot[] coolTimeSlots = FindObjectsOfType<CoolTimeSlot>();
         CoolTimePanel coolTimePanel = FindObjectOfType<CoolTimePanel>();
         fireDatas[0].onCoolTimeChange += coolTimePanel[0].RefreshUI;
         fireDatas[1].onCoolTimeChange += coolTimePanel[1].RefreshUI;
         fireDatas[2].onCoolTimeChange += coolTimePanel[2].RefreshUI;
         barrier.onCoolTimeChange += coolTimePanel[3].RefreshUI;
+        barrier.onDurationTimeChange += coolTimePanel[3].RefreshUI;
+        barrier.onDurationMode += coolTimePanel[3].SetDurationMode;
+        onSpecialShellChange += coolTimePanel.SetSelected;
 
         base.Start();
     }
@@ -173,6 +178,7 @@ public class PlayerTank : Tank
             default:
                 break;
         }
+        onSpecialShellChange?.Invoke((int)key);
     }
 
     public override void TakeDamage(float damage)

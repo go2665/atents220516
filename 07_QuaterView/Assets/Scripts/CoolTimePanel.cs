@@ -17,4 +17,18 @@ public class CoolTimePanel : MonoBehaviour
     {
         coolTimeSlots = GetComponentsInChildren<CoolTimeSlot>();
     }
+
+    public void SetSelected(int select)
+    {
+        if( select == 0 )
+        {
+            coolTimeSlots[select + 1].SetSelected(true);
+            coolTimeSlots[select + 2].SetSelected(false);
+        }
+        else
+        {
+            coolTimeSlots[select + 0].SetSelected(false);
+            coolTimeSlots[select + 1].SetSelected(true);
+        }
+    }
 }
