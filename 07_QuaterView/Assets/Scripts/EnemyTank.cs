@@ -60,6 +60,7 @@ public class EnemyTank : Tank
     {
         if (!isDead)
         {
+            player.onDead -= PlayerDead;
             agent.isStopped = true;     //길찾기 중단 후 컴포넌트 비활성화
             agent.enabled = false;
         }
@@ -70,7 +71,7 @@ public class EnemyTank : Tank
     private void PlayerDead()
     {
         // 플레이어 사망시 호출될 함수
-        player = null;
+        player = null;        
         agent.isStopped = true;     // 길찾기 중단.
     }
 }

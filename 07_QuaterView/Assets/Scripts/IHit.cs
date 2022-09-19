@@ -8,7 +8,7 @@ public interface IHit
     float HP { get; set; }
     float MaxHP { get; }
 
-    Action onHealthChange { get; set; }
+    Action<float> onHealthChange { get; set; }
     Action onDead { get; set; }
 
     void Dead();

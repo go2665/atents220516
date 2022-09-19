@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Tank : MonoBehaviour, IHit
 {
@@ -16,6 +17,7 @@ public class Tank : MonoBehaviour, IHit
     protected Vector3 hitPoint = Vector3.zero;    // 충돌한 위치
 
     private float hp;                   // 현재 HP
+    private Image hpBar;
 
     // 각종 컴포넌트들
     protected Rigidbody rigid;
@@ -28,20 +30,23 @@ public class Tank : MonoBehaviour, IHit
         get => hp;
         set
         {
-            hp = value;
-            if (hp <= 0)    // HP가 0보다 작거나 같아지면 사망처리
+            if (value != hp)
             {
-                hp = 0;                
-                Dead();
+                hp = value;
+                if (hp <= 0)    // HP가 0보다 작거나 같아지면 사망처리
+                {
+                    hp = 0;
+                    Dead();
+                }
+                hp = Mathf.Min(hp, maxHP);  // HP 상승할때를 대비한 코드
+                onHealthChange?.Invoke(hp / maxHP);
             }
-            hp = Mathf.Min(hp, maxHP);  // HP 상승할때를 대비한 코드
-            onHealthChange?.Invoke();
         }
     }
     public float MaxHP { get => maxHP; }
 
     // 델리게이트들
-    public Action onHealthChange { get; set; }  // HP 변경이 있을 때 실행될 델리게이트
+    public Action<float> onHealthChange { get; set; }  // HP 변경이 있을 때 실행될 델리게이트
     public Action onDead { get; set; }          // 죽을 때 실행될 델리게이트
 
     protected virtual void Awake()
@@ -59,11 +64,15 @@ public class Tank : MonoBehaviour, IHit
             Shell shell = shellPrefabs[i].GetComponent<Shell>();        // 포탄에서 데이터 가져와서
             fireDatas[i] = new FireData(shell.data);                    // fireData만들기
         }
+
+        hpBar = GetComponentInChildren<Image>();
+        onHealthChange += (ratio) => hpBar.fillAmount = ratio;
+
     }
 
     protected virtual void Start()
     {
-        hp = maxHP;     // 시작할 때 최대HP로 시작
+        HP = maxHP;     // 시작할 때 최대HP로 시작        
     }
 
     protected virtual void Update()

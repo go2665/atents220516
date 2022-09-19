@@ -40,13 +40,13 @@ public class EnemySpawner : MonoBehaviour, IHit
                 Dead();
             }
             hp = Mathf.Min(hp, maxHP);
-            onHealthChange?.Invoke();
+            onHealthChange?.Invoke(hp / maxHP);
         }
     }
 
     public float MaxHP { get => maxHP; }
 
-    public Action onHealthChange { get; set; }  
+    public Action<float> onHealthChange { get; set; }  
 
     public Action onDead { get; set; }
 
