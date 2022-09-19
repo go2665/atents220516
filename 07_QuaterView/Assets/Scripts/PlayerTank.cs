@@ -76,6 +76,18 @@ public class PlayerTank : Tank
         inputActions.Tank.Disable();
     }
 
+    protected override void Start()
+    {
+        //CoolTimeSlot[] coolTimeSlots = FindObjectsOfType<CoolTimeSlot>();
+        CoolTimePanel coolTimePanel = FindObjectOfType<CoolTimePanel>();
+        fireDatas[0].onCoolTimeChange += coolTimePanel[0].RefreshUI;
+        fireDatas[1].onCoolTimeChange += coolTimePanel[1].RefreshUI;
+        fireDatas[2].onCoolTimeChange += coolTimePanel[2].RefreshUI;
+        barrier.onCoolTimeChange += coolTimePanel[3].RefreshUI;
+
+        base.Start();
+    }
+
     protected override void Update()
     {
         base.Update();  // 쿨타임 처리
