@@ -10,7 +10,8 @@ public interface IHit
 
     Action<float> onHealthChange { get; set; }
     Action onDead { get; set; }
+    
+    void TakeDamage(float damage);
 
     void Dead();
-
 }

@@ -80,6 +80,15 @@ public partial class @TankInputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Skill_Barrier"",
+                    ""type"": ""Button"",
+                    ""id"": ""c52f70ee-db9a-4ead-9cc1-3ff8346bcfd7"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -192,6 +201,17 @@ public partial class @TankInputActions : IInputActionCollection2, IDisposable
                     ""action"": ""ShortCut2"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e1128424-40b4-4fa2-b3b7-4191605dc0d4"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""K&M"",
+                    ""action"": ""Skill_Barrier"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -223,6 +243,7 @@ public partial class @TankInputActions : IInputActionCollection2, IDisposable
         m_Tank_SpecialFire = m_Tank.FindAction("SpecialFire", throwIfNotFound: true);
         m_Tank_ShortCut1 = m_Tank.FindAction("ShortCut1", throwIfNotFound: true);
         m_Tank_ShortCut2 = m_Tank.FindAction("ShortCut2", throwIfNotFound: true);
+        m_Tank_Skill_Barrier = m_Tank.FindAction("Skill_Barrier", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -288,6 +309,7 @@ public partial class @TankInputActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_Tank_SpecialFire;
     private readonly InputAction m_Tank_ShortCut1;
     private readonly InputAction m_Tank_ShortCut2;
+    private readonly InputAction m_Tank_Skill_Barrier;
     public struct TankActions
     {
         private @TankInputActions m_Wrapper;
@@ -298,6 +320,7 @@ public partial class @TankInputActions : IInputActionCollection2, IDisposable
         public InputAction @SpecialFire => m_Wrapper.m_Tank_SpecialFire;
         public InputAction @ShortCut1 => m_Wrapper.m_Tank_ShortCut1;
         public InputAction @ShortCut2 => m_Wrapper.m_Tank_ShortCut2;
+        public InputAction @Skill_Barrier => m_Wrapper.m_Tank_Skill_Barrier;
         public InputActionMap Get() { return m_Wrapper.m_Tank; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -325,6 +348,9 @@ public partial class @TankInputActions : IInputActionCollection2, IDisposable
                 @ShortCut2.started -= m_Wrapper.m_TankActionsCallbackInterface.OnShortCut2;
                 @ShortCut2.performed -= m_Wrapper.m_TankActionsCallbackInterface.OnShortCut2;
                 @ShortCut2.canceled -= m_Wrapper.m_TankActionsCallbackInterface.OnShortCut2;
+                @Skill_Barrier.started -= m_Wrapper.m_TankActionsCallbackInterface.OnSkill_Barrier;
+                @Skill_Barrier.performed -= m_Wrapper.m_TankActionsCallbackInterface.OnSkill_Barrier;
+                @Skill_Barrier.canceled -= m_Wrapper.m_TankActionsCallbackInterface.OnSkill_Barrier;
             }
             m_Wrapper.m_TankActionsCallbackInterface = instance;
             if (instance != null)
@@ -347,6 +373,9 @@ public partial class @TankInputActions : IInputActionCollection2, IDisposable
                 @ShortCut2.started += instance.OnShortCut2;
                 @ShortCut2.performed += instance.OnShortCut2;
                 @ShortCut2.canceled += instance.OnShortCut2;
+                @Skill_Barrier.started += instance.OnSkill_Barrier;
+                @Skill_Barrier.performed += instance.OnSkill_Barrier;
+                @Skill_Barrier.canceled += instance.OnSkill_Barrier;
             }
         }
     }
@@ -368,5 +397,6 @@ public partial class @TankInputActions : IInputActionCollection2, IDisposable
         void OnSpecialFire(InputAction.CallbackContext context);
         void OnShortCut1(InputAction.CallbackContext context);
         void OnShortCut2(InputAction.CallbackContext context);
+        void OnSkill_Barrier(InputAction.CallbackContext context);
     }
 }

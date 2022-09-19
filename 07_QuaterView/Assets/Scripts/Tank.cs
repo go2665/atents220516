@@ -66,7 +66,11 @@ public class Tank : MonoBehaviour, IHit
         }
 
         hpBar = GetComponentInChildren<Image>();
-        onHealthChange += (ratio) => hpBar.fillAmount = ratio;
+        onHealthChange += (ratio) =>
+        {
+            hpBar.fillAmount = ratio;
+            hpBar.color = Color.Lerp(Color.red, Color.green, ratio);
+        };
 
     }
 
@@ -99,6 +103,11 @@ public class Tank : MonoBehaviour, IHit
         {
             DestroyProcess();
         }
+    }
+
+    public virtual void TakeDamage(float damage)
+    {
+        HP -= damage;
     }
 
     public virtual void Dead()

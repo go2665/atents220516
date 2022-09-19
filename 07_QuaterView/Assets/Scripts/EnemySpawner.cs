@@ -122,6 +122,11 @@ public class EnemySpawner : MonoBehaviour, IHit
         spawnTimer = spawnInterval; // 스폰 시간 초기화
     }
 
+    public void TakeDamage(float damage)
+    {
+        HP -= damage;
+    }
+
     public void Dead()
     {
         // 죽었을 때 실행될 함수

@@ -26,13 +26,15 @@ public class Shell : MonoBehaviour
 
     protected virtual void OnCollisionEnter(Collision collision)
     {
-
         // 충돌하면 폭팔 이팩트 생성
         data.Explosion(collision.contacts[0].point, collision.contacts[0].normal);
 
         // 맞은 대상이 HP가 깎일 수 있는 대상이면 HP를 감소시킨다.
         IHit hitTarget = collision.gameObject.GetComponent<IHit>();
-        data.TakeDamage(hitTarget);
+        if (hitTarget != null)
+        {
+            hitTarget.TakeDamage(data.damage);
+        }
 
         Destroy(this.gameObject);   // 포탄 삭제
     }

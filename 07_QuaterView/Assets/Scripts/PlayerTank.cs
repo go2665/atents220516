@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -28,6 +29,8 @@ public class PlayerTank : Tank
 
     private ShellType specialShell = ShellType.BadZone;         // 특수탄(우클릭발사) 종류
 
+    private Skill_Barrier barrier;
+
     private TankInputActions inputActions;                      // 액션맵
     private Vector2 inputDir = Vector2.zero;                    // 입력받은 이동 방향
     private Action<InputAction.CallbackContext> onShortcut1;    // 단축키 1번용 함수 저장용 델리게이트
@@ -37,6 +40,8 @@ public class PlayerTank : Tank
     protected override void Awake()
     {
         base.Awake();   // 컴포넌트 찾고 FireData 만들기
+
+        barrier = GetComponent<Skill_Barrier>();
 
         inputActions = new TankInputActions();              // 액션맵 생성
         onShortcut1 = (_) => ShortCut(ShortCutType.Key1);   // 단축키 액션과 연결하고 해재할 람다함수 저장
@@ -54,11 +59,13 @@ public class PlayerTank : Tank
         inputActions.Tank.SpecialFire.performed += OnSpecialFire;
         inputActions.Tank.ShortCut1.performed += onShortcut1;
         inputActions.Tank.ShortCut2.performed += onShortcut2;
+        inputActions.Tank.Skill_Barrier.performed += OnBarrierActivate;
     }
 
     private void OnDisable()
     {
         // 입력 액션과 함수 연결 해제
+        inputActions.Tank.Skill_Barrier.performed -= OnBarrierActivate;
         inputActions.Tank.ShortCut2.performed -= onShortcut2;
         inputActions.Tank.ShortCut1.performed -= onShortcut1;
         inputActions.Tank.SpecialFire.performed -= OnSpecialFire;
@@ -115,6 +122,11 @@ public class PlayerTank : Tank
         Fire(specialShell);
     }
 
+    private void OnBarrierActivate(InputAction.CallbackContext _)
+    {
+        barrier.UseSkill();
+    }
+
     // 일반 함수들 -------------------------------------------------------------------------------------
     private void Fire(ShellType type)
     {
@@ -148,6 +160,14 @@ public class PlayerTank : Tank
                 break;
             default:
                 break;
+        }
+    }
+
+    public override void TakeDamage(float damage)
+    {
+        if (!barrier.IsSkillActivate)
+        {
+            base.TakeDamage(damage);
         }
     }
 
