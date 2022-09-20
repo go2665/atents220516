@@ -19,6 +19,8 @@ public class Tank : MonoBehaviour, IHit
     private float hp;                   // 현재 HP
     private Image hpBar;
 
+    GameObject minimapIndicator;
+
     // 각종 컴포넌트들
     protected Rigidbody rigid;
     protected Collider tankCollider;
@@ -53,6 +55,7 @@ public class Tank : MonoBehaviour, IHit
     {
         rigid = GetComponent<Rigidbody>();                              // 리지드바디 가져오기
         tankExplosionEffect = transform.GetChild(3).GetComponent<ParticleSystem>();      // 탱크 폭팔 파티클 시스템
+        minimapIndicator = transform.GetChild(5).gameObject;
         tankCollider = GetComponent<Collider>();                        // 탱크의 컬라이드
 
         turret = transform.Find("TankRenderers").Find("TankTurret");    // 포탑 찾고
@@ -115,6 +118,8 @@ public class Tank : MonoBehaviour, IHit
         if (!isDead)            // 살아 있을때 한번만 실행
         {
             isDead = true;      // 사망 표시
+
+            minimapIndicator.SetActive(false);
 
             rigid.drag = 0.0f;          // 마찰력 감소
             rigid.angularDrag = 0.0f;   // 회전 마찰력 제거

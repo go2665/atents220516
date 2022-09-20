@@ -40,7 +40,7 @@ public class Skill_Barrier : MonoBehaviour
 
     private void Awake()
     {
-        skillEffect = transform.GetChild(5).gameObject; // 이팩트용 게임 오브젝트 찾기
+        skillEffect = transform.GetChild(6).gameObject; // 이팩트용 게임 오브젝트 찾기
     }
 
     private void Start()
