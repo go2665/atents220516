@@ -5,7 +5,7 @@ using UnityEngine.Networking;
 
 public class HttpRequest : MonoBehaviour
 {
-    readonly string url = "http://go2665.dothome.co.kr/HTTP_Data/Data.txt";
+    readonly string url = "http://go2665.dothome.co.kr/HTTP_Data/TestData.txt";
 
     void Start()
     {
@@ -25,6 +25,8 @@ public class HttpRequest : MonoBehaviour
         else
         {
             Debug.Log($"Data get : {www.downloadHandler.text}");
+            TestData test = JsonUtility.FromJson<TestData>(www.downloadHandler.text);
+            int i = 0;
         }
     }
 }
