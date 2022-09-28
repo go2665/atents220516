@@ -11,3 +11,11 @@ public enum ShipType : byte
     Submarine,      // 사이즈3
     PatrolBoat      // 사이즈2
 }
+
+public enum ShipDirection : byte
+{
+    NORTH = 0,
+    EAST,
+    SOUTH,
+    WEST
+}

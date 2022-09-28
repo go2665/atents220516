@@ -65,6 +65,16 @@ public class Board : MonoBehaviour
         return ((-1 < pos.x && pos.x < BoardSize) && (-1 < pos.y && pos.y < BoardSize));
     }
 
+    /// <summary>
+    /// 해당 위치에 배가 있는지 확인하는 함수
+    /// </summary>
+    /// <param name="pos">확인할 위치</param>
+    /// <returns>true면 해당 위치에 배가 있다. false면 없다.</returns>
+    private bool IsShipDeployed(Vector2Int pos)
+    {
+        return (shipInfo[pos.y * BoardSize + pos.x] != ShipType.None);
+    }
+
     //bool IsValidAndAttackable(Vector2Int pos)
     //{
     //    return IsAttackable(pos) && IsValidPosition(pos);
@@ -72,7 +82,59 @@ public class Board : MonoBehaviour
 
 
     // 배를 배치하기
-    // 공격을 당하기
+    //  배를 배치하는 함수
+    //  배의 방향을 지정하는 함수
+    //  배를 배치할 수 있는 위치인지 확인하는 함수
+
+    public bool ShipDeployment(Ship ship, Vector2Int pos)
+    {
+        Vector2Int[] gridPositions = new Vector2Int[ship.Size];
+
+        Vector2Int offset = Vector2Int.zero;
+        switch (ship.Direction)
+        {
+            case ShipDirection.NORTH:
+                offset = Vector2Int.down;
+                break;
+            case ShipDirection.EAST:
+                offset = Vector2Int.left;
+                break;
+            case ShipDirection.SOUTH:
+                offset = Vector2Int.up;
+                break;
+            case ShipDirection.WEST:
+                offset = Vector2Int.right;
+                break;
+        }
+
+        for( int i=0;i<ship.Size;i++)
+        {
+            gridPositions[i] = pos + offset * i;
+        }
+
+        bool result = true;
+        foreach(var tempPos in gridPositions)
+        {
+            if( !IsValidPosition(tempPos) || IsShipDeployed(tempPos) )
+            {
+                result = false;
+                break;
+            }
+        }
+
+        if (result)
+        {
+            foreach (var tempPos in gridPositions)
+            {
+                shipInfo[tempPos.y * BoardSize + tempPos.x] = ship.Type;
+            }
+        }
+
+        // 주석 설명. 테스트 편하게 할 기능들 만들기
+
+        return result;
+    }   
+    
 
     // 그리드 변환( 월드좌표 <-> 그리드 좌표). 그리드의 좌상이 (0,0), 우하가 (9,9), 왼->오른(+x), 위->아래(+y)
     Vector3 GridToWorld(int x, int y)

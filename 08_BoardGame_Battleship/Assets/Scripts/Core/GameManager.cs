@@ -6,7 +6,7 @@ public class GameManager : Singleton<GameManager>
 {
     InputController input;
 
-    public InputController Input { get => input; }
+    public InputController Input { get => input; }    
 
     protected override void Awake()
     {
@@ -14,4 +14,5 @@ public class GameManager : Singleton<GameManager>
 
         input = GetComponent<InputController>();
     }
+
 }
