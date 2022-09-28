@@ -4,7 +4,8 @@ using UnityEngine;
 
 public enum ShipType : byte
 {
-    Carrier = 0,    // 사이즈5
+    None = 0,       // 배 아님
+    Carrier,        // 사이즈5
     Battleship,     // 사이즈4
     Destroyer,      // 사이즈3
     Submarine,      // 사이즈3

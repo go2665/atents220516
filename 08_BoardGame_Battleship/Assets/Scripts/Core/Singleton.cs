@@ -33,10 +33,11 @@ public class Singleton<T> : MonoBehaviour where T : Component
         }
     }
 
-    private void Awake()
+    protected virtual void Awake()
     {
-        if (instance == null)
+        if (instance == null)       
         {
+            // 새롭게 만들어진 싱글톤
             instance = this as T;
             DontDestroyOnLoad(this.gameObject);
 
@@ -44,18 +45,28 @@ public class Singleton<T> : MonoBehaviour where T : Component
         }
         else
         {
+            // 이 타입으로 만들어진 싱글톤이 있다.
             if (instance != this)
             {
-                Destroy(this.gameObject);
+                // 이미 만들어진게 내가 아니다.
+                Destroy(this.gameObject);   // 나를 삭제.
             }
         }
     }
 
+    /// <summary>
+    /// 씬이 로딩될 때 실행될 델리게이트에 등록한 함수
+    /// </summary>
+    /// <param name="scene">해당 씬 데이터</param>
+    /// <param name="mode">씬 추가 모드</param>
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         Initialize();
     }
 
+    /// <summary>
+    /// 각종 초기화용 함수. 상속받을 클래스에서 override해서 사용할 것.
+    /// </summary>
     protected virtual void Initialize()
     {
     }
