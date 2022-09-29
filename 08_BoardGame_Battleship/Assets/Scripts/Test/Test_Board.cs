@@ -5,16 +5,21 @@ using UnityEngine;
 public class Test_Board : MonoBehaviour
 {
     public Board board;
+    public GameObject shipPrefab;
 
     void Start()
     {
-        GameObject shipObj = new()
-        {
-            name = "Test Ship"
-        };
-        Ship ship = shipObj.AddComponent<Ship>();
+        //GameObject shipObj = new()
+        //{
+        //    name = "Test Ship"
+        //};
+        //Ship ship = shipObj.AddComponent<Ship>();
+        //ship.Initialize(ShipType.Carrier);
+        //ship.SetDirection(ShipDirection.EAST);
+
+        GameObject shipObj = Instantiate(shipPrefab);
+        Ship ship = shipObj.GetComponent<Ship>();
         ship.Initialize(ShipType.Carrier);
-        ship.SetDirection(ShipDirection.EAST);
 
         bool result = board.ShipDeployment(ship, new Vector2Int(0, 0));
         Debug.Log(result);

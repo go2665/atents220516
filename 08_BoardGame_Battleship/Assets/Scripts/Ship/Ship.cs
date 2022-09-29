@@ -6,9 +6,12 @@ using UnityEngine.UIElements;
 
 public class Ship : MonoBehaviour
 {
+    public GameObject[] shipModels;
+
     ShipType type;
     ShipDirection direction;
     int size = 2;
+    Transform model;
 
     public ShipType Type { get => type; }
     public ShipDirection Direction { get => direction; }
@@ -40,12 +43,16 @@ public class Ship : MonoBehaviour
             default:
                 break;
         }
+
+        GameObject obj = Instantiate(shipModels[(int)type - 1], transform);
+        model = obj.transform;
         direction = ShipDirection.NORTH;
     }
 
     public void SetDirection(ShipDirection dir)
     {
         direction = dir;
+        //model;
     }
 
 }
