@@ -19,3 +19,11 @@ public enum ShipDirection : byte
     SOUTH,
     WEST
 }
+
+public enum PlayerState : byte
+{
+    Title = 0,      // 타이틀 화면 모드
+    ShipDeployment, // 함선 배치 모드
+    Battle,         // 전투 모드
+    GameEnd         // 게임 종료 모드
+}

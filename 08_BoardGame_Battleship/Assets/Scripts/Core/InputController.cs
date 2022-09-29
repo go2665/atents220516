@@ -14,6 +14,8 @@ public class InputController : MonoBehaviour
     /// </summary>
     public Action<Vector2> onClick;
 
+    public Action<Vector2> onMouseMove;
+
 
     /// <summary>
     /// 액션 맵
@@ -30,10 +32,13 @@ public class InputController : MonoBehaviour
     {
         inputActions.Player.Enable();
         inputActions.Player.Click.performed += OnClick;
+        inputActions.Player.MouseMove.performed += OnMouseMove;
+
     }
 
     private void OnDisable()
     {
+        inputActions.Player.MouseMove.performed -= OnMouseMove;
         inputActions.Player.Click.performed -= OnClick;
         inputActions.Player.Disable();
     }
@@ -42,5 +47,10 @@ public class InputController : MonoBehaviour
     {
         // 클릭했을 때의 마우스 위치를 델리게이트로 전달
         onClick?.Invoke(Mouse.current.position.ReadValue());
+    }
+
+    private void OnMouseMove(InputAction.CallbackContext context)
+    {
+        onMouseMove?.Invoke(context.ReadValue<Vector2>());
     }
 }

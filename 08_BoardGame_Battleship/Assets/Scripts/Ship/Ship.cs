@@ -40,6 +40,7 @@ public class Ship : MonoBehaviour
             default:
                 break;
         }
+        direction = ShipDirection.NORTH;
     }
 
     public void SetDirection(ShipDirection dir)
