@@ -10,8 +10,8 @@ public class Test_Board : MonoBehaviour
 
     void Start()
     {
-        userPlayer.Test_SetState(PlayerState.ShipDeployment);
-        userPlayer.SelectShipToDeploy(ShipType.PatrolBoat);
+        userPlayer.Test_SetState(PlayerState.ShipDeployment);   // 테스트 유저의 상태를 함선 배치모드로 설정
+        userPlayer.SelectShipToDeploy(ShipType.Submarine);      // 현재 배치할 배를 잠수함으로 설정
 
         //bool result = board.ShipDeployment(ship, new Vector2Int(0, 0));
         //Debug.Log(result);

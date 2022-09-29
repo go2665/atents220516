@@ -16,13 +16,13 @@ public class Board : MonoBehaviour
 
     private void Awake()
     {
-        shipInfo = new ShipType[BoardSize * BoardSize];
-        bombInfo = new bool[BoardSize * BoardSize];
+        shipInfo = new ShipType[BoardSize * BoardSize]; // 배 배치 정보 배열 만들기
+        bombInfo = new bool[BoardSize * BoardSize];     // 포탄 공격 당한 위치 배열 만들기
     }
 
     private void Start()
     {
-        GameManager.Inst.Input.onClick += OnClick;
+        GameManager.Inst.Input.onClick += Test_OnClick;
     }
 
     /// <summary>
@@ -33,11 +33,11 @@ public class Board : MonoBehaviour
     public bool Attacked(Vector2Int pos)
     {
         bool result = false;
-        if(IsValidPosition(pos))
+        if(IsValidPosition(pos))    // 적절한 좌표인지 확인
         {
-            if (IsAttackable(pos))
+            if (IsAttackable(pos))  // 공격 가능한 위치인지 확인(공격했던 곳은 다시 공격 못함)
             {
-                bombInfo[pos.y * BoardSize + pos.x] = true;
+                bombInfo[pos.y * BoardSize + pos.x] = true; // 공격 받았다고 표시
                 result = true;
             }
         }
@@ -81,37 +81,54 @@ public class Board : MonoBehaviour
     //}
 
 
-    // 배를 배치하기
-    //  배를 배치하는 함수
-    //  배의 방향을 지정하는 함수
-    //  배를 배치할 수 있는 위치인지 확인하는 함수
+    
+    /// <summary>
+    /// 함선 배치하는 함수
+    /// </summary>
+    /// <param name="ship">배치할 함선</param>
+    /// <param name="pos">배치할 월드좌표</param>
+    /// <returns>성공여부(true면 성공)</returns>
+    public bool ShipDeployment(Ship ship, Vector3 pos)
+    {
+        Vector2Int gridPos = WorldToGrid(pos);
 
+        return ShipDeployment(ship, gridPos);
+    }
+
+    /// <summary>
+    /// 함선 배치하는 함수
+    /// </summary>
+    /// <param name="ship">배치할 함선</param>
+    /// <param name="pos">배치할 그리드 좌표</param>
+    /// <returns>성공여부(true면 성공)</returns>
     public bool ShipDeployment(Ship ship, Vector2Int pos)
     {
         Vector2Int[] gridPositions = new Vector2Int[ship.Size];
 
-        Vector2Int offset = Vector2Int.zero;
+        Vector2Int offset = Vector2Int.zero;    // 배 머리부터 꼬리까지 한칸씩 확인하기 위한 값
         switch (ship.Direction)
         {
             case ShipDirection.NORTH:
-                offset = Vector2Int.down;
+                offset = Vector2Int.up;         // 북쪽을 바라보고 있기 때문에 꼬리로 갈수록 그리드 좌표로는 y가 점점 증가한다.
                 break;
             case ShipDirection.EAST:
-                offset = Vector2Int.left;
+                offset = Vector2Int.left;       // 동쪽을 바라보고 있기 때문에 꼬리로 갈수록 그리드 좌표로는 x가 점점 감소한다.
                 break;
             case ShipDirection.SOUTH:
-                offset = Vector2Int.up;
+                offset = Vector2Int.down;       // 남쪽을 바라보고 있기 때문에 꼬리로 갈수록 그리드 좌표로는 y가 점점 감소한다.
                 break;
             case ShipDirection.WEST:
-                offset = Vector2Int.right;
+                offset = Vector2Int.right;      // 서쪽을 바라보고 있기 때문에 꼬리로 갈수록 그리드 좌표로는 x가 점점 증가한다.
                 break;
         }
 
+        // 배 머리부터 시작해서 배꼬리까지 좌표를 하나씩 구하기
         for( int i=0;i<ship.Size;i++)
         {
             gridPositions[i] = pos + offset * i;
         }
 
+        // 배의 각 부분 좌표를 확인해서 해당칸이 맵 바깥이거나 다른 배가 하나라도 있으면 실패
         bool result = true;
         foreach(var tempPos in gridPositions)
         {
@@ -122,15 +139,14 @@ public class Board : MonoBehaviour
             }
         }
 
+        // 모든 칸이 배치가 가능한 지역이면
         if (result)
         {
             foreach (var tempPos in gridPositions)
             {
-                shipInfo[tempPos.y * BoardSize + tempPos.x] = ship.Type;
+                shipInfo[tempPos.y * BoardSize + tempPos.x] = ship.Type;    // 모든 칸에 이 배의 타입을 저장
             }
         }
-
-        // 주석 설명. 테스트 편하게 할 기능들 만들기
 
         return result;
     }
@@ -155,10 +171,10 @@ public class Board : MonoBehaviour
     }
 
     /// <summary>
-    /// 마우스 클릭 입력 처리용 함수
+    /// 마우스 클릭 입력 테스트 함수
     /// </summary>
     /// <param name="screenPos">마우스 커서의 스크린 좌표</param>
-    void OnClick(Vector2 screenPos)
+    void Test_OnClick(Vector2 screenPos)
     {
         Ray ray = Camera.main.ScreenPointToRay(screenPos);
 
@@ -171,19 +187,6 @@ public class Board : MonoBehaviour
             //Debug.Log($"Grid : {gridPos}");
             //Vector3 worldPos = GridToWorld(gridPos);
             //Debug.Log($"World : {worldPos}");
-        }
-    }
-
-
-    void Test()
-    {
-        shipInfo = new ShipType[BoardSize * BoardSize];
-        for(int i=0;i<BoardSize;i++)
-        {
-            for(int j=0;j<BoardSize;j++)
-            {
-                ShipType ship = shipInfo[i*BoardSize+j];
-            }
         }
     }
 }

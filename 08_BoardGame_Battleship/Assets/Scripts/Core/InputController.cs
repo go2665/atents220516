@@ -59,11 +59,14 @@ public class InputController : MonoBehaviour
 
     private void OnMouseMove(InputAction.CallbackContext context)
     {
+        // 마우스가 움직일 때 마우스의 위치를 델리게이트로 전달
         onMouseMove?.Invoke(context.ReadValue<Vector2>());
     }
 
     private void OnMouseWheel(InputAction.CallbackContext context)
     {
+        // 마우스 휠버튼이 돌아갈 때 돌아가는 방향을 델리게이트로 전달
+        // 위로 돌릴때 +120, 아래로 돌릴때 -120
         onMouseWheel?.Invoke(context.ReadValue<float>());
     }
 }
