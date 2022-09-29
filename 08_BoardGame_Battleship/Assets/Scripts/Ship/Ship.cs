@@ -14,7 +14,15 @@ public class Ship : MonoBehaviour
     Transform model;
 
     public ShipType Type { get => type; }
-    public ShipDirection Direction { get => direction; }
+    public ShipDirection Direction 
+    { 
+        get => direction; 
+        set
+        {
+            direction = value;
+            model.rotation = Quaternion.Euler(0, (int)direction * 90.0f, 0);
+        }            
+    }
     public int Size { get => size; }
 
     /// <summary>
@@ -46,13 +54,7 @@ public class Ship : MonoBehaviour
 
         GameObject obj = Instantiate(shipModels[(int)type - 1], transform);
         model = obj.transform;
-        direction = ShipDirection.NORTH;
-    }
-
-    public void SetDirection(ShipDirection dir)
-    {
-        direction = dir;
-        //model;
+        Direction = ShipDirection.NORTH;
     }
 
 }

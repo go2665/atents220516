@@ -133,21 +133,21 @@ public class Board : MonoBehaviour
         // 주석 설명. 테스트 편하게 할 기능들 만들기
 
         return result;
-    }   
-    
-
-    // 그리드 변환( 월드좌표 <-> 그리드 좌표). 그리드의 좌상이 (0,0), 우하가 (9,9), 왼->오른(+x), 위->아래(+y)
-    Vector3 GridToWorld(int x, int y)
-    {
-        return new Vector3(x + 0.5f, 0, -(y + 0.5f));
     }
 
-    Vector3 GridToWorld(Vector2Int gridPos)
+
+    // 그리드 변환( 월드좌표 <-> 그리드 좌표). 그리드의 좌상이 (0,0), 우하가 (9,9), 왼->오른(+x), 위->아래(+y)
+    public Vector3 GridToWorld(int x, int y)
+    {
+        return transform.position + new Vector3(x + 0.5f, 0, -(y + 0.5f));
+    }
+
+    public Vector3 GridToWorld(Vector2Int gridPos)
     {
         return GridToWorld(gridPos.x, gridPos.y);
     }
 
-    Vector2Int WorldToGrid(Vector3 worldPos)
+    public Vector2Int WorldToGrid(Vector3 worldPos)
     {
         Vector3 diff = worldPos - transform.position;
 
@@ -164,11 +164,11 @@ public class Board : MonoBehaviour
 
         if( Physics.Raycast(ray, out RaycastHit hit, 100.0f, LayerMask.GetMask("Sea")) )
         {
-            Vector2Int gridPos = WorldToGrid(hit.point);
-            gridPos.x = 120;
-            Attacked(gridPos);
+            //Vector2Int gridPos = WorldToGrid(hit.point);
+            //gridPos.x = 120;
+            //Attacked(gridPos);
 
-            Debug.Log($"Grid : {gridPos}");
+            //Debug.Log($"Grid : {gridPos}");
             //Vector3 worldPos = GridToWorld(gridPos);
             //Debug.Log($"World : {worldPos}");
         }

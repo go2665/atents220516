@@ -16,3 +16,9 @@
   2.2. GridToWorld 만들기
   2.3. WorldToGrid 만들기
   시간  : 6시 5분까지 -> 6시 20분까지
+
+
+9/29
+1. Ship.cs의 SetDirection 함수 완성하기
+  1.1. SetDirection에서 방향을 지정하면 배 모델링의 회전도 변경된다.
+  시간 : 4시 55분
