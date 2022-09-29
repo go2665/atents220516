@@ -10,8 +10,6 @@ public class PlayerBase : MonoBehaviour
     protected PlayerState state = PlayerState.Title;
     protected Ship[] ships;
 
-    
-
     protected virtual void Start()
     {
         int shipTypeCount = ShipManager.Inst.ShipTypeCount;
@@ -21,7 +19,6 @@ public class PlayerBase : MonoBehaviour
             ships[i] = ShipManager.Inst.MakeShip((ShipType)(i + 1), this);
         }
     }
-
 
     // 테스트 용도
     public void Test_SetState(PlayerState state)

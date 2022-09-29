@@ -11,11 +11,12 @@ public class Test_Board : MonoBehaviour
     void Start()
     {
         userPlayer.Test_SetState(PlayerState.ShipDeployment);
-        userPlayer.SelectShipToDeploy(ShipType.Carrier);
+        userPlayer.SelectShipToDeploy(ShipType.PatrolBoat);
 
         //bool result = board.ShipDeployment(ship, new Vector2Int(0, 0));
         //Debug.Log(result);
         //result = board.ShipDeployment(ship, new Vector2Int(4, 1));
         //Debug.Log(result);
+        
     }
 }

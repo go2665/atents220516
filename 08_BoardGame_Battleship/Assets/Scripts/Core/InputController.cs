@@ -14,8 +14,15 @@ public class InputController : MonoBehaviour
     /// </summary>
     public Action<Vector2> onClick;
 
+    /// <summary>
+    /// 마우스를 움직일 때 실행될 델리게이트
+    /// </summary>
     public Action<Vector2> onMouseMove;
 
+    /// <summary>
+    /// 마우스의 휠을 돌릴 때 실행될 델리게이트
+    /// </summary>
+    public Action<float> onMouseWheel;
 
     /// <summary>
     /// 액션 맵
@@ -33,11 +40,12 @@ public class InputController : MonoBehaviour
         inputActions.Player.Enable();
         inputActions.Player.Click.performed += OnClick;
         inputActions.Player.MouseMove.performed += OnMouseMove;
-
-    }
+        inputActions.Player.MouseWheel.performed += OnMouseWheel;
+    }    
 
     private void OnDisable()
     {
+        inputActions.Player.MouseWheel.performed -= OnMouseWheel;
         inputActions.Player.MouseMove.performed -= OnMouseMove;
         inputActions.Player.Click.performed -= OnClick;
         inputActions.Player.Disable();
@@ -52,5 +60,10 @@ public class InputController : MonoBehaviour
     private void OnMouseMove(InputAction.CallbackContext context)
     {
         onMouseMove?.Invoke(context.ReadValue<Vector2>());
+    }
+
+    private void OnMouseWheel(InputAction.CallbackContext context)
+    {
+        onMouseWheel?.Invoke(context.ReadValue<float>());
     }
 }

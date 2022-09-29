@@ -277,7 +277,7 @@ MonoBehaviour:
   board: {fileID: 140398522}
   shipPrefab: {fileID: 7542479153382594121, guid: d3aa7ef54afa063419fe7d678bbab543,
     type: 3}
-  userPlayer: {fileID: 0}
+  userPlayer: {fileID: 2033042323}
 --- !u!4 &252022637
 Transform:
   m_ObjectHideFlags: 0
