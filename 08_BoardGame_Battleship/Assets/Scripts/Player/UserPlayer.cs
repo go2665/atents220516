@@ -108,18 +108,16 @@ public class UserPlayer : PlayerBase
         // 배치할 배가 있으면
         if (selectedShip != null)
         {
-            if (!selectedShip.IsDeployed)
+            if (selectedShip.IsDeployed)            
             {
-                // 클릭한 위치에 함선 배치 시도
-                Vector3 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
-                bool result = board.ShipDeployment(selectedShip, worldPos);
-                Debug.Log($"Ship deployment : {result}");
-            }
-            else
-            {
-                // 기존 함선배치를 취소하고 새롭게 배치
+                // 기존 함선배치를 취소
                 board.UndoShipDeployment(selectedShip);
             }
+
+            // 클릭한 위치에 함선 배치 시도
+            Vector3 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
+            bool result = board.ShipDeployment(selectedShip, worldPos);
+            //Debug.Log($"Ship deployment : {result}");
         }
     }
 
@@ -145,7 +143,7 @@ public class UserPlayer : PlayerBase
             Vector2Int gridPos = board.WorldToGrid(worldPos);
             worldPos = board.GridToWorld(gridPos);
 
-            selectedShip.transform.position = worldPos;
+            selectedShip.transform.position = worldPos;         
         }
     }
 
