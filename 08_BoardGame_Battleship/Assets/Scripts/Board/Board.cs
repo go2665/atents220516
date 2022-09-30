@@ -194,7 +194,14 @@ public class Board : MonoBehaviour
 
     public void UndoShipDeployment(Ship ship)
     {
-        foreach(var pos in shipPositions[ship.Type])
+#if UNITY_EDITOR
+        if (testShipDeploymentInfo != null)
+        {
+            testShipDeploymentInfo.UnMarkShipDeplymentInfo(ship.Type);    // 보여주던 것 삭제하기
+        }
+#endif
+
+        foreach (var pos in shipPositions[ship.Type])
         {
             shipInfo[pos.y * BoardSize + pos.x] = ShipType.None;
         }

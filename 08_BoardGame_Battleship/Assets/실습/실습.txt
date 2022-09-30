@@ -34,3 +34,9 @@
    2.1. 보드가 공격을 받으면 Info를 생성하고 Info에 포탄 정보용 머티리얼을 설정한다.
    2.2. Info는 BombInfo의 자삭으로 생성 되어야 한다.
    시간 6시 20분까지
+
+3. UndoShipDeployment 완성하기
+   3.1. ShipDeploymentInfo에 생성한 함종별 오브젝트들을 기록하는 딕셔너리 만들기
+   3.2. UnMarkShipDeplymentInfo 완성하기
+   3.3. UndoShipDeployment 실행시 확인용 오브젝트도 사라져야 함
+   시간 8시 30분까지
