@@ -8,8 +8,21 @@ public class ShipDeploymentInfo : MonoBehaviour
     public GameObject infoPrefab;
     public Material[] infoMaterials;
 
-    public GameObject MakeInfoObject(ShipType type)
+    private GameObject MakeInfoObject(ShipType type)
     {
-        return null;
+        GameObject obj = Instantiate(infoPrefab, transform);
+        Renderer renderer = obj.GetComponent<Renderer>();
+        renderer.material = infoMaterials[(int)(type - 1)];
+
+        return obj;
+    }
+
+    public void MarkShipDeplymentInfo(ShipType type, Vector3[] positions)
+    {
+        for(int i=0; i<positions.Length; i++)
+        {
+            GameObject obj = MakeInfoObject(type);
+            obj.transform.position = positions[i];
+        }
     }
 }

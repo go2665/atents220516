@@ -28,3 +28,4 @@
 1. ShipDeploymentInfo 완성하기
    1.1. 함선을 배치하면 Info를 생성하고 Info에 함선 색에 맞는 머티리얼을 설정한다.
    1.2. Info는 ShipDeploymentInfo의 자식으로 생성 되어야 한다.
+   시간 : 5시까지

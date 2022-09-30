@@ -1,8 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class UserPlayer : PlayerBase
 {
@@ -65,7 +65,9 @@ public class UserPlayer : PlayerBase
     /// <param name="type">선택할 배의 종류</param>
     public void SelectShipToDeploy(ShipType type)
     {
+        selectedShip?.gameObject.SetActive(false);
         selectedShip = ships[(int)(type - 1)];
+        OnMouseMove(Mouse.current.position.ReadValue());
         selectedShip.gameObject.SetActive(true);
     }
 
