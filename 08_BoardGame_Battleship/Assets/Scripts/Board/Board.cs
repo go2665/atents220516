@@ -16,6 +16,7 @@ public class Board : MonoBehaviour
 
 #if UNITY_EDITOR
     ShipDeploymentInfo testShipDeploymentInfo;
+    BombInfo testBombInfo;
 #endif
 
     private void Awake()
@@ -25,6 +26,7 @@ public class Board : MonoBehaviour
 
 #if UNITY_EDITOR
         testShipDeploymentInfo = GetComponentInChildren<ShipDeploymentInfo>();
+        testBombInfo = GetComponentInChildren<BombInfo>();
 #endif
     }
 
@@ -47,6 +49,13 @@ public class Board : MonoBehaviour
             {
                 bombInfo[pos.y * BoardSize + pos.x] = true; // 공격 받았다고 표시
                 result = true;
+
+#if UNITY_EDITOR
+                if( testBombInfo != null )
+                {
+
+                }
+#endif
             }
         }
 
