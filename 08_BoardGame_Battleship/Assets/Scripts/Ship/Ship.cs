@@ -24,7 +24,12 @@ public class Ship : MonoBehaviour
     /// <summary>
     /// 배의 모델링 게임오브젝트의 트랜스폼
     /// </summary>
-    Transform model;    
+    Transform model;
+
+    /// <summary>
+    /// 배가 배치되었는지에 대한 정보
+    /// </summary>
+    bool isDeployed = false;
 
     // 프로퍼티들 ----------------------------------------------------------------------------------
     /// <summary>
@@ -50,6 +55,11 @@ public class Ship : MonoBehaviour
     /// 배의 크기 확인용 프로퍼티
     /// </summary>
     public int Size { get => size; }
+
+    /// <summary>
+    /// 배의 배치 여부 확인용 프로퍼티
+    /// </summary>
+    public bool IsDeployed { get => isDeployed; set => isDeployed = value; }
 
     // 함수들 --------------------------------------------------------------------------------------
 

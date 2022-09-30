@@ -4,15 +4,21 @@ using UnityEngine;
 
 public class BombInfo : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public GameObject infoPrefab;
+    public Material infoMaterial;
+
+    private GameObject MakeInfoObject()
     {
-        
+        GameObject obj = Instantiate(infoPrefab, transform);
+        Renderer renderer = obj.GetComponent<Renderer>();
+        renderer.material = infoMaterial;
+
+        return obj;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void MarkBombInfo(Vector3 position)
     {
-        
+        GameObject obj = MakeInfoObject();
+        obj.transform.position = position;
     }
 }

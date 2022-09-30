@@ -14,6 +14,8 @@ public class Board : MonoBehaviour
     // 공격 당한 위치들을 표시하는 배열
     bool[] bombInfo;
 
+    Dictionary<ShipType, List<Vector2Int>> shipPositions;
+
 #if UNITY_EDITOR
     ShipDeploymentInfo testShipDeploymentInfo;
     BombInfo testBombInfo;
@@ -23,6 +25,13 @@ public class Board : MonoBehaviour
     {
         shipInfo = new ShipType[BoardSize * BoardSize]; // 배 배치 정보 배열 만들기
         bombInfo = new bool[BoardSize * BoardSize];     // 포탄 공격 당한 위치 배열 만들기
+
+        shipPositions = new Dictionary<ShipType, List<Vector2Int>>(ShipManager.Inst.ShipTypeCount);
+        shipPositions[ShipType.Carrier] = new List<Vector2Int>();
+        shipPositions[ShipType.Battleship] = new List<Vector2Int>();
+        shipPositions[ShipType.Destroyer] = new List<Vector2Int>();
+        shipPositions[ShipType.Submarine] = new List<Vector2Int>();
+        shipPositions[ShipType.PatrolBoat] = new List<Vector2Int>();
 
 #if UNITY_EDITOR
         testShipDeploymentInfo = GetComponentInChildren<ShipDeploymentInfo>();
@@ -53,7 +62,7 @@ public class Board : MonoBehaviour
 #if UNITY_EDITOR
                 if( testBombInfo != null )
                 {
-
+                    testBombInfo.MarkBombInfo(GridToWorld(pos));
                 }
 #endif
             }
@@ -162,7 +171,10 @@ public class Board : MonoBehaviour
             foreach (var tempPos in gridPositions)
             {
                 shipInfo[tempPos.y * BoardSize + tempPos.x] = ship.Type;    // 모든 칸에 이 배의 타입을 저장
+                shipPositions[ship.Type].Add(tempPos);
             }
+
+            ship.IsDeployed = true;
 
 #if UNITY_EDITOR
             if (testShipDeploymentInfo != null)
@@ -178,6 +190,16 @@ public class Board : MonoBehaviour
         }
 
         return result;
+    }
+
+    public void UndoShipDeployment(Ship ship)
+    {
+        foreach(var pos in shipPositions[ship.Type])
+        {
+            shipInfo[pos.y * BoardSize + pos.x] = ShipType.None;
+        }
+        shipPositions[ship.Type].Clear();
+        ship.IsDeployed = false;
     }
 
 
