@@ -14,10 +14,14 @@ public class Board : MonoBehaviour
     // 공격 당한 위치들을 표시하는 배열
     bool[] bombInfo;
 
+    ShipDeploymentInfo testShipDeploymentInfo;
+
     private void Awake()
     {
         shipInfo = new ShipType[BoardSize * BoardSize]; // 배 배치 정보 배열 만들기
         bombInfo = new bool[BoardSize * BoardSize];     // 포탄 공격 당한 위치 배열 만들기
+
+        testShipDeploymentInfo = GetComponentInChildren<ShipDeploymentInfo>();
     }
 
     private void Start()
@@ -145,6 +149,7 @@ public class Board : MonoBehaviour
             foreach (var tempPos in gridPositions)
             {
                 shipInfo[tempPos.y * BoardSize + tempPos.x] = ship.Type;    // 모든 칸에 이 배의 타입을 저장
+                //testShipDeploymentInfo    // 배치된 배를 보여주기
             }
         }
 
