@@ -31,6 +31,11 @@ public class Ship : MonoBehaviour
     /// </summary>
     bool isDeployed = false;
 
+    /// <summary>
+    /// 배의 HP
+    /// </summary>
+    int hp = 0;
+
     // 프로퍼티들 ----------------------------------------------------------------------------------
     /// <summary>
     /// 배의 타입 확인용 프로퍼티
@@ -89,6 +94,7 @@ public class Ship : MonoBehaviour
             default:
                 break;
         }
+        hp = size;
 
         // 배의 모델 생성 후 자식으로 추가
         GameObject modelPrefab = ShipManager.Inst.GetShipModel(type);
@@ -122,4 +128,24 @@ public class Ship : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 이 배가 공격당했을 때 실행될 함수
+    /// </summary>
+    public void OnAttacked()
+    {
+        Debug.Log($"{type} 공격 받음");
+        hp--;
+        if(hp <= 0)
+        {
+            OnDie();
+        }
+    }
+
+    /// <summary>
+    /// 이 배가 침몰당했을 때 실행될 함수
+    /// </summary>
+    private void OnDie()
+    {
+        Debug.Log($"{type} 폭발");
+    }
 }

@@ -10,6 +10,7 @@ public class Test_Ship : TestBase
     private void Start()
     {
         userPlayer.Test_SetState(PlayerState.ShipDeployment);
+        //userPlayer.Test_SetState(PlayerState.Battle);
     }
 
     protected override void OnTest1(InputAction.CallbackContext obj)
@@ -37,4 +38,8 @@ public class Test_Ship : TestBase
         userPlayer.SelectShipToDeploy(ShipType.PatrolBoat);
     }
 
+    protected override void OnTest0(InputAction.CallbackContext obj)
+    {
+        userPlayer.Test_SetState(PlayerState.Battle);
+    }
 }

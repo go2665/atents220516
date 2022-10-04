@@ -30,8 +30,11 @@ public class PlayerBase : MonoBehaviour
         ships = new Ship[shipTypeCount];
         for ( int i=0;i< shipTypeCount; i++)
         {
-            ships[i] = ShipManager.Inst.MakeShip((ShipType)(i + 1), this);
+            ships[i] = ShipManager.Inst.MakeShip((ShipType)(i + 1), this);            
+            board.onShipAttacked[(ShipType)(i + 1)] = ships[i].OnAttacked;  // 배 종류별로 공격 당할 때 실행될 함수 연결
         }
+        board.onShipAttacked[ShipType.None] = null; // 키값 추가용.
+
     }
 
     // 테스트 용도(플레이어의 상태 설정)

@@ -123,6 +123,10 @@ public class UserPlayer : PlayerBase
 
     protected virtual void OnClick_Battle(Vector2 screenPos)
     {
+        Vector3 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
+
+        bool result = board.Attacked(worldPos);
+
     }
 
     protected virtual void OnClick_GameEnd(Vector2 screenPos)

@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class Board : MonoBehaviour
 {
+    // 배가 공격당했을 때 실행될 델리게이트가 있는 딕셔너리
+    public Dictionary<ShipType, Action> onShipAttacked;
+
     // 게임 판의 크기(10*10)
     const int BoardSize = 10;
 
@@ -33,6 +36,8 @@ public class Board : MonoBehaviour
         shipPositions[ShipType.Submarine] = new List<Vector2Int>();
         shipPositions[ShipType.PatrolBoat] = new List<Vector2Int>();
 
+        onShipAttacked = new Dictionary<ShipType, Action>(ShipManager.Inst.ShipTypeCount);
+
 #if UNITY_EDITOR
         testShipDeploymentInfo = GetComponentInChildren<ShipDeploymentInfo>();
         testBombInfo = GetComponentInChildren<BombInfo>();
@@ -47,22 +52,36 @@ public class Board : MonoBehaviour
     /// <summary>
     /// 공격 당할 때 호출되는 함수
     /// </summary>
-    /// <param name="pos">공격 당한 위치</param>
+    /// <param name="worldPos">공격 당한 위치(월드 좌표)</param>
     /// <returns>true면 실제로 공격을 받았다. false면 여러 이유로 공격이 안됬다.</returns>
-    public bool Attacked(Vector2Int pos)
+    public bool Attacked(Vector3 worldPos)
+    {
+        return Attacked(WorldToGrid(worldPos));
+    }
+
+    /// <summary>
+    /// 공격 당할 때 호출되는 함수
+    /// </summary>
+    /// <param name="gridPos">공격 당한 위치(그리드 좌표)</param>
+    /// <returns>true면 실제로 공격을 받았다. false면 여러 이유로 공격이 안됬다.</returns>
+    public bool Attacked(Vector2Int gridPos)
     {
         bool result = false;
-        if(IsValidPosition(pos))    // 적절한 좌표인지 확인
+        if(IsValidPosition(gridPos))    // 적절한 좌표인지 확인
         {
-            if (IsAttackable(pos))  // 공격 가능한 위치인지 확인(공격했던 곳은 다시 공격 못함)
+            if (IsAttackable(gridPos))  // 공격 가능한 위치인지 확인(공격했던 곳은 다시 공격 못함)
             {
-                bombInfo[pos.y * BoardSize + pos.x] = true; // 공격 받았다고 표시
+                int index = gridPos.y * BoardSize + gridPos.x;
+                bombInfo[index] = true; // 공격 받은 위치 표시
+
+                onShipAttacked[shipInfo[index]]?.Invoke();  // 해당 위치에 배가 있으면 배가 공격당한 함수 실행
+
                 result = true;
 
 #if UNITY_EDITOR
                 if( testBombInfo != null )
                 {
-                    testBombInfo.MarkBombInfo(GridToWorld(pos));
+                    testBombInfo.MarkBombInfo(GridToWorld(gridPos));
                 }
 #endif
             }
