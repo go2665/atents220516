@@ -13,12 +13,6 @@ public class EnemyPlayer : PlayerBase
         AutoShipDeployment();
     }
 
-    // 배치 기능
 
-    void AutoShipDeployment()
-    {
-        // board.IsShipDeployment(, );
-        // ships[0]
-
-    }
+    
 }

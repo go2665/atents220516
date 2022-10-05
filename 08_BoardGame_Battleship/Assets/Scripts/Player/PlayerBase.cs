@@ -55,6 +55,35 @@ public class PlayerBase : MonoBehaviour
 
     }
 
+    protected void AutoShipDeployment()
+    {
+        foreach (var ship in ships)
+        {
+            if (ship.IsDeployed)
+                continue;
+
+            int rotateCount = UnityEngine.Random.Range(0, ShipManager.Inst.ShipDirectionCount);
+            bool isCCW = (UnityEngine.Random.Range(0, 10) % 2) == 0;
+            for (int i=0;i< rotateCount;i++)
+            {
+                ship.Rotate(isCCW);
+            }
+
+            bool result;
+            Vector2Int randPos;
+            do
+            {
+                randPos = board.RandomPosition();
+                result = board.IsShipDeployment(ship, randPos);
+            } while (!result);
+
+            board.ShipDeployment(ship, randPos);
+        }
+
+        // 1. 배들끼리 붙으면 안된다.
+        // 2. 벽에 배의 옆면이 붙으면 안된다.
+    }
+
     // 테스트 용도(플레이어의 상태 설정)
     public void Test_SetState(PlayerState state)
     {

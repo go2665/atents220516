@@ -284,6 +284,11 @@ public class Board : MonoBehaviour
         return new Vector2Int( (int)diff.x, (int)-diff.z);
     }
 
+    public Vector2Int RandomPosition()
+    {
+        return new Vector2Int(UnityEngine.Random.Range(0, BoardSize), UnityEngine.Random.Range(0, BoardSize));
+    }
+
     /// <summary>
     /// 마우스 클릭 입력 테스트 함수
     /// </summary>
