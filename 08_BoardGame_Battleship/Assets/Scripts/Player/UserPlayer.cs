@@ -183,6 +183,7 @@ public class UserPlayer : PlayerBase
 
             SelectedShip.transform.position = worldPos + Vector3.up * 2;
 
+            // 배치 가능 여부에 따라 색상 변경
             bool isSuccess = board.IsShipDeployment(SelectedShip, gridPos);
             ShipManager.Inst.SetTempShipColor(isSuccess);
         }
@@ -211,6 +212,10 @@ public class UserPlayer : PlayerBase
                 ccw = true;
 
             SelectedShip.Rotate(ccw);
+
+            // 배치 가능 여부에 따라 색상 변경
+            bool isSuccess = board.IsShipDeployment(SelectedShip, SelectedShip.transform.position);
+            ShipManager.Inst.SetTempShipColor(isSuccess);
         }
     }
 

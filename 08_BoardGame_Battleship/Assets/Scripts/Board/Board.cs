@@ -182,7 +182,19 @@ public class Board : MonoBehaviour
     /// 특정 위치에 함선을 배치할 수 있는지 여부를 리턴
     /// </summary>
     /// <param name="ship">확인할 배(크기, 방향 사용)</param>
-    /// <param name="pos">확인할 위치</param>
+    /// <param name="pos">확인할 위치(월드 포지션)</param>
+    /// <returns>true면 배치가능, false 불가능</returns>
+    public bool IsShipDeployment(Ship ship, Vector3 pos)
+    {
+        Vector2Int gridPos = WorldToGrid(pos);
+        return IsShipDeployment(ship, gridPos, out _);
+    }
+
+    /// <summary>
+    /// 특정 위치에 함선을 배치할 수 있는지 여부를 리턴
+    /// </summary>
+    /// <param name="ship">확인할 배(크기, 방향 사용)</param>
+    /// <param name="pos">확인할 위치(그리드 포지션)</param>
     /// <returns>true면 배치가능, false 불가능</returns>
     public bool IsShipDeployment(Ship ship, Vector2Int pos)
     {
@@ -193,7 +205,7 @@ public class Board : MonoBehaviour
     /// 특정 위치에 함선을 배치할 수 있는지 여부를 리턴
     /// </summary>
     /// <param name="ship">확인할 배(크기, 방향 사용)</param>
-    /// <param name="pos">확인할 위치</param>
+    /// <param name="pos">확인할 위치(그리드 포지션)</param>
     /// <param name="gridPositions">확인할 배의 그리드 좌표들</param>
     /// <returns>true면 배치가능, false 불가능</returns>
     private bool IsShipDeployment(Ship ship, Vector2Int pos, out Vector2Int[] gridPositions)
