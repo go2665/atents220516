@@ -36,6 +36,14 @@ public class Ship : MonoBehaviour
     /// </summary>
     int hp = 0;
 
+    /// <summary>
+    /// 배가 가지고 있는 모델의 랜더러. 머티리얼 변경용
+    /// </summary>
+    Renderer shipRenderer;
+
+    // 델리게이트 ----------------------------------------------------------------------------------
+    public Action<ShipType> onDead;
+
     // 프로퍼티들 ----------------------------------------------------------------------------------
     /// <summary>
     /// 배의 타입 확인용 프로퍼티
@@ -65,6 +73,11 @@ public class Ship : MonoBehaviour
     /// 배의 배치 여부 확인용 프로퍼티
     /// </summary>
     public bool IsDeployed { get => isDeployed; set => isDeployed = value; }
+
+    /// <summary>
+    /// 배가 가지고 있는 모델의 랜더러에 접근하기 위한 프로퍼티
+    /// </summary>
+    public Renderer Renderer => shipRenderer;
 
     // 함수들 --------------------------------------------------------------------------------------
 
@@ -100,6 +113,9 @@ public class Ship : MonoBehaviour
         GameObject modelPrefab = ShipManager.Inst.GetShipModel(type);
         GameObject obj = Instantiate(modelPrefab, transform);
 
+        // 배의 모델의 랜더러 가져오기
+        shipRenderer = obj.GetComponentInChildren<Renderer>();  
+
         // 모델의 트랜스폼 저장
         model = obj.transform;
 
@@ -133,7 +149,7 @@ public class Ship : MonoBehaviour
     /// </summary>
     public void OnAttacked()
     {
-        Debug.Log($"{type} 공격 받음");
+        //Debug.Log($"{type} 공격 받음");
         hp--;
         if(hp <= 0)
         {
@@ -146,6 +162,7 @@ public class Ship : MonoBehaviour
     /// </summary>
     private void OnDie()
     {
-        Debug.Log($"{type} 폭발");
+        //Debug.Log($"{type} 폭발");
+        onDead?.Invoke(type);
     }
 }

@@ -10,6 +10,27 @@ public class UserPlayer : PlayerBase
     /// 배치하기 위해 선택한 배
     /// </summary>
     Ship selectedShip = null;
+    Ship SelectedShip
+    {
+        get => selectedShip;
+        set
+        {
+            if( selectedShip != value ) // 값이 변경될 때만 적용
+            {
+                if (selectedShip != null)
+                {
+                    // 이전에 선택된 배가 있으면 머티리얼을 원상 복귀
+                    selectedShip.Renderer.material = ShipManager.Inst.NormalShipMaterial;
+                }
+                selectedShip = value;
+                if (selectedShip != null)
+                {
+                    // 새롭게 할당된 배는 머티리얼을 배치모드용 머티리얼로 설정
+                    selectedShip.Renderer.material = ShipManager.Inst.TempShipMaterial;
+                }
+            }
+        }
+    }
 
     /// <summary>
     /// 상태별로 클릭했을 때 실행될 함수들
@@ -65,10 +86,19 @@ public class UserPlayer : PlayerBase
     /// <param name="type">선택할 배의 종류</param>
     public void SelectShipToDeploy(ShipType type)
     {
-        selectedShip?.gameObject.SetActive(false);
-        selectedShip = ships[(int)(type - 1)];
-        OnMouseMove(Mouse.current.position.ReadValue());
-        selectedShip.gameObject.SetActive(true);
+        if (SelectedShip != null)   // 이미 선택 중인 배가 있다면
+        {
+            SelectedShip.gameObject.SetActive(false);   // 비활성화 하고
+        }
+        SelectedShip = ships[(int)(type - 1)];          // 새 배 선택
+
+        if(SelectedShip.IsDeployed) // 이미 배치된 배를 다시 배치하는 경우
+        {
+            board.UndoShipDeployment(SelectedShip);     // 기존에 배치 되었던 것을 취소
+        }
+
+        OnMouseMove(Mouse.current.position.ReadValue());// 마우스 위치로 배 이동
+        SelectedShip.gameObject.SetActive(true);        // 배가 보이게 활성화
     }
 
     /// <summary>
@@ -106,18 +136,21 @@ public class UserPlayer : PlayerBase
     protected virtual void OnClick_ShipDeployment(Vector2 screenPos)
     {
         // 배치할 배가 있으면
-        if (selectedShip != null)
+        if (SelectedShip != null)
         {
-            if (selectedShip.IsDeployed)            
+            if (SelectedShip.IsDeployed)            
             {
-                // 기존 함선배치를 취소
-                board.UndoShipDeployment(selectedShip);
+                // 이미 배치가 된 배면, 기존 함선배치를 취소
+                board.UndoShipDeployment(SelectedShip);
             }
 
             // 클릭한 위치에 함선 배치 시도
             Vector3 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
-            bool result = board.ShipDeployment(selectedShip, worldPos);
-            //Debug.Log($"Ship deployment : {result}");
+            bool result = board.ShipDeployment(SelectedShip, worldPos);
+            if (result)
+            {
+                SelectedShip = null;    // 배치에 성공했으면 SelectedShip 해제
+            }
         }
     }
 
@@ -139,15 +172,15 @@ public class UserPlayer : PlayerBase
 
     protected virtual void OnMouseMove_ShipDeployment(Vector2 screenPos)
     {
-        // 배치할 배가 있으면
-        if (selectedShip != null)
+        // 배치할 배를 선택중이고 아직 배치가 안됬을 때
+        if (SelectedShip != null && !SelectedShip.IsDeployed)
         {
             // 마우스 포인터가 존재하는 그리드에 따라 함선 이동
             Vector3 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
             Vector2Int gridPos = board.WorldToGrid(worldPos);
             worldPos = board.GridToWorld(gridPos);
 
-            selectedShip.transform.position = worldPos;         
+            SelectedShip.transform.position = worldPos;         
         }
     }
 
@@ -166,14 +199,14 @@ public class UserPlayer : PlayerBase
     private void OnMouseWheel_ShipDeployment(float wheel)
     {
         // 배치할 배가 있으면
-        if (selectedShip != null)
+        if (SelectedShip != null)
         {
             // 휠버튼 돌렸을 때 돌리는 방향에 따라 배치할 함선 회전
             bool ccw = false;
             if (wheel > 0)
                 ccw = true;
 
-            selectedShip.Rotate(ccw);
+            SelectedShip.Rotate(ccw);
         }
     }
 

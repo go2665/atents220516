@@ -19,6 +19,11 @@ public class ShipManager : Singleton<ShipManager>
     public GameObject[] shipModels;
 
     /// <summary>
+    /// 배의 머티리얼(0번째는 정상, 1번째는 배치모드)
+    /// </summary>
+    public Material[] shipMaterials;
+
+    /// <summary>
     /// 배의 종류
     /// </summary>
     int shipTypeCount;
@@ -37,6 +42,16 @@ public class ShipManager : Singleton<ShipManager>
     /// 배가 바라볼 수 있는 방향이 몇 방향인지 알기 위한 프로퍼티
     /// </summary>
     public int ShipDirectionCount { get => shipDirectionCount; }
+
+    /// <summary>
+    /// 배가 정상적인 상황일 때 사용하는 머티리얼 프로퍼티
+    /// </summary>
+    public Material NormalShipMaterial => shipMaterials[0];
+
+    /// <summary>
+    /// 배가 배치모드일 때 사용하는 머티리얼 프로퍼티
+    /// </summary>
+    public Material TempShipMaterial => shipMaterials[1];
 
     protected override void Awake()
     {
