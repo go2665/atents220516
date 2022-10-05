@@ -23,8 +23,11 @@ public class ShipManager : Singleton<ShipManager>
     /// </summary>
     public Material[] shipMaterials;
 
+    readonly Color successColor = new(0, 1, 0, 0.2f);
+    readonly Color failColor = new(1, 0, 0, 0.2f);
+
     /// <summary>
-    /// 배의 종류
+    /// 배의 종류 개수
     /// </summary>
     int shipTypeCount;
 
@@ -60,6 +63,8 @@ public class ShipManager : Singleton<ShipManager>
         // enum들의 값 가지수 찾아 저장하기
         shipTypeCount = Enum.GetValues(typeof(ShipType)).Length - 1;
         shipDirectionCount = Enum.GetValues(typeof(ShipDirection)).Length;
+
+        SetTempShipColor(true);
     }
 
     /// <summary>
@@ -87,5 +92,21 @@ public class ShipManager : Singleton<ShipManager>
     public GameObject GetShipModel(ShipType type)
     {
         return shipModels[(int)type - 1];
+    }
+
+    /// <summary>
+    /// 배치 모드의 배의 머티리얼 색상을 지정하기
+    /// </summary>
+    /// <param name="isSuccess">true면 투명한 녹색, false면 투명한 빨강</param>
+    public void SetTempShipColor(bool isSuccess)
+    {
+        if( isSuccess )
+        {
+            TempShipMaterial.SetColor("_Color", successColor);
+        }
+        else
+        {
+            TempShipMaterial.SetColor("_Color", failColor);
+        }
     }
 }

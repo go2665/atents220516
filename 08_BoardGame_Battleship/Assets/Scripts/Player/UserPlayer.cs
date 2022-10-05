@@ -182,6 +182,9 @@ public class UserPlayer : PlayerBase
             worldPos = board.GridToWorld(gridPos);
 
             SelectedShip.transform.position = worldPos + Vector3.up * 2;
+
+            bool isSuccess = board.IsShipDeployment(SelectedShip, gridPos);
+            ShipManager.Inst.SetTempShipColor(isSuccess);
         }
     }
 

@@ -148,8 +148,57 @@ public class Board : MonoBehaviour
     /// <returns>성공여부(true면 성공)</returns>
     public bool ShipDeployment(Ship ship, Vector2Int pos)
     {
-        Vector2Int[] gridPositions = new Vector2Int[ship.Size];
+        Vector2Int[] gridPositions;
+        bool result = IsShipDeployment(ship, pos, out gridPositions);
 
+        // 모든 칸이 배치가 가능한 지역이면
+        if (result)
+        {
+            foreach (var tempPos in gridPositions)
+            {
+                shipInfo[tempPos.y * BoardSize + tempPos.x] = ship.Type;    // 모든 칸에 이 배의 타입을 저장
+                shipPositions[ship.Type].Add(tempPos);
+            }
+
+            ship.IsDeployed = true;
+
+#if UNITY_EDITOR
+            if (testShipDeploymentInfo != null)
+            {
+                Vector3[] worldPositions = new Vector3[gridPositions.Length];
+                for (int i = 0; i < worldPositions.Length; i++)
+                {
+                    worldPositions[i] = GridToWorld(gridPositions[i]);
+                }
+                testShipDeploymentInfo.MarkShipDeplymentInfo(ship.Type, worldPositions);    // 배치된 배를 보여주기
+            }
+#endif
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    /// 특정 위치에 함선을 배치할 수 있는지 여부를 리턴
+    /// </summary>
+    /// <param name="ship">확인할 배(크기, 방향 사용)</param>
+    /// <param name="pos">확인할 위치</param>
+    /// <returns>true면 배치가능, false 불가능</returns>
+    public bool IsShipDeployment(Ship ship, Vector2Int pos)
+    {
+        return IsShipDeployment(ship, pos, out _);
+    }
+
+    /// <summary>
+    /// 특정 위치에 함선을 배치할 수 있는지 여부를 리턴
+    /// </summary>
+    /// <param name="ship">확인할 배(크기, 방향 사용)</param>
+    /// <param name="pos">확인할 위치</param>
+    /// <param name="gridPositions">확인할 배의 그리드 좌표들</param>
+    /// <returns>true면 배치가능, false 불가능</returns>
+    private bool IsShipDeployment(Ship ship, Vector2Int pos, out Vector2Int[] gridPositions)
+    {
+        gridPositions = new Vector2Int[ship.Size];
         Vector2Int offset = Vector2Int.zero;    // 배 머리부터 꼬리까지 한칸씩 확인하기 위한 값
         switch (ship.Direction)
         {
@@ -168,44 +217,20 @@ public class Board : MonoBehaviour
         }
 
         // 배 머리부터 시작해서 배꼬리까지 좌표를 하나씩 구하기
-        for( int i=0;i<ship.Size;i++)
+        for (int i = 0; i < ship.Size; i++)
         {
             gridPositions[i] = pos + offset * i;
         }
 
         // 배의 각 부분 좌표를 확인해서 해당칸이 맵 바깥이거나 다른 배가 하나라도 있으면 실패
         bool result = true;
-        foreach(var tempPos in gridPositions)
+        foreach (var tempPos in gridPositions)
         {
-            if( !IsValidPosition(tempPos) || IsShipDeployed(tempPos) )
+            if (!IsValidPosition(tempPos) || IsShipDeployed(tempPos))
             {
                 result = false;
                 break;
             }
-        }
-
-        // 모든 칸이 배치가 가능한 지역이면
-        if (result)
-        {
-            foreach (var tempPos in gridPositions)
-            {
-                shipInfo[tempPos.y * BoardSize + tempPos.x] = ship.Type;    // 모든 칸에 이 배의 타입을 저장
-                shipPositions[ship.Type].Add(tempPos);
-            }
-
-            ship.IsDeployed = true;
-
-#if UNITY_EDITOR
-            if (testShipDeploymentInfo != null)
-            {
-                Vector3[] worldPositions = new Vector3[gridPositions.Length];
-                for(int i=0;i<worldPositions.Length;i++)
-                {
-                    worldPositions[i] = GridToWorld(gridPositions[i]);
-                }
-                testShipDeploymentInfo.MarkShipDeplymentInfo(ship.Type, worldPositions);    // 배치된 배를 보여주기
-            }
-#endif
         }
 
         return result;

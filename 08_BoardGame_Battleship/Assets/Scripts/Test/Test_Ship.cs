@@ -37,9 +37,12 @@ public class Test_Ship : TestBase
     {
         userPlayer.SelectShipToDeploy(ShipType.PatrolBoat);
     }
-
+    
     protected override void OnTest0(InputAction.CallbackContext obj)
     {
-        userPlayer.Test_SetState(PlayerState.Battle);
+        //userPlayer.Test_SetState(PlayerState.Battle);
+        Material mat = ShipManager.Inst.TempShipMaterial;
+        mat.SetColor("_Color", new Color(1, 0, 0, 0.2f));
+
     }
 }
