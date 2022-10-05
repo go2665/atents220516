@@ -37,6 +37,11 @@ public class Ship : MonoBehaviour
     int hp = 0;
 
     /// <summary>
+    /// 함선의 생존 여부
+    /// </summary>
+    bool isAlive = true;    
+
+    /// <summary>
     /// 배가 가지고 있는 모델의 랜더러. 머티리얼 변경용
     /// </summary>
     Renderer shipRenderer;
@@ -73,6 +78,11 @@ public class Ship : MonoBehaviour
     /// 배의 배치 여부 확인용 프로퍼티
     /// </summary>
     public bool IsDeployed { get => isDeployed; set => isDeployed = value; }
+
+    /// <summary>
+    /// 함선의 생존 여부를 알려주는 프로퍼티
+    /// </summary>
+    public bool IsAlive => isAlive;
 
     /// <summary>
     /// 배가 가지고 있는 모델의 랜더러에 접근하기 위한 프로퍼티
@@ -162,7 +172,8 @@ public class Ship : MonoBehaviour
     /// </summary>
     private void OnDie()
     {
-        //Debug.Log($"{type} 폭발");
+        Debug.Log($"{type} 침몰");
+        isAlive = false;
         onDead?.Invoke(type);
     }
 }

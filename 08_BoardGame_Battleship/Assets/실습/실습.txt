@@ -48,3 +48,7 @@
 
 2. 함선 배치모드에서 함선을 회전할 때 배치 가능 여부에 따라 TempShip 색상 변경하기
    시간 6시 10분까지
+
+3. EnemyPlayer의 AutoShipDeployment() 완성하기
+   3.1. AutoShipDeployment가 실행되면 모든 함선이 랜덤하게 자동으로 배치된다.
+   시간 8시 20분까지

@@ -52,3 +52,6 @@ MonoBehaviour:
   - {fileID: 89435443378607436, guid: 9bd5d2c1d62d695498cc26088146dcd4, type: 3}
   - {fileID: 89435443378607436, guid: 9bd5d2c1d62d695498cc26088146dcd4, type: 3}
   - {fileID: 7167784391986941281, guid: 7efab705af51d764897a16d74ac29cec, type: 3}
+  shipMaterials:
+  - {fileID: 2100000, guid: 6406669ef54699544b7d1152505a52f0, type: 2}
+  - {fileID: 2100000, guid: fe651ff115a2c224f8deab921e0e473f, type: 2}

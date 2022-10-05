@@ -19,6 +19,6 @@ public class BombInfo : MonoBehaviour
     public void MarkBombInfo(Vector3 position)
     {
         GameObject obj = MakeInfoObject();
-        obj.transform.position = position;
+        obj.transform.position = position + Vector3.up;
     }
 }
