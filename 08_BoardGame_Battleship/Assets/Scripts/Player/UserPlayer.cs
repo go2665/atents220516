@@ -149,6 +149,7 @@ public class UserPlayer : PlayerBase
             bool result = board.ShipDeployment(SelectedShip, worldPos);
             if (result)
             {
+                SelectedShip.transform.position -= Vector3.up * 2;
                 SelectedShip = null;    // 배치에 성공했으면 SelectedShip 해제
             }
         }
@@ -180,7 +181,7 @@ public class UserPlayer : PlayerBase
             Vector2Int gridPos = board.WorldToGrid(worldPos);
             worldPos = board.GridToWorld(gridPos);
 
-            SelectedShip.transform.position = worldPos;         
+            SelectedShip.transform.position = worldPos + Vector3.up * 2;
         }
     }
 

@@ -40,3 +40,8 @@
    3.2. UnMarkShipDeplymentInfo 완성하기
    3.3. UndoShipDeployment 실행시 확인용 오브젝트도 사라져야 함
    시간 8시 30분까지
+
+
+10/5
+1. 코드 확인
+   시간 5시 5분까지
