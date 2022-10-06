@@ -83,11 +83,12 @@ public class PlayerBase : MonoBehaviour
     }
 
         
-
+    /// <summary>
+    /// 자동 함선 배치 함수
+    /// 가능한 배끼리 붙지 않고 벽부분에 배가 배치되지 않도록 설정
+    /// </summary>
     public void AutoShipDeployment()
     {
-        // 1. 배들끼리 붙으면 안된다.
-        // 2. 벽에 배의 옆면이 붙으면 안된다.
         int capacity = Board.BoardSize * Board.BoardSize;
         List<int> highPriority = new(capacity);
         List<int> lowPriority = new(capacity);
@@ -153,29 +154,54 @@ public class PlayerBase : MonoBehaviour
             // 위치 가져오기
             Vector2Int pos;
             Vector2Int[] shipPositions;
-            bool result = true;
+            bool failDeployment = true;
+            int counter = 0;
+            // high 쪽 탐색
             do
             {
-                List<int> positionList;
-                if (highPriority.Count > 0)
+                int headIndex = highPriority[0];
+                highPriority.RemoveAt(0);
+                pos = new Vector2Int(headIndex % Board.BoardSize, headIndex / Board.BoardSize);
+
+                failDeployment = !board.IsShipDeployment(ship, pos, out shipPositions);
+                if (failDeployment)
                 {
-                    positionList = highPriority;
+                    // 배치 실패. 원래 리스트에 되돌리기
+                    highPriority.Add(headIndex);
                 }
                 else
                 {
-                    positionList = lowPriority;
+                    // 머리는 배치 성공. 머리를 제외한 나머지 부분이 전부 high에 있는지 확인
+                    for (int i = 1; i < shipPositions.Length; i++)
+                    {
+                        int bodyIndex = shipPositions[i].x + shipPositions[i].y * Board.BoardSize;
+                        if (!highPriority.Exists((x) => x == bodyIndex))
+                        {
+                            highPriority.Add(headIndex);
+                            failDeployment = true;
+                            break;
+                        }
+                    }
                 }
-                int index = positionList[0];
-                positionList.RemoveAt(0);
-                pos = new Vector2Int(index % Board.BoardSize, index / Board.BoardSize);
-                
-                result = !board.IsShipDeployment(ship, pos, out shipPositions);
-                if(result)
+                counter++;
+            } while (failDeployment && counter < 5 && highPriority.Count > 0);
+            //Debug.Log($"Counter : {counter}");
+
+            // low쪽 탐색
+            while (failDeployment)
+            {
+                //Debug.Log("Low 확인 중");
+                int headIndex = lowPriority[0];
+                lowPriority.RemoveAt(0);
+                pos = new Vector2Int(headIndex % Board.BoardSize, headIndex / Board.BoardSize);
+
+                failDeployment = !board.IsShipDeployment(ship, pos, out shipPositions);
+                if (failDeployment)
                 {
                     // 배치 실패. 원래 리스트에 되돌리기
-                    positionList.Add(index);
+                    lowPriority.Add(headIndex);
                 }
-            } while (result);
+            }
 
             // 위치는 골라졌다.
             board.ShipDeployment(ship, pos);        // 함선 배치
