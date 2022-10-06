@@ -112,14 +112,19 @@ public class PlayerBase : MonoBehaviour
             }
         }
 
-        // highPriority를 섞기(겹치는 숫자없이 순서만 섞여야 한다.)
+        // highPriority를 섞기(피셔 예이츠 알고리즘 사용)
         int[] temp = highPriority.ToArray();
-
-        // temp 랜덤한 위치에 있는 숫자 하나를 선택한다.
-        // 선택한 숫자와 제일 마지막에 있는 숫자와 교환한다.
-        // 교환한 마지막 부분을 제외한 나머지 부분에서 랜덤하게 선택한다.
-        // 선택한 숫자와 제일 마지막에서 두번째 숫자와 교환한다.
-        // 계속 반복
+        for(int i = temp.Length - 1; i>-1; i--) // 오른쪽 기준으로 셔플
+        {
+            int randIndex = UnityEngine.Random.Range(0, i);
+            (temp[randIndex], temp[i]) = (temp[i], temp[randIndex]);
+        }
+        //for (int i = 0; i < temp.Length - 1; i++) // 왼쪽 기준으로 셔플
+        //{
+        //    int index = Random.Range(i + 1, temp.Length);
+        //    (temp[i], temp[index]) = (temp[index], temp[i]);
+        //}
+        highPriority = new List<int>(temp);        
 
 
 
