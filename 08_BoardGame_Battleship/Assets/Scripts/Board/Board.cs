@@ -9,7 +9,7 @@ public class Board : MonoBehaviour
     public Dictionary<ShipType, Action> onShipAttacked;
 
     // 게임 판의 크기(10*10)
-    const int BoardSize = 10;
+    public const int BoardSize = 10;
 
     // 배의 배치 정보를 저장한 배열
     ShipType[] shipInfo;    // 2차원 배열이지만 1차원 배열로 표현

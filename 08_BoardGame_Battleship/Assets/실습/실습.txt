@@ -52,3 +52,7 @@
 3. EnemyPlayer의 AutoShipDeployment() 완성하기
    3.1. AutoShipDeployment가 실행되면 모든 함선이 랜덤하게 자동으로 배치된다.
    시간 8시 20분까지 -> 30분까지
+
+10/6
+1. 셔플 알고리즘 구현하기
+  시간 : 5시 10분까지

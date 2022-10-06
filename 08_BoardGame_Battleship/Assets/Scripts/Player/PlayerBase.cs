@@ -55,7 +55,7 @@ public class PlayerBase : MonoBehaviour
 
     }
 
-    protected void AutoShipDeployment()
+    public void AutoShipDeployment_v1()
     {
         foreach (var ship in ships)
         {
@@ -78,10 +78,66 @@ public class PlayerBase : MonoBehaviour
             } while (!result);
 
             board.ShipDeployment(ship, randPos);
-        }
+        }        
+    }
 
+        
+
+    public void AutoShipDeployment()
+    {
         // 1. 배들끼리 붙으면 안된다.
         // 2. 벽에 배의 옆면이 붙으면 안된다.
+        int capacity = Board.BoardSize * Board.BoardSize;
+        List<int> highPriority = new(capacity);
+        List<int> lowPriority = new(capacity);
+
+        // 가장자리 부분을 낮은 우선 순위에 배치
+        for (int i = 0; i < capacity; i++)
+        {
+            if ( i % 10 == 0 
+                || i % 10 == (Board.BoardSize - 1)
+                || (0 < i && i < (Board.BoardSize - 1))
+                || ((Board.BoardSize - 1) * Board.BoardSize < i && i < (Board.BoardSize * Board.BoardSize - 1)))
+            {
+                // Board.BoardSize가 10일때
+                // 0~9
+                // 10,20,30,40,50,60,70,80,90
+                // 19,29,39,49,59,69,79,89,99
+                // 90~99
+                lowPriority.Add(i);
+            }
+            else
+            {
+                highPriority.Add(i);
+            }
+        }
+
+        // highPriority를 섞기(겹치는 숫자없이 순서만 섞여야 한다.)
+        int[] temp = highPriority.ToArray();
+
+        // temp 랜덤한 위치에 있는 숫자 하나를 선택한다.
+        // 선택한 숫자와 제일 마지막에 있는 숫자와 교환한다.
+        // 교환한 마지막 부분을 제외한 나머지 부분에서 랜덤하게 선택한다.
+        // 선택한 숫자와 제일 마지막에서 두번째 숫자와 교환한다.
+        // 계속 반복
+
+
+
+        foreach (var ship in ships)
+        {
+            if (ship.IsDeployed)
+                continue;
+
+
+        }
+    }
+
+    public void UndoAllShipDeployment()
+    {        
+        foreach(var ship in ships)
+        {
+            board.UndoShipDeployment(ship);
+        }
     }
 
     // 테스트 용도(플레이어의 상태 설정)
