@@ -208,7 +208,7 @@ public class Board : MonoBehaviour
     /// <param name="pos">확인할 위치(그리드 포지션)</param>
     /// <param name="gridPositions">확인할 배의 그리드 좌표들</param>
     /// <returns>true면 배치가능, false 불가능</returns>
-    private bool IsShipDeployment(Ship ship, Vector2Int pos, out Vector2Int[] gridPositions)
+    public bool IsShipDeployment(Ship ship, Vector2Int pos, out Vector2Int[] gridPositions)
     {
         gridPositions = new Vector2Int[ship.Size];
         Vector2Int offset = Vector2Int.zero;    // 배 머리부터 꼬리까지 한칸씩 확인하기 위한 값
