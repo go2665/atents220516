@@ -30,4 +30,15 @@ public class Test_EnemyPlayer : TestBase
         Debug.Log(ret);
 
     }
+
+    protected override void OnTest3(InputAction.CallbackContext obj)
+    {
+        int[] temp = { 1,2,3,4,5 };
+        Utils.Shuffle<int>(temp);
+        Debug.Log(temp);
+
+        //List<int> temp2 = new List<int>() { 1, 2, 3, 4, 5 };
+        //Utils.Shuffle<int>(temp2.ToArray());    // 이것은 안됨
+        //Debug.Log(temp2);
+    }
 }

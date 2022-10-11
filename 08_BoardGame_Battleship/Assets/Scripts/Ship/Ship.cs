@@ -155,6 +155,19 @@ public class Ship : MonoBehaviour
     }
 
     /// <summary>
+    /// 배를 랜덤한 방향으로 랜덤덤한 횟수만큼 90도씩 회전 시키는 함수
+    /// </summary>
+    public void RandomRotate()
+    {
+        int rotateCount = UnityEngine.Random.Range(0, ShipManager.Inst.ShipDirectionCount); // 랜덤한 회수로
+        bool isCCW = (UnityEngine.Random.Range(0, 10) % 2) == 0;                            // 랜덤한 방향으로
+        for (int i = 0; i < rotateCount; i++)
+        {
+            Rotate(isCCW);
+        }
+    }
+
+    /// <summary>
     /// 이 배가 공격당했을 때 실행될 함수
     /// </summary>
     public void OnAttacked()
