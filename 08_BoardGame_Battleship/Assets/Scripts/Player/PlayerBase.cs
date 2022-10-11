@@ -389,7 +389,7 @@ public class PlayerBase : MonoBehaviour
 #if UNITY_EDITOR
         // highCandidatePrefab 생성하기
         GameObject obj = Instantiate(highCandidatePrefab);
-        obj.transform.position = oppenent.board.IndexToWorld(index);
+        obj.transform.position = oppenent.board.IndexToWorld(index) + Vector3.up;
         highCandidateMark[index] = obj;
 #endif
     }
