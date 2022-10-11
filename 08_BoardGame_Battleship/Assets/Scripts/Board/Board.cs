@@ -75,7 +75,7 @@ public class Board : MonoBehaviour
                 int index = GridToIndex(gridPos);
                 bombInfo[index] = true; // 공격 받은 위치 표시
 
-                if(shipInfo[index] != ShipType.None)
+                if(shipInfo[index] != ShipType.None)    // 배가 명중되어야 true 리턴
                 {
                     result = true;
                 }
@@ -291,6 +291,11 @@ public class Board : MonoBehaviour
         Vector3 diff = worldPos - transform.position;
 
         return new Vector2Int( (int)diff.x, (int)-diff.z);
+    }
+
+    public Vector3 IndexToWorld(int index)
+    {
+        return GridToWorld(Board.IndexToGrid(index));
     }
 
     // 그리드 좌표와 인덱스 좌표 변환

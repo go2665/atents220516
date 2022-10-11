@@ -9,6 +9,8 @@ using static UnityEngine.GraphicsBuffer;
 /// </summary>
 public class PlayerBase : MonoBehaviour
 {
+    public GameObject highCandidatePrefab;  // 우선순위가 높은지역을 표시할 프리팹
+
     /// <summary>
     /// 이 플레이어의 게임판( 플레이어의 자식으로 넣을지 고민중 )
     /// </summary>
@@ -27,6 +29,13 @@ public class PlayerBase : MonoBehaviour
     protected int hp;
 
     protected PlayerBase oppenent;
+
+    List<int> attackCandidateIndice;        // 섞여있는 전체 좌표 목록
+    List<int> attackComboIndice;            // 연속 성공 판정을 위한 맞은 위치
+    List<int> attackHighCandidateIndice;    // 우선순위가 높은 공격 목표
+#if UNITY_EDITOR
+    Dictionary<int, GameObject> highCandidateMark = new Dictionary<int, GameObject>();
+#endif
 
     public Board Board => board;
 
@@ -345,12 +354,14 @@ public class PlayerBase : MonoBehaviour
 
     public void Attack(Vector2Int gridPos)
     {
+        int indexPos = Board.GridToIndex(gridPos);
+        RemoveHighCandidate(indexPos);  // 일단 삭제 시도
+
         bool result = oppenent.Board.Attacked(gridPos);
 
         // 공격 했다는 표시
         // 성공했으면 추가로 성공 표시
 
-#if UNITY_EDITOR
         // 우선 순위가 높은 지역 표시
         if(result)
         {
@@ -360,14 +371,10 @@ public class PlayerBase : MonoBehaviour
             foreach (var side in neighbor)
             {
                 Vector2Int n = gridPos + side;
-                attackHighCandidateIndice.Add(Board.GridToIndex(n));
-
-                // highCandidatePrefab 생성하기
-                GameObject obj = Instantiate(highCandidatePrefab);
-                obj.transform.position = oppenent.board.GridToWorld(n);
+                int index = Board.GridToIndex(n);
+                AddHighCandidate(index);
             }
         }
-#endif
     }
 
     public void Attack(int index)
@@ -375,10 +382,31 @@ public class PlayerBase : MonoBehaviour
         Attack(Board.IndexToGrid(index));
     }
 
-    List<int> attackCandidateIndice;        // 섞여있는 전체 좌표 목록
-    List<int> attackComboIndice;            // 연속 성공 판정을 위한 맞은 위치
-    List<int> attackHighCandidateIndice;    // 우선순위가 높은 공격 목표
-    public GameObject highCandidatePrefab;  // 우선순위가 높은지역을 표시할 프리팹
+    void AddHighCandidate(int index)
+    {
+        attackHighCandidateIndice.Add(index);
+
+#if UNITY_EDITOR
+        // highCandidatePrefab 생성하기
+        GameObject obj = Instantiate(highCandidatePrefab);
+        obj.transform.position = oppenent.board.IndexToWorld(index);
+        highCandidateMark[index] = obj;
+#endif
+    }
+
+    void RemoveHighCandidate(int index)
+    {
+        if (attackHighCandidateIndice.Exists((x) => x == index))
+        {
+            attackHighCandidateIndice.Remove(index);
+#if UNITY_EDITOR
+            Destroy(highCandidateMark[index]);
+            highCandidateMark[index] = null;
+            highCandidateMark.Remove(index);
+#endif
+        }
+    }
+
 
     // 테스트 용도(플레이어의 상태 설정)
     public void Test_SetState(PlayerState state)
