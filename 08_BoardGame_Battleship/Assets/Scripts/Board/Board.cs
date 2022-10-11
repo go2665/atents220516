@@ -64,7 +64,7 @@ public class Board : MonoBehaviour
     /// 공격 당할 때 호출되는 함수
     /// </summary>
     /// <param name="gridPos">공격 당한 위치(그리드 좌표)</param>
-    /// <returns>true면 실제로 공격을 받았다. false면 여러 이유로 공격이 안됬다.</returns>
+    /// <returns>true면 실제로 배가 공격을 받았다. false면 여러 이유(그리드 밖, 이미 공격 한곳, 바다)로 공격이 안됬다.</returns>
     public bool Attacked(Vector2Int gridPos)
     {
         bool result = false;
@@ -75,9 +75,12 @@ public class Board : MonoBehaviour
                 int index = GridToIndex(gridPos);
                 bombInfo[index] = true; // 공격 받은 위치 표시
 
-                onShipAttacked[shipInfo[index]]?.Invoke();  // 해당 위치에 배가 있으면 배가 공격당한 함수 실행
+                if(shipInfo[index] != ShipType.None)
+                {
+                    result = true;
+                }
 
-                result = true;
+                onShipAttacked[shipInfo[index]]?.Invoke();  // 해당 위치에 배가 있으면 배가 공격당한 함수 실행                
 
 #if UNITY_EDITOR
                 if( testBombInfo != null )
@@ -96,7 +99,7 @@ public class Board : MonoBehaviour
     /// </summary>
     /// <param name="pos">확인할 위치</param>
     /// <returns>true면 공격 가능한 지역. false면 공격 불가능한 지역</returns>
-    private bool IsAttackable(Vector2Int pos)
+    public bool IsAttackable(Vector2Int pos)
     {        
         return !bombInfo[GridToIndex(pos)];
     }
@@ -106,9 +109,14 @@ public class Board : MonoBehaviour
     /// </summary>
     /// <param name="pos">확인할 위치</param>
     /// <returns>board 안이면 true, 아니면 false</returns>
-    private bool IsValidPosition(Vector2Int pos)
+    public static bool IsValidPosition(Vector2Int pos)
     {
         return ((-1 < pos.x && pos.x < BoardSize) && (-1 < pos.y && pos.y < BoardSize));
+    }
+
+    public static bool IsValidIndex(int index)
+    {
+        return (-1 < index && index < BoardSize);
     }
 
     /// <summary>

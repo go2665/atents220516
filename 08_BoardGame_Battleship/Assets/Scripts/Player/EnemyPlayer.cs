@@ -9,7 +9,8 @@ public class EnemyPlayer : PlayerBase
     protected override void Start()
     {
         base.Start();
-        
+        oppenent = GameManager.Inst.UserPlayer;
+
         AutoShipDeployment();
     }
 

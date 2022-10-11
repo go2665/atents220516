@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 /// <summary>
 /// 플레이어 기본 클래스
@@ -11,7 +12,7 @@ public class PlayerBase : MonoBehaviour
     /// <summary>
     /// 이 플레이어의 게임판( 플레이어의 자식으로 넣을지 고민중 )
     /// </summary>
-    public Board board;
+    protected Board board;
 
     /// <summary>
     /// 플레이어의 상태
@@ -24,6 +25,17 @@ public class PlayerBase : MonoBehaviour
     protected Ship[] ships;
 
     protected int hp;
+
+    protected PlayerBase oppenent;
+
+    public Board Board => board;
+
+    protected virtual void Awake()
+    {
+        board = GetComponentInChildren<Board>();
+        attackComboIndice = new List<int>();
+        attackHighCandidateIndice = new List<int>();
+    }
 
     protected virtual void Start()
     {
@@ -323,9 +335,44 @@ public class PlayerBase : MonoBehaviour
         target = attackCandidateIndice[0];
         attackCandidateIndice.RemoveAt(0);
 
+        Attack(target);
+    }
 
-        board.Attacked(Board.IndexToGrid(target));
+    public void Attack(Vector3 worldPos)
+    {
+        Attack(oppenent.Board.WorldToGrid(worldPos));
+    }
 
+    public void Attack(Vector2Int gridPos)
+    {
+        bool result = oppenent.Board.Attacked(gridPos);
+
+        // 공격 했다는 표시
+        // 성공했으면 추가로 성공 표시
+
+#if UNITY_EDITOR
+        // 우선 순위가 높은 지역 표시
+        if(result)
+        {
+            //공격이 성공했으면 공격한 지점의 동서남북에 highCandidatePrefab 생성해서 표시하기
+            Vector2Int[] neighbor = { new(-1, 0), new(1, 0), new(0, 1), new(0, -1) };
+
+            foreach (var side in neighbor)
+            {
+                Vector2Int n = gridPos + side;
+                attackHighCandidateIndice.Add(Board.GridToIndex(n));
+
+                // highCandidatePrefab 생성하기
+                GameObject obj = Instantiate(highCandidatePrefab);
+                obj.transform.position = oppenent.board.GridToWorld(n);
+            }
+        }
+#endif
+    }
+
+    public void Attack(int index)
+    {
+        Attack(Board.IndexToGrid(index));
     }
 
     List<int> attackCandidateIndice;        // 섞여있는 전체 좌표 목록

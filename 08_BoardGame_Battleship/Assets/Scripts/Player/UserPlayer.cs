@@ -47,8 +47,10 @@ public class UserPlayer : PlayerBase
     /// </summary>
     Action<float>[] onMouseWheel;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         // 모든 델리게이트 등록
         int length = Enum.GetValues(typeof(PlayerState)).Length;
         onClick = new Action<Vector2>[length];
@@ -73,6 +75,8 @@ public class UserPlayer : PlayerBase
     protected override void Start()
     {
         base.Start();
+
+        oppenent = GameManager.Inst.EnemyPlayer;
 
         // 인풋 컨트롤러와 유저 플레이어 연결
         GameManager.Inst.Input.onClick += OnClick;
@@ -158,8 +162,7 @@ public class UserPlayer : PlayerBase
     protected virtual void OnClick_Battle(Vector2 screenPos)
     {
         Vector3 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
-
-        bool result = board.Attacked(worldPos);
+        Attack(worldPos);
 
     }
 

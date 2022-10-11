@@ -15,13 +15,25 @@ public class GameManager : Singleton<GameManager>
     /// <summary>
     /// 인풋 컨트롤러에 접근하기 위한 프로퍼티
     /// </summary>
-    public InputController Input { get => input; }    
+    public InputController Input { get => input; }
+
+    private UserPlayer userPlayer;
+    private EnemyPlayer enemyPlayer;
+
+    public UserPlayer UserPlayer => userPlayer;
+    public EnemyPlayer EnemyPlayer => enemyPlayer;
 
     protected override void Awake()
     {
         base.Awake();
 
         input = GetComponent<InputController>();    // 인풋 컨트롤러 찾기
+    }
+
+    protected override void Initialize()
+    {
+        userPlayer = FindObjectOfType<UserPlayer>();
+        enemyPlayer = FindObjectOfType<EnemyPlayer>();
     }
 
 }
