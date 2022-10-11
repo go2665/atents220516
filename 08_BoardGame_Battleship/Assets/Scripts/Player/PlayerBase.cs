@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 /// <summary>
@@ -39,6 +38,17 @@ public class PlayerBase : MonoBehaviour
         }
         board.onShipAttacked[ShipType.None] = null; // 키값 추가용.
 
+        // 전체 공격 목표 만들기
+        int fullSize = Board.BoardSize * Board.BoardSize;
+        int[] tempCandidate = new int[fullSize];
+        for(int i=0;i< fullSize;i++)        // 순서대로 들어간 것 만들기
+        {
+            tempCandidate[i] = i;
+        }
+        Utils.Shuffle<int>(tempCandidate);  //섞고
+        attackCandidateIndice = new List<int>(tempCandidate);   // 섞은 것을 기반으로 리스트 만들기
+
+
         hp = shipTypeCount;
     }
 
@@ -56,6 +66,10 @@ public class PlayerBase : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// 자동 함선 배치 함수
+    /// 완전 랜덤 처리
+    /// </summary>
     public void AutoShipDeployment_v1()
     {
         foreach (var ship in ships)
@@ -74,15 +88,14 @@ public class PlayerBase : MonoBehaviour
             Vector2Int randPos;
             do
             {
-                randPos = board.RandomPosition();
+                randPos = Board.RandomPosition();
                 result = board.IsShipDeployment(ship, randPos);
             } while (!result);
 
             board.ShipDeployment(ship, randPos);
         }        
     }
-
-        
+            
     /// <summary>
     /// 자동 함선 배치 함수
     /// 가능한 배끼리 붙지 않고 벽부분에 배가 배치되지 않도록 설정
@@ -112,40 +125,22 @@ public class PlayerBase : MonoBehaviour
 
         // highPriority를 섞기(피셔 예이츠 알고리즘 사용)
         int[] temp = highPriority.ToArray();
-        for(int i = temp.Length - 1; i>-1; i--) // 랜덤으로 선택한 숫자를 오른쪽에 모으면서 셔플
-        {
-            int randIndex = UnityEngine.Random.Range(0, i);
-            (temp[randIndex], temp[i]) = (temp[i], temp[randIndex]);
-        }
-        //for (int i = 0; i < temp.Length - 1; i++) // 왼쪽 기준으로 셔플
-        //{
-        //    int index = Random.Range(i + 1, temp.Length);
-        //    (temp[i], temp[index]) = (temp[index], temp[i]);
-        //}
+        Utils.Shuffle<int>(temp);        
         highPriority = new List<int>(temp);     // 셔플이 끝난 배열을 다시 리스트로 변환해서 highPriority에 추가
 
         // lowPriority도 섞기(highPriority와 같음)
         temp = lowPriority.ToArray();
-        for (int i = temp.Length - 1; i > -1; i--) // 오른쪽 기준으로 셔플
-        {
-            int randIndex = UnityEngine.Random.Range(0, i);
-            (temp[randIndex], temp[i]) = (temp[i], temp[randIndex]);
-        }
+        Utils.Shuffle<int>(temp);
         lowPriority = new List<int>(temp);
 
         // 함선마다 배치작업 처리
         foreach (var ship in ships)
         {
-            if (ship.IsDeployed)    // 배치 완료된 배는 다시 배치하지 않음
+            if (ship.IsDeployed)            // 배치 완료된 배는 다시 배치하지 않음
                 continue;
 
             // 함선 회전 시키기
-            int rotateCount = UnityEngine.Random.Range(0, ShipManager.Inst.ShipDirectionCount); // 랜덤한 회수로
-            bool isCCW = (UnityEngine.Random.Range(0, 10) % 2) == 0;                            // 랜덤한 방향으로
-            for (int i = 0; i < rotateCount; i++)
-            {
-                ship.Rotate(isCCW);
-            }
+            ship.RandomRotate();
 
             // 위치 결정하기
             Vector2Int pos;                 // 배의 머리부분의 위치(그리드 좌표)
@@ -159,7 +154,7 @@ public class PlayerBase : MonoBehaviour
                 // 리스트의 첫번째 데이터를 꺼내기
                 int headIndex = highPriority[0];    // 첫번째 숫자 저장
                 highPriority.RemoveAt(0);           // 리스트에서 제거
-                pos = new Vector2Int(headIndex % Board.BoardSize, headIndex / Board.BoardSize); // 인덱스를 그리드 좌표로 변환
+                pos = Board.IndexToGrid(headIndex); // 인덱스를 그리드 좌표로 변환
 
                 failDeployment = !board.IsShipDeployment(ship, pos, out shipPositions); // 해당 위치에 배를 배치할 수 있는지 확인
                 if (failDeployment)
@@ -172,7 +167,7 @@ public class PlayerBase : MonoBehaviour
                     // 머리는 배치 성공. 머리를 제외한 나머지 부분이 전부 high에 있는지 확인
                     for (int i = 1; i < shipPositions.Length; i++)
                     {
-                        int bodyIndex = shipPositions[i].x + shipPositions[i].y * Board.BoardSize;
+                        int bodyIndex = Board.GridToIndex(shipPositions[i]);
                         if (!highPriority.Exists((x) => x == bodyIndex))    // bodyIndex가 high에 있는지 확인
                         {
                             // 하나의 바디라도 high에 없으면 실패.
@@ -191,7 +186,7 @@ public class PlayerBase : MonoBehaviour
                 //Debug.Log("Low 확인 중");
                 int headIndex = lowPriority[0];
                 lowPriority.RemoveAt(0);
-                pos = new Vector2Int(headIndex % Board.BoardSize, headIndex / Board.BoardSize);
+                pos = Board.IndexToGrid(headIndex);
 
                 failDeployment = !board.IsShipDeployment(ship, pos, out shipPositions); // 배치할 수 있는 위치면 무조건 배치(우선순위 생각하지 않음)
                 if (failDeployment)
@@ -212,7 +207,7 @@ public class PlayerBase : MonoBehaviour
             List<int> tempList = new List<int>(shipPositions.Length);
             foreach (var tempPos in shipPositions)   // 배치할 위치(그리드 좌표)를 index로 변환
             {
-                tempList.Add(tempPos.x + tempPos.y * Board.BoardSize);  
+                tempList.Add(Board.GridToIndex(tempPos));
             }
             foreach (var tempIndex in tempList)
             {
@@ -223,17 +218,15 @@ public class PlayerBase : MonoBehaviour
             // 함선 주변 지역을 high에서 low로 이동
             List<int> toLowList = new List<int>(ship.Size * 2 + 6);
             
-            // 함선 주변 위치를 구하는 방법
-            // 1. 가로 방향인지 세로 방향인지 확인한다.
-            // 2. 가로 방향이면 배의 각 칸별 위치와 배의 머리 앞칸과 꼬리 뒤칸에서 y를 +-1씩 한 위치들을 추가한다. 
-            // 3. 세로 방향이면 배의 각 칸별 위치와 배의 머리 앞칸과 꼬리 뒤칸에서 x를 +-1씩 한 위치들을 추가한다. 
+            // 함선 주변 위치 계산            
             if( ship.Direction == ShipDirection.NORTH || ship.Direction == ShipDirection.SOUTH)
             {
                 // 배가 세로 방향이다.
                 foreach (var tempPos in shipPositions)
                 {
-                    toLowList.Add((tempPos.x + 1) + tempPos.y * Board.BoardSize);   // 배의 위 아래를 low로 이동
-                    toLowList.Add((tempPos.x - 1) + tempPos.y * Board.BoardSize);
+                    // 배 위치의 좌우 위치를 low로 이동                    
+                    toLowList.Add(Board.GridToIndex(tempPos + new Vector2Int(1, 0)));
+                    toLowList.Add(Board.GridToIndex(tempPos + new Vector2Int(-1, 0)));
                 }
 
                 Vector2Int headFrontPos;    // 머리 앞쪽 위치
@@ -250,21 +243,22 @@ public class PlayerBase : MonoBehaviour
                     headFrontPos = shipPositions[0] + Vector2Int.up;
                     tailRearPos = shipPositions[^1] + Vector2Int.down;
                 }
-                // 머리 앞쪽과 머리 앞쪽의 양옆과 머리 뒤쪽의 양옆을 low로 이동
-                toLowList.Add(headFrontPos.x + headFrontPos.y * Board.BoardSize);
-                toLowList.Add((headFrontPos.x + 1) + headFrontPos.y * Board.BoardSize);
-                toLowList.Add((headFrontPos.x - 1) + headFrontPos.y * Board.BoardSize);
-                toLowList.Add(tailRearPos.x + tailRearPos.y * Board.BoardSize);
-                toLowList.Add((tailRearPos.x + 1) + tailRearPos.y * Board.BoardSize);
-                toLowList.Add((tailRearPos.x - 1) + tailRearPos.y * Board.BoardSize);
+                // 머리 앞쪽과 머리 앞쪽의 양옆과 꼬리 뒤쪽의 양옆을 low로 이동
+                toLowList.Add(Board.GridToIndex(headFrontPos));
+                toLowList.Add(Board.GridToIndex(headFrontPos + new Vector2Int(1, 0)));
+                toLowList.Add(Board.GridToIndex(headFrontPos + new Vector2Int(-1, 0)));
+                toLowList.Add(Board.GridToIndex(tailRearPos));
+                toLowList.Add(Board.GridToIndex(tailRearPos + new Vector2Int(1, 0)));
+                toLowList.Add(Board.GridToIndex(tailRearPos + new Vector2Int(-1, 0)));
             }
             else
             {
                 // 배가 가로 방향 이다.
                 foreach (var tempPos in shipPositions)
                 {
-                    toLowList.Add(tempPos.x + (tempPos.y + 1) * Board.BoardSize);   // 배의 좌우를 low로 이동
-                    toLowList.Add(tempPos.x + (tempPos.y - 1) * Board.BoardSize);
+                    // 배 위치의 위아래 위치를 low로 이동
+                    toLowList.Add(Board.GridToIndex(tempPos + new Vector2Int(0, 1)));
+                    toLowList.Add(Board.GridToIndex(tempPos + new Vector2Int(0, -1)));
                 }
 
                 Vector2Int headFrontPos;    // 머리 앞쪽 위치
@@ -281,22 +275,23 @@ public class PlayerBase : MonoBehaviour
                     headFrontPos = shipPositions[0] + Vector2Int.left;
                     tailRearPos = shipPositions[^1] + Vector2Int.right;
                 }
-                // 머리 앞쪽과 머리 앞쪽의 양옆과 머리 뒤쪽의 양옆을 low로 이동
-                toLowList.Add(headFrontPos.x + headFrontPos.y * Board.BoardSize);
-                toLowList.Add(headFrontPos.x + (headFrontPos.y + 1) * Board.BoardSize);
-                toLowList.Add(headFrontPos.x + (headFrontPos.y - 1) * Board.BoardSize);
-                toLowList.Add(tailRearPos.x + tailRearPos.y * Board.BoardSize);
-                toLowList.Add(tailRearPos.x + (tailRearPos.y + 1) * Board.BoardSize);
-                toLowList.Add(tailRearPos.x + (tailRearPos.y - 1) * Board.BoardSize);
+                // 머리 앞쪽과 머리 앞쪽의 양옆과 꼬리 뒤쪽의 양옆을 low로 이동
+                toLowList.Add(Board.GridToIndex(headFrontPos));
+                toLowList.Add(Board.GridToIndex(headFrontPos + new Vector2Int(0, 1)));
+                toLowList.Add(Board.GridToIndex(headFrontPos + new Vector2Int(0, -1)));
+                toLowList.Add(Board.GridToIndex(tailRearPos));
+                toLowList.Add(Board.GridToIndex(tailRearPos + new Vector2Int(0, 1)));
+                toLowList.Add(Board.GridToIndex(tailRearPos + new Vector2Int(0, -1)));
             }
 
-            // Low로 보낼 인덱스들을 실제 Low로 보내기
+            // Low로 보낼 인덱스들을 Low로 보내기
             foreach(var index in toLowList)
             {
-                if( highPriority.Exists((x) => x == index) )    // 이미 제거된 것을 또 제거할 수 있으므로 없는 인덱스만 이동
+                // highPriority에서 이미 제거된 위치를 다시 제거할 수 있으므로 highPriority에 있는 인덱스만 이동
+                if ( highPriority.Exists((x) => x == index))    
                 {
-                    highPriority.Remove(index); // High에서 제거
-                    lowPriority.Add(index);     // Low에서 제거
+                    highPriority.Remove(index); // High에서 제거하기
+                    lowPriority.Add(index);     // Low에 추가하기
                 }
             }
         }
@@ -312,6 +307,31 @@ public class PlayerBase : MonoBehaviour
             board.UndoShipDeployment(ship);
         }
     }
+
+    /// <summary>
+    /// 자동 공격 함수
+    /// 플레이어가 타임 오버 되었을 때나 적이 공격할 때 사용
+    /// </summary>
+    public void AutoAttack()
+    {
+        int target = -1;
+        // 공격지점 선택 조건
+        // 공격이 한줄로 연속으로 명중했으면 그 줄의 앞 뒤 중 하나를 공격한다.
+        // 이전 공격이 명중했으면 명중위치의 동서남북 중 하나를 공격한다.
+
+        // 중복없는 랜덤으로 고른다.
+        target = attackCandidateIndice[0];
+        attackCandidateIndice.RemoveAt(0);
+
+
+        board.Attacked(Board.IndexToGrid(target));
+
+    }
+
+    List<int> attackCandidateIndice;        // 섞여있는 전체 좌표 목록
+    List<int> attackComboIndice;            // 연속 성공 판정을 위한 맞은 위치
+    List<int> attackHighCandidateIndice;    // 우선순위가 높은 공격 목표
+    public GameObject highCandidatePrefab;  // 우선순위가 높은지역을 표시할 프리팹
 
     // 테스트 용도(플레이어의 상태 설정)
     public void Test_SetState(PlayerState state)

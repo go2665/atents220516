@@ -9,12 +9,23 @@ public class Test_EnemyPlayer : TestBase
 
     protected override void OnTest1(InputAction.CallbackContext obj)
     {
+        // 배 배치 테스트
         enemy.UndoAllShipDeployment();
         enemy.AutoShipDeployment();
     }
 
     protected override void OnTest2(InputAction.CallbackContext obj)
     {
+        enemy.AutoAttack();
+    }
+
+    protected override void OnTest3(InputAction.CallbackContext obj)
+    {
+    }
+
+    private static void Test_ListFind()
+    {
+        // 리스트에서 없는 숫자 찾을 때 결과 확인
         List<int> list = new List<int>(5);
         list.Add(1);
         list.Add(2);
@@ -25,15 +36,15 @@ public class Test_EnemyPlayer : TestBase
         int ret = list.Find((x) => x == 5);
         Debug.Log(ret);
         ret = list.Find((x) => x == 7);
-        Debug.Log(ret);
+        Debug.Log(ret); // 0이 나옴
         ret = list.Find((x) => x == 0);
         Debug.Log(ret);
-
     }
 
-    protected override void OnTest3(InputAction.CallbackContext obj)
+    private static void Test_Suffle()
     {
-        int[] temp = { 1,2,3,4,5 };
+        // 셔플 테스트
+        int[] temp = { 1, 2, 3, 4, 5 };
         Utils.Shuffle<int>(temp);
         Debug.Log(temp);
 

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.PlayerSettings;
 
 public class Board : MonoBehaviour
 {
@@ -71,7 +72,7 @@ public class Board : MonoBehaviour
         {
             if (IsAttackable(gridPos))  // 공격 가능한 위치인지 확인(공격했던 곳은 다시 공격 못함)
             {
-                int index = gridPos.y * BoardSize + gridPos.x;
+                int index = GridToIndex(gridPos);
                 bombInfo[index] = true; // 공격 받은 위치 표시
 
                 onShipAttacked[shipInfo[index]]?.Invoke();  // 해당 위치에 배가 있으면 배가 공격당한 함수 실행
@@ -96,8 +97,8 @@ public class Board : MonoBehaviour
     /// <param name="pos">확인할 위치</param>
     /// <returns>true면 공격 가능한 지역. false면 공격 불가능한 지역</returns>
     private bool IsAttackable(Vector2Int pos)
-    {
-        return !bombInfo[pos.y * BoardSize + pos.x];
+    {        
+        return !bombInfo[GridToIndex(pos)];
     }
 
     /// <summary>
@@ -117,7 +118,7 @@ public class Board : MonoBehaviour
     /// <returns>true면 해당 위치에 배가 있다. false면 없다.</returns>
     private bool IsShipDeployed(Vector2Int pos)
     {
-        return (shipInfo[pos.y * BoardSize + pos.x] != ShipType.None);
+        return (shipInfo[GridToIndex(pos)] != ShipType.None);
     }
 
     //bool IsValidAndAttackable(Vector2Int pos)
@@ -156,7 +157,7 @@ public class Board : MonoBehaviour
         {
             foreach (var tempPos in gridPositions)
             {
-                shipInfo[tempPos.y * BoardSize + tempPos.x] = ship.Type;    // 모든 칸에 이 배의 타입을 저장
+                shipInfo[GridToIndex(tempPos)] = ship.Type;    // 모든 칸에 이 배의 타입을 저장
                 shipPositions[ship.Type].Add(tempPos);
             }
 
@@ -259,7 +260,7 @@ public class Board : MonoBehaviour
 
         foreach (var pos in shipPositions[ship.Type])
         {
-            shipInfo[pos.y * BoardSize + pos.x] = ShipType.None;
+            shipInfo[GridToIndex(pos)] = ShipType.None;
         }
         shipPositions[ship.Type].Clear();
         ship.IsDeployed = false;
@@ -284,7 +285,18 @@ public class Board : MonoBehaviour
         return new Vector2Int( (int)diff.x, (int)-diff.z);
     }
 
-    public Vector2Int RandomPosition()
+    // 그리드 좌표와 인덱스 좌표 변환
+    public static Vector2Int IndexToGrid(int index)
+    {
+        return new Vector2Int(index % BoardSize, index / BoardSize);
+    }
+
+    public static int GridToIndex(Vector2Int grid)
+    {
+        return grid.x + grid.y * BoardSize;
+    }
+
+    public static Vector2Int RandomPosition()
     {
         return new Vector2Int(UnityEngine.Random.Range(0, BoardSize), UnityEngine.Random.Range(0, BoardSize));
     }
