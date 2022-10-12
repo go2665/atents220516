@@ -367,76 +367,163 @@ public class PlayerBase : MonoBehaviour
         // 우선 순위가 높은 지역 표시
         if(result)
         {
-            // 공격이 성공했으면 연속 성공인지 확인
-            attackComboIndice.Add(indexPos);
-            if (attackComboIndice.Count > 1)
+            if (attackComboIndice.Count > 0)
             {
-                // 연속적으로 공격이 성공했다.
-                // 연속 공격 줄의 앞뒤를 후보지에 넣어야 한다.
-
-                // 앞과 뒤 구하기
-                // 한줄로 들어있는지 판단하기 + 방향 확인용 데이터 만들기
-                int diff = Mathf.Abs(attackComboIndice[0] - attackComboIndice[1]);  // 1이면 가로, 10이면 세로. oldDiff때문에 따로 계산
-                if (diff == 1 || diff == 10)    // 일단 한줄이다.
+                int startIndex = attackComboIndice[0];
+                int lastIndex;
+                if(attackComboIndice.Count == 1)
                 {
-                    bool isLine = true;
-                    for (int i = 2; i < attackComboIndice.Count; i++)  // 첫번째 2개는 확인 했으니 2번 부터.
-                    {
-                        int oldDiff = diff;
-                        diff = Mathf.Abs(attackComboIndice[i - 1] - attackComboIndice[i]);  // 새 차이 구해서 
-                        if (oldDiff != diff)   // 서로 다르면 한줄로 공격하고 있는 것이 아니다.
-                        {
-                            isLine = false;     // 한줄이 아니라고 표시
-                            break;
-                        }
-                    }
-
-                    // 한줄로 되어있는 상황 일때
-                    if (isLine)
-                    {
-                        Vector2Int hitGrid = gridPos;   // 이번에 공격받은 지점
-                        Vector2Int direction;
-                        if (diff == 1)
-                        {
-                            // diff가 1이면 가로
-                            direction = Vector2Int.right;
-                        }
-                        else
-                        {
-                            // diff가 10이면 세로
-                            direction = Vector2Int.up;
-                        }
-
-                        do
-                        {
-                            hitGrid += direction;   // 정해진 방향으로 계속 더하면서 이미 공격한 지점은 넘어가기
-                        } while (Board.IsValidPosition(hitGrid) && !oppenent.Board.IsAttackable(hitGrid));
-                        AddHighCandidate(Board.GridToIndex(hitGrid));   // 아직 공격 안한 지점을 후보지에 추가
-
-                        do
-                        {
-                            hitGrid -= direction;
-                        } while (Board.IsValidPosition(hitGrid) && !oppenent.Board.IsAttackable(hitGrid));
-                        AddHighCandidate(Board.GridToIndex(hitGrid));
-                    }
-                    else
-                    {
-                        attackComboIndice.Clear();          // 한줄이 아니니까 비우고
-                        attackComboIndice.Add(indexPos);    // 다음 확인을 위해서 마지막 공격은 남겨놓기
-                        AddNeigborToHighCandidate(gridPos); // 이웃들 전체 추가
-                    }
+                    lastIndex = indexPos;
                 }
                 else
                 {
-                    attackComboIndice.Clear();          // 한줄이 아니니까 비우고
-                    attackComboIndice.Add(indexPos);    // 다음 확인을 위해서 마지막 공격은 남겨놓기
-                    AddNeigborToHighCandidate(gridPos); // 이웃들 전체 추가
+                    lastIndex = attackComboIndice[attackComboIndice.Count - 1];
+                }
+                Vector2Int start = Board.IndexToGrid(startIndex);
+                Vector2Int last = Board.IndexToGrid(lastIndex);
+                Vector2Int[] newPos = new Vector2Int[2];
+
+                int diff = Mathf.Abs(startIndex - lastIndex);
+                if (diff == 1)
+                {
+                    // 가로
+                    if (startIndex > lastIndex)
+                    {
+                        // 오른쪽->왼쪽
+                        newPos[0] = start + Vector2Int.right;
+                        newPos[1] = last + Vector2Int.left;
+                    }
+                    else
+                    {
+                        // 왼쪽->오른쪽
+                        newPos[0] = start + Vector2Int.left;
+                        newPos[1] = last + Vector2Int.right;
+                    }
+                }
+                else if (diff == 10)
+                {
+                    // 세로
+                    if (startIndex > lastIndex)
+                    {
+                        // 아래->위
+                        newPos[0] = start + Vector2Int.down;
+                        newPos[1] = last + Vector2Int.up;
+                    }
+                    else
+                    {
+                        // 위->아래
+                        newPos[0] = start + Vector2Int.up;
+                        newPos[1] = last + Vector2Int.down;
+                    }    
+                }
+
+                foreach (var pos in newPos)
+                {
+                    if (Board.IsValidPosition(pos))
+                    {
+                        int newIndex = Board.GridToIndex(pos);
+                        attackComboIndice.Add(newIndex);
+                        AddHighCandidate(newIndex);
+                    }
                 }
             }
+            //else if(attackComboIndice.Count > 0) 
+            //{
+            //    // 1개 들어있는 상황
+            //    Vector2Int lastHit = Board.IndexToGrid(attackComboIndice[0]);
+            //    if( (Mathf.Abs(gridPos.x - lastHit.x) == 1 && (gridPos.y == lastHit.y))     // 가로로 옆에 있다.
+            //       || (Mathf.Abs(gridPos.y - lastHit.y) == 1 && (gridPos.x == lastHit.x)))  // 세로로 위아래에 있다.
+            //    {
+            //        attackComboIndice.Add(indexPos);
+            //        AddNeigborToHighCandidate(gridPos);
+            //    }
+            //    else
+            //    {
+            //        attackComboIndice.Clear();
+            //        attackComboIndice.Add(indexPos);
+            //        AddNeigborToHighCandidate(gridPos);
+            //    }
+            //}
             else
             {
-                AddNeigborToHighCandidate(gridPos);     // 이웃들 추가
+                // 아무것도 안들어있는 상황
+                attackComboIndice.Add(indexPos);
+                AddNeigborToHighCandidate(gridPos);
             }
+
+            
+            
+            
+            //// 공격이 성공했으면 연속 성공인지 확인
+            //attackComboIndice.Add(indexPos);
+            //if (attackComboIndice.Count > 1)
+            //{
+            //    // 연속적으로 공격이 성공했다.
+            //    // 연속 공격 줄의 앞뒤를 후보지에 넣어야 한다.
+
+            //    // 앞과 뒤 구하기
+            //    // 한줄로 들어있는지 판단하기 + 방향 확인용 데이터 만들기
+            //    int diff = Mathf.Abs(attackComboIndice[0] - attackComboIndice[1]);  // 1이면 가로, 10이면 세로. oldDiff때문에 따로 계산
+            //    if (diff == 1 || diff == 10)    // 일단 한줄이다.
+            //    {
+            //        bool isLine = true;
+            //        for (int i = 2; i < attackComboIndice.Count; i++)  // 첫번째 2개는 확인 했으니 2번 부터.
+            //        {
+            //            int oldDiff = diff;
+            //            diff = Mathf.Abs(attackComboIndice[i - 1] - attackComboIndice[i]);  // 새 차이 구해서 
+            //            if (oldDiff != diff)   // 서로 다르면 한줄로 공격하고 있는 것이 아니다.
+            //            {
+            //                isLine = false;     // 한줄이 아니라고 표시
+            //                break;
+            //            }
+            //        }
+
+            //        // 한줄로 되어있는 상황 일때
+            //        if (isLine)
+            //        {
+            //            Vector2Int hitGrid = gridPos;   // 이번에 공격받은 지점
+            //            Vector2Int direction;
+            //            if (diff == 1)
+            //            {
+            //                // diff가 1이면 가로
+            //                direction = Vector2Int.right;
+            //            }
+            //            else
+            //            {
+            //                // diff가 10이면 세로
+            //                direction = Vector2Int.up;
+            //            }
+
+            //            do
+            //            {
+            //                hitGrid += direction;   // 정해진 방향으로 계속 더하면서 이미 공격한 지점은 넘어가기
+            //            } while (Board.IsValidPosition(hitGrid) && !oppenent.Board.IsAttackable(hitGrid));
+            //            AddHighCandidate(Board.GridToIndex(hitGrid));   // 아직 공격 안한 지점을 후보지에 추가
+
+            //            do
+            //            {
+            //                hitGrid -= direction;
+            //            } while (Board.IsValidPosition(hitGrid) && !oppenent.Board.IsAttackable(hitGrid));
+            //            AddHighCandidate(Board.GridToIndex(hitGrid));
+            //        }
+            //        else
+            //        {
+            //            attackComboIndice.Clear();          // 한줄이 아니니까 비우고
+            //            attackComboIndice.Add(indexPos);    // 다음 확인을 위해서 마지막 공격은 남겨놓기
+            //            AddNeigborToHighCandidate(gridPos); // 이웃들 전체 추가
+            //        }
+            //    }
+            //    else
+            //    {
+            //        attackComboIndice.Clear();          // 한줄이 아니니까 비우고
+            //        attackComboIndice.Add(indexPos);    // 다음 확인을 위해서 마지막 공격은 남겨놓기
+            //        AddNeigborToHighCandidate(gridPos); // 이웃들 전체 추가
+            //    }
+            //}
+            //else
+            //{
+            //    AddNeigborToHighCandidate(gridPos);     // 이웃들 추가
+            //}
         }
         else
         {
