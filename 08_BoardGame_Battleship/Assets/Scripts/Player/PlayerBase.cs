@@ -377,45 +377,54 @@ public class PlayerBase : MonoBehaviour
                 // 앞과 뒤 구하기
                 // 한줄로 들어있는지 판단하기 + 방향 확인용 데이터 만들기
                 int diff = Mathf.Abs(attackComboIndice[0] - attackComboIndice[1]);  // 1이면 가로, 10이면 세로. oldDiff때문에 따로 계산
-                bool isLine = true;
-                for(int i=2;i<attackComboIndice.Count;i++)  // 첫번째 2개는 확인 했으니 2번 부터.
+                if (diff == 1 || diff == 10)    // 일단 한줄이다.
                 {
-                    int oldDiff = diff;
-                    diff = Mathf.Abs(attackComboIndice[i - 1] - attackComboIndice[i]);  // 새 차이 구해서 
-                    if( oldDiff != diff )   // 서로 다르면 한줄로 공격하고 있는 것이 아니다.
+                    bool isLine = true;
+                    for (int i = 2; i < attackComboIndice.Count; i++)  // 첫번째 2개는 확인 했으니 2번 부터.
                     {
-                        isLine = false;     // 한줄이 아니라고 표시
-                        break;
+                        int oldDiff = diff;
+                        diff = Mathf.Abs(attackComboIndice[i - 1] - attackComboIndice[i]);  // 새 차이 구해서 
+                        if (oldDiff != diff)   // 서로 다르면 한줄로 공격하고 있는 것이 아니다.
+                        {
+                            isLine = false;     // 한줄이 아니라고 표시
+                            break;
+                        }
                     }
-                }
 
-                // 한줄로 되어있는 상황 일때
-                if( isLine && (diff == 1 || diff == 10) )
-                {
-                    Vector2Int hitGrid = gridPos;
-                    Vector2Int direction;
-                    if ( diff == 1 )
+                    // 한줄로 되어있는 상황 일때
+                    if (isLine)
                     {
-                        // diff가 1이면 가로
-                        direction = Vector2Int.right;
+                        Vector2Int hitGrid = gridPos;   // 이번에 공격받은 지점
+                        Vector2Int direction;
+                        if (diff == 1)
+                        {
+                            // diff가 1이면 가로
+                            direction = Vector2Int.right;
+                        }
+                        else
+                        {
+                            // diff가 10이면 세로
+                            direction = Vector2Int.up;
+                        }
+
+                        do
+                        {
+                            hitGrid += direction;   // 정해진 방향으로 계속 더하면서 이미 공격한 지점은 넘어가기
+                        } while (Board.IsValidPosition(hitGrid) && !oppenent.Board.IsAttackable(hitGrid));
+                        AddHighCandidate(Board.GridToIndex(hitGrid));   // 아직 공격 안한 지점을 후보지에 추가
+
+                        do
+                        {
+                            hitGrid -= direction;
+                        } while (Board.IsValidPosition(hitGrid) && !oppenent.Board.IsAttackable(hitGrid));
+                        AddHighCandidate(Board.GridToIndex(hitGrid));
                     }
                     else
                     {
-                        // diff가 10이면 세로
-                        direction = Vector2Int.up;
+                        attackComboIndice.Clear();          // 한줄이 아니니까 비우고
+                        attackComboIndice.Add(indexPos);    // 다음 확인을 위해서 마지막 공격은 남겨놓기
+                        AddNeigborToHighCandidate(gridPos); // 이웃들 전체 추가
                     }
-
-                    do
-                    {
-                        hitGrid += direction;   // 정해진 방향으로 계속 더하면서 이미 공격한 지점은 넘어가기
-                    } while (Board.IsValidPosition(hitGrid) && !oppenent.Board.IsAttackable(hitGrid));
-                    AddHighCandidate(Board.GridToIndex(hitGrid));   // 아직 공격 안한 지점을 후보지에 추가
-
-                    do
-                    {
-                        hitGrid -= direction;
-                    } while (Board.IsValidPosition(hitGrid) && !oppenent.Board.IsAttackable(hitGrid));
-                    AddHighCandidate(Board.GridToIndex(hitGrid));
                 }
                 else
                 {
