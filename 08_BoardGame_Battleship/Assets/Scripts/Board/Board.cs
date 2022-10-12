@@ -97,11 +97,21 @@ public class Board : MonoBehaviour
     /// <summary>
     /// 공격 당할 수 있는지 확인하는 함수
     /// </summary>
-    /// <param name="pos">확인할 위치</param>
+    /// <param name="pos">확인할 위치 그리드 좌표</param>
     /// <returns>true면 공격 가능한 지역. false면 공격 불가능한 지역</returns>
     public bool IsAttackable(Vector2Int pos)
     {        
         return !bombInfo[GridToIndex(pos)];
+    }
+
+    /// <summary>
+    /// 공격 당할 수 있는지 확인하는 함수
+    /// </summary>
+    /// <param name="index">확인할 위치의 인덱스</param>
+    /// <returns>true면 공격 가능한 지역. false면 공격 불가능한 지역</returns>
+    public bool IsAttackable(int index)
+    {
+        return !bombInfo[index];
     }
 
     /// <summary>
@@ -116,7 +126,7 @@ public class Board : MonoBehaviour
 
     public static bool IsValidIndex(int index)
     {
-        return (-1 < index && index < BoardSize);
+        return (-1 < index && index < BoardSize * BoardSize);
     }
 
     /// <summary>

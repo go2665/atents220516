@@ -340,6 +340,8 @@ public class PlayerBase : MonoBehaviour
         // 공격이 한줄로 연속으로 명중했으면 그 줄의 앞 뒤 중 하나를 공격한다.
         // 이전 공격이 명중했으면 명중위치의 동서남북 중 하나를 공격한다.
 
+        // attackHighCandidateIndice의 크기가 1이상이면 무조건 이것이 우선
+
         // 중복없는 랜덤으로 고른다.
         target = attackCandidateIndice[0];
         attackCandidateIndice.RemoveAt(0);
@@ -365,12 +367,88 @@ public class PlayerBase : MonoBehaviour
         // 우선 순위가 높은 지역 표시
         if(result)
         {
-            //공격이 성공했으면 공격한 지점의 동서남북에 highCandidatePrefab 생성해서 표시하기
-            Vector2Int[] neighbor = { new(-1, 0), new(1, 0), new(0, 1), new(0, -1) };
-
-            foreach (var side in neighbor)
+            // 공격이 성공했으면 연속 성공인지 확인
+            attackComboIndice.Add(indexPos);
+            if (attackComboIndice.Count > 1)
             {
-                Vector2Int n = gridPos + side;
+                // 연속적으로 공격이 성공했다.
+                // 연속 공격 줄의 앞뒤를 후보지에 넣어야 한다.
+
+                // 앞과 뒤 구하기
+                // 한줄로 들어있는지 판단하기 + 방향 확인용 데이터 만들기
+                int diff = Mathf.Abs(attackComboIndice[0] - attackComboIndice[1]);  // 1이면 가로, 10이면 세로. oldDiff때문에 따로 계산
+                bool isLine = true;
+                for(int i=2;i<attackComboIndice.Count;i++)  // 첫번째 2개는 확인 했으니 2번 부터.
+                {
+                    int oldDiff = diff;
+                    diff = Mathf.Abs(attackComboIndice[i - 1] - attackComboIndice[i]);  // 새 차이 구해서 
+                    if( oldDiff != diff )   // 서로 다르면 한줄로 공격하고 있는 것이 아니다.
+                    {
+                        isLine = false;     // 한줄이 아니라고 표시
+                        break;
+                    }
+                }
+
+                // 한줄로 되어있는 상황 일때
+                if( isLine && (diff == 1 || diff == 10) )
+                {
+                    Vector2Int hitGrid = gridPos;
+                    Vector2Int direction;
+                    if ( diff == 1 )
+                    {
+                        // diff가 1이면 가로
+                        direction = Vector2Int.right;
+                    }
+                    else
+                    {
+                        // diff가 10이면 세로
+                        direction = Vector2Int.up;
+                    }
+
+                    do
+                    {
+                        hitGrid += direction;   // 정해진 방향으로 계속 더하면서 이미 공격한 지점은 넘어가기
+                    } while (Board.IsValidPosition(hitGrid) && !oppenent.Board.IsAttackable(hitGrid));
+                    AddHighCandidate(Board.GridToIndex(hitGrid));   // 아직 공격 안한 지점을 후보지에 추가
+
+                    do
+                    {
+                        hitGrid -= direction;
+                    } while (Board.IsValidPosition(hitGrid) && !oppenent.Board.IsAttackable(hitGrid));
+                    AddHighCandidate(Board.GridToIndex(hitGrid));
+                }
+                else
+                {
+                    attackComboIndice.Clear();          // 한줄이 아니니까 비우고
+                    attackComboIndice.Add(indexPos);    // 다음 확인을 위해서 마지막 공격은 남겨놓기
+                    AddNeigborToHighCandidate(gridPos); // 이웃들 전체 추가
+                }
+            }
+            else
+            {
+                AddNeigborToHighCandidate(gridPos);     // 이웃들 추가
+            }
+        }
+        else
+        {
+            attackComboIndice.Clear();  // 공격이 실패했으면 콤보 끊어짐
+        }
+    }
+
+    /// <summary>
+    /// 목표 지점의 이웃들을 모두 후보지에 추가
+    /// </summary>
+    /// <param name="gridPos">목표지점(그리드좌표)</param>
+    private void AddNeigborToHighCandidate(Vector2Int gridPos)
+    {
+        // 공격이 성공했으면 공격한 지점의 동서남북에 highCandidatePrefab 생성해서 표시하기
+        Vector2Int[] neighbor = { new(-1, 0), new(1, 0), new(0, 1), new(0, -1) };
+
+        foreach (var side in neighbor)
+        {
+            Vector2Int n = gridPos + side;
+            if (Board.IsValidPosition(n) && oppenent.Board.IsAttackable(n))
+            {
                 int index = Board.GridToIndex(n);
                 AddHighCandidate(index);
             }
@@ -384,19 +462,24 @@ public class PlayerBase : MonoBehaviour
 
     void AddHighCandidate(int index)
     {
-        attackHighCandidateIndice.Add(index);
+        // index가 attackHighCandidateIndice에 없으면 if가 true
+        if (!attackHighCandidateIndice.Exists((x) => x == index))
+        {
+
+            attackHighCandidateIndice.Add(index);
 
 #if UNITY_EDITOR
-        // highCandidatePrefab 생성하기
-        GameObject obj = Instantiate(highCandidatePrefab);
-        obj.transform.position = oppenent.board.IndexToWorld(index) + Vector3.up;
-        highCandidateMark[index] = obj;
+            // highCandidatePrefab 생성하기
+            GameObject obj = Instantiate(highCandidatePrefab, transform);
+            obj.transform.position = oppenent.board.IndexToWorld(index) + Vector3.up;
+            highCandidateMark[index] = obj;
 #endif
+        }
     }
 
     void RemoveHighCandidate(int index)
     {
-        if (attackHighCandidateIndice.Exists((x) => x == index))
+        if (attackHighCandidateIndice.Exists((x) => x == index))    // 리스트 안에 있는 각 요소를 x라고 했을 때 x가 index와 같으면 true
         {
             attackHighCandidateIndice.Remove(index);
 #if UNITY_EDITOR
