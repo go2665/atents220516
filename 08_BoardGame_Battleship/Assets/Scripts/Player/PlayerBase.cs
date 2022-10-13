@@ -31,8 +31,11 @@ public class PlayerBase : MonoBehaviour
     protected PlayerBase oppenent;
 
     List<int> attackCandidateIndice;        // 섞여있는 전체 좌표 목록
-    List<int> attackComboIndice;            // 연속 성공 판정을 위한 맞은 위치
     List<int> attackHighCandidateIndice;    // 우선순위가 높은 공격 목표
+    Vector2Int lastAttackSuccessPos;        // 마지막에 공격 성공한 위치
+    readonly Vector2Int NOT_SUCCESS_YET = -Vector2Int.one;  // 이전에 공격을 성공한적이 없다.를 표시하기 위한 용도    
+
+
 #if UNITY_EDITOR
     Dictionary<int, GameObject> highCandidateMark = new Dictionary<int, GameObject>();
 #endif
@@ -42,8 +45,8 @@ public class PlayerBase : MonoBehaviour
     protected virtual void Awake()
     {
         board = GetComponentInChildren<Board>();
-        attackComboIndice = new List<int>();
         attackHighCandidateIndice = new List<int>();
+        lastAttackSuccessPos = NOT_SUCCESS_YET;         // 초기값으로 공격 성공한 적이 없음.
     }
 
     protected virtual void Start()
@@ -354,105 +357,98 @@ public class PlayerBase : MonoBehaviour
         Attack(oppenent.Board.WorldToGrid(worldPos));
     }
 
-    public void Attack(Vector2Int gridPos)
+    public void Attack(Vector2Int attackGridPos)
     {
-        int indexPos = Board.GridToIndex(gridPos);
-        RemoveHighCandidate(indexPos);  // 일단 삭제 시도
+        RemoveHighCandidate(Board.GridToIndex(attackGridPos));  // 공격을 했으니 후보지에서 제거
 
-        bool result = oppenent.Board.Attacked(gridPos);
+        bool result = oppenent.Board.Attacked(attackGridPos);   // 실제로 공격해서 결과 얻기
 
-        // 공격 했다는 표시
-        // 성공했으면 추가로 성공 표시
-
-        // 우선 순위가 높은 지역 표시
         if(result)
         {
-            if (attackComboIndice.Count > 0)
-            {
-                int startIndex = attackComboIndice[0];
-                int lastIndex;
-                if(attackComboIndice.Count == 1)
+            // 공격이 성공했다.
+            if (lastAttackSuccessPos != NOT_SUCCESS_YET)    
+            {                
+                // 이전에 공격을 성공한 적이 있으면                
+                if (Mathf.Abs(attackGridPos.x - lastAttackSuccessPos.x) == 1 && (attackGridPos.y == lastAttackSuccessPos.y))
                 {
-                    lastIndex = indexPos;
+                    // 가로로 옆에 공격을 성공 했다.
+
+                    // 기본 원리
+                    // attackGridPos.x를 계속 증가하고 (감소하고)
+                    // 보드 끝까지 계속 증가시키다가
+                    //   공격 실패한 지점이 나오면 취소
+                    //   공격을 안한 유효구간이 나오면 후보지에 추가
+
+                    Vector2Int newPos = attackGridPos;
+                    for(int i= attackGridPos.x - 1; i>-1;i--)
+                    {
+                        newPos.x = i;   // attackGridPos.x를 계속 감소시켜서 newPos에 넣기
+                        if (oppenent.board.IsAttackFailPosition(newPos))    // 공격 실패한 지점이 나오면 더 이상 진행안함.
+                            break;
+                        if( Board.IsValidPosition(newPos) && oppenent.board.IsAttackable(newPos) )
+                        {
+                            // 그리드 영역 안이고 공격이 가능한 지점이다.
+                            AddHighCandidate(Board.GridToIndex(newPos));    // 이 지점을 후보지에 추가하고 찾기 중지
+                            break;
+                        }
+                    }
+
+                    for(int i= attackGridPos.x + 1; i< Board.BoardSize;i++)
+                    {
+                        newPos.x = i;   // attackGridPos.x를 계속 증가시켜서 newPos에 넣기
+                        if (oppenent.board.IsAttackFailPosition(newPos))    // 공격 실패한 지점이 나오면 더 이상 진행안함.
+                            break;
+                        if (Board.IsValidPosition(newPos) && oppenent.board.IsAttackable(newPos))
+                        {
+                            // 그리드 영역 안이고 공격이 가능한 지점이다.
+                            AddHighCandidate(Board.GridToIndex(newPos));    // 이 지점을 후보지에 추가하고 찾기 중지
+                            break;
+                        }
+                    }
+                    lastAttackSuccessPos = attackGridPos;   // 공격 성공한 지점으로 기록
+                }
+                else if(Mathf.Abs(attackGridPos.y - lastAttackSuccessPos.y) == 1 && (attackGridPos.x == lastAttackSuccessPos.x))     // 세로로 위아래에 있다.
+                {
+                    // 세로로 공격에 성공했다. (가로와 x,y만 다르고 똑같다.)
+                    Vector2Int newPos = attackGridPos;
+                    for (int i = attackGridPos.y - 1; i > -1; i--)
+                    {
+                        newPos.y = i;
+                        if (oppenent.board.IsAttackFailPosition(newPos))
+                            break;
+                        if (Board.IsValidPosition(newPos) && oppenent.board.IsAttackable(newPos))
+                        {
+                            AddHighCandidate(Board.GridToIndex(newPos));
+                            break;
+                        }
+                    }
+
+                    for (int i = attackGridPos.y + 1; i < Board.BoardSize; i++)
+                    {
+                        newPos.y = i;
+                        if (oppenent.board.IsAttackFailPosition(newPos))
+                            break;
+                        if (Board.IsValidPosition(newPos) && oppenent.board.IsAttackable(newPos))
+                        {
+                            AddHighCandidate(Board.GridToIndex(newPos));
+                            break;
+                        }
+                    }
+                    lastAttackSuccessPos = attackGridPos;
                 }
                 else
                 {
-                    lastIndex = attackComboIndice[attackComboIndice.Count - 1];
-                }
-                Vector2Int start = Board.IndexToGrid(startIndex);
-                Vector2Int last = Board.IndexToGrid(lastIndex);
-                Vector2Int[] newPos = new Vector2Int[2];
-
-                int diff = Mathf.Abs(startIndex - lastIndex);
-                if (diff == 1)
-                {
-                    // 가로
-                    if (startIndex > lastIndex)
-                    {
-                        // 오른쪽->왼쪽
-                        newPos[0] = start + Vector2Int.right;
-                        newPos[1] = last + Vector2Int.left;
-                    }
-                    else
-                    {
-                        // 왼쪽->오른쪽
-                        newPos[0] = start + Vector2Int.left;
-                        newPos[1] = last + Vector2Int.right;
-                    }
-                }
-                else if (diff == 10)
-                {
-                    // 세로
-                    if (startIndex > lastIndex)
-                    {
-                        // 아래->위
-                        newPos[0] = start + Vector2Int.down;
-                        newPos[1] = last + Vector2Int.up;
-                    }
-                    else
-                    {
-                        // 위->아래
-                        newPos[0] = start + Vector2Int.up;
-                        newPos[1] = last + Vector2Int.down;
-                    }    
-                }
-
-                foreach (var pos in newPos)
-                {
-                    if (Board.IsValidPosition(pos))
-                    {
-                        int newIndex = Board.GridToIndex(pos);
-                        attackComboIndice.Add(newIndex);
-                        AddHighCandidate(newIndex);
-                    }
+                    // 공격은 성공했지만 옆이 아니라 다른 위치를 공격했다.
+                    lastAttackSuccessPos = attackGridPos;       // 공격 성공한 지점 기록
+                    AddNeigborToHighCandidate(attackGridPos);   // 그 위치의 4방향을 후보지에 추가
                 }
             }
-            //else if(attackComboIndice.Count > 0) 
-            //{
-            //    // 1개 들어있는 상황
-            //    Vector2Int lastHit = Board.IndexToGrid(attackComboIndice[0]);
-            //    if( (Mathf.Abs(gridPos.x - lastHit.x) == 1 && (gridPos.y == lastHit.y))     // 가로로 옆에 있다.
-            //       || (Mathf.Abs(gridPos.y - lastHit.y) == 1 && (gridPos.x == lastHit.x)))  // 세로로 위아래에 있다.
-            //    {
-            //        attackComboIndice.Add(indexPos);
-            //        AddNeigborToHighCandidate(gridPos);
-            //    }
-            //    else
-            //    {
-            //        attackComboIndice.Clear();
-            //        attackComboIndice.Add(indexPos);
-            //        AddNeigborToHighCandidate(gridPos);
-            //    }
-            //}
             else
             {
-                // 아무것도 안들어있는 상황
-                attackComboIndice.Add(indexPos);
-                AddNeigborToHighCandidate(gridPos);
+                // 공격은 성공했는데 이전에 성공한적이 없다.
+                lastAttackSuccessPos = attackGridPos;       // 공격 성공한 지점 기록
+                AddNeigborToHighCandidate(attackGridPos);   // 그 위치의 4방향을 후보지에 추가
             }
-
-            
-            
             
             //// 공격이 성공했으면 연속 성공인지 확인
             //attackComboIndice.Add(indexPos);
@@ -527,7 +523,8 @@ public class PlayerBase : MonoBehaviour
         }
         else
         {
-            attackComboIndice.Clear();  // 공격이 실패했으면 콤보 끊어짐
+            // 공격이 실패했다.            
+            lastAttackSuccessPos = NOT_SUCCESS_YET;
         }
     }
 

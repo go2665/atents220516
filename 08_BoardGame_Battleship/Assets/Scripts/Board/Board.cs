@@ -115,6 +115,19 @@ public class Board : MonoBehaviour
     }
 
     /// <summary>
+    /// 공격 실패한 지점인지 확인하는 함수
+    /// </summary>
+    /// <param name="pos">확인할 위치(그리드 좌표)</param>
+    /// <returns>true면 공격을 실패한 지점</returns>
+    public bool IsAttackFailPosition(Vector2Int pos)
+    {
+        int index = GridToIndex(pos);
+
+        // 공격을 한 지점 and 배가 없는 지점
+        return bombInfo[index] && (shipInfo[index] == ShipType.None);
+    }
+
+    /// <summary>
     /// 적절한 위치인지 확인하는 함수
     /// </summary>
     /// <param name="pos">확인할 위치</param>
