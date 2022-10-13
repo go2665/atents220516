@@ -35,6 +35,8 @@ public class PlayerBase : MonoBehaviour
     Vector2Int lastAttackSuccessPos;        // 마지막에 공격 성공한 위치
     readonly Vector2Int NOT_SUCCESS_YET = -Vector2Int.one;  // 이전에 공격을 성공한적이 없다.를 표시하기 위한 용도    
 
+    bool shipDestroyedThisTurn = false;     // 이번턴에 내 배가 부서졌는지 표시하기 위한 용도
+
 
 #if UNITY_EDITOR
     Dictionary<int, GameObject> highCandidateMark = new Dictionary<int, GameObject>();
@@ -78,6 +80,8 @@ public class PlayerBase : MonoBehaviour
 
     private void OnShipDestroy(ShipType type)
     {
+        shipDestroyedThisTurn = true;   // 이번턴에 배가 부서졌음을 표시
+
         hp--;
         if( hp <= 0 )
         {
@@ -345,16 +349,30 @@ public class PlayerBase : MonoBehaviour
 
         // attackHighCandidateIndice의 크기가 1이상이면 무조건 이것이 우선
 
-        // 중복없는 랜덤으로 고른다.
-        target = attackCandidateIndice[0];
-        attackCandidateIndice.RemoveAt(0);
+        if( attackHighCandidateIndice.Count > 0 )
+        {
+            target = attackHighCandidateIndice[0];
+            attackHighCandidateIndice.RemoveAt(0);
+            attackCandidateIndice.Remove(target);
+        }
+        else
+        {
+            // 중복없는 랜덤으로 고른다.
+            target = attackCandidateIndice[0];
+            attackCandidateIndice.RemoveAt(0);
+        }
 
-        Attack(target);
+        Attack(target);        
     }
 
     public void Attack(Vector3 worldPos)
     {
         Attack(oppenent.Board.WorldToGrid(worldPos));
+    }
+
+    public void Attack(int index)
+    {
+        Attack(Board.IndexToGrid(index));
     }
 
     public void Attack(Vector2Int attackGridPos)
@@ -366,33 +384,44 @@ public class PlayerBase : MonoBehaviour
         if(result)
         {
             // 공격이 성공했다.
-            if (lastAttackSuccessPos != NOT_SUCCESS_YET)    
-            {
-                // 이전에 공격이 성공한 적이 있으면 
-                // 지금 공격한지점(attackGridPos)와 마지작 성공지점(lastAttackSuccessPos)를 기준으로
-                // 한줄로 진행되는 상황으로 처리할 것인지 결정
-                CheckHighCandidate(attackGridPos, lastAttackSuccessPos);
-            }
-            else
-            {
-                // 이전에 공격이 성공한적이 없다.
-                Vector2Int oldAttackSuccessPos;
-                if (CheckNeighborSuccess(attackGridPos, out oldAttackSuccessPos))    // 공격지점 주변에 공격 성공지점이 있는지 체크
-                {
-                    // attackGridPos근처에 공격 성공지점이 있으면 그 줄로 성공중이다라고 판별
-                    CheckHighCandidate(attackGridPos, oldAttackSuccessPos);
-                }
-                else
-                {
-                    lastAttackSuccessPos = attackGridPos;       // 공격 성공한 지점 기록
-                    AddNeighborToHighCandidate(attackGridPos);   // 그 위치의 4방향을 후보지에 추가
-                }
-            }
+            AttackSuccess(attackGridPos);
         }
         else
         {
             // 공격이 실패했다.            
             lastAttackSuccessPos = NOT_SUCCESS_YET;
+        }
+
+        if(oppenent.shipDestroyedThisTurn)  // 상대방의 배가 이번턴에 부서졌으면
+        {
+            RemoveAllHightCandidate();      // 내 후보지들을 모두 제거
+            oppenent.shipDestroyedThisTurn = false; // 표시 초기화
+        }
+    }
+
+    void AttackSuccess(Vector2Int attackPos)
+    {
+        if (lastAttackSuccessPos != NOT_SUCCESS_YET)
+        {
+            // 이전에 공격이 성공한 적이 있으면 
+            // 지금 공격한지점(attackGridPos)와 마지작 성공지점(lastAttackSuccessPos)를 기준으로
+            // 한줄로 진행되는 상황으로 처리할 것인지 결정
+            CheckHighCandidate(attackPos, lastAttackSuccessPos);
+        }
+        else
+        {
+            // 이전에 공격이 성공한적이 없다.
+            Vector2Int oldAttackSuccessPos;
+            if (CheckNeighborSuccess(attackPos, out oldAttackSuccessPos))    // 공격지점 주변에 공격 성공지점이 있는지 체크
+            {
+                // attackGridPos근처에 공격 성공지점이 있으면 그 줄로 성공중이다라고 판별
+                CheckHighCandidate(attackPos, oldAttackSuccessPos);
+            }
+            else
+            {
+                lastAttackSuccessPos = attackPos;       // 공격 성공한 지점 기록
+                AddNeighborToHighCandidate(attackPos);   // 그 위치의 4방향을 후보지에 추가
+            }
         }
     }
 
@@ -519,11 +548,11 @@ public class PlayerBase : MonoBehaviour
         return result;
     }
 
-    public void Attack(int index)
-    {
-        Attack(Board.IndexToGrid(index));
-    }
 
+    /// <summary>
+    /// 후보지 추가
+    /// </summary>
+    /// <param name="index">추가할 후보지의 인덱스</param>
     void AddHighCandidate(int index)
     {
         // index가 attackHighCandidateIndice에 없으면 if가 true
@@ -541,6 +570,10 @@ public class PlayerBase : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 특정 후보지 제거
+    /// </summary>
+    /// <param name="index">삭제할 후보지의 인덱스</param>
     void RemoveHighCandidate(int index)
     {
         if (attackHighCandidateIndice.Exists((x) => x == index))    // 리스트 안에 있는 각 요소를 x라고 했을 때 x가 index와 같으면 true
@@ -552,6 +585,22 @@ public class PlayerBase : MonoBehaviour
             highCandidateMark.Remove(index);
 #endif
         }
+    }
+
+    /// <summary>
+    /// 모든 후보지역 제거
+    /// </summary>
+    void RemoveAllHightCandidate()
+    {
+#if UNITY_EDITOR
+        foreach (var candidate in attackHighCandidateIndice)
+        {
+            Destroy(highCandidateMark[candidate]);
+            highCandidateMark[candidate] = null;
+            highCandidateMark.Remove(candidate);
+        }
+#endif
+        attackHighCandidateIndice.Clear();
     }
 
 
