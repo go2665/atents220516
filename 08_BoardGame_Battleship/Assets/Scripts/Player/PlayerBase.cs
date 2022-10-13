@@ -367,159 +367,27 @@ public class PlayerBase : MonoBehaviour
         {
             // 공격이 성공했다.
             if (lastAttackSuccessPos != NOT_SUCCESS_YET)    
-            {                
-                // 이전에 공격을 성공한 적이 있으면                
-                if (Mathf.Abs(attackGridPos.x - lastAttackSuccessPos.x) == 1 && (attackGridPos.y == lastAttackSuccessPos.y))
-                {
-                    // 가로로 옆에 공격을 성공 했다.
-
-                    // 기본 원리
-                    // attackGridPos.x를 계속 증가하고 (감소하고)
-                    // 보드 끝까지 계속 증가시키다가
-                    //   공격 실패한 지점이 나오면 취소
-                    //   공격을 안한 유효구간이 나오면 후보지에 추가
-
-                    Vector2Int newPos = attackGridPos;
-                    for(int i= attackGridPos.x - 1; i>-1;i--)
-                    {
-                        newPos.x = i;   // attackGridPos.x를 계속 감소시켜서 newPos에 넣기
-                        if (oppenent.board.IsAttackFailPosition(newPos))    // 공격 실패한 지점이 나오면 더 이상 진행안함.
-                            break;
-                        if( Board.IsValidPosition(newPos) && oppenent.board.IsAttackable(newPos) )
-                        {
-                            // 그리드 영역 안이고 공격이 가능한 지점이다.
-                            AddHighCandidate(Board.GridToIndex(newPos));    // 이 지점을 후보지에 추가하고 찾기 중지
-                            break;
-                        }
-                    }
-
-                    for(int i= attackGridPos.x + 1; i< Board.BoardSize;i++)
-                    {
-                        newPos.x = i;   // attackGridPos.x를 계속 증가시켜서 newPos에 넣기
-                        if (oppenent.board.IsAttackFailPosition(newPos))    // 공격 실패한 지점이 나오면 더 이상 진행안함.
-                            break;
-                        if (Board.IsValidPosition(newPos) && oppenent.board.IsAttackable(newPos))
-                        {
-                            // 그리드 영역 안이고 공격이 가능한 지점이다.
-                            AddHighCandidate(Board.GridToIndex(newPos));    // 이 지점을 후보지에 추가하고 찾기 중지
-                            break;
-                        }
-                    }
-                    lastAttackSuccessPos = attackGridPos;   // 공격 성공한 지점으로 기록
-                }
-                else if(Mathf.Abs(attackGridPos.y - lastAttackSuccessPos.y) == 1 && (attackGridPos.x == lastAttackSuccessPos.x))     // 세로로 위아래에 있다.
-                {
-                    // 세로로 공격에 성공했다. (가로와 x,y만 다르고 똑같다.)
-                    Vector2Int newPos = attackGridPos;
-                    for (int i = attackGridPos.y - 1; i > -1; i--)
-                    {
-                        newPos.y = i;
-                        if (oppenent.board.IsAttackFailPosition(newPos))
-                            break;
-                        if (Board.IsValidPosition(newPos) && oppenent.board.IsAttackable(newPos))
-                        {
-                            AddHighCandidate(Board.GridToIndex(newPos));
-                            break;
-                        }
-                    }
-
-                    for (int i = attackGridPos.y + 1; i < Board.BoardSize; i++)
-                    {
-                        newPos.y = i;
-                        if (oppenent.board.IsAttackFailPosition(newPos))
-                            break;
-                        if (Board.IsValidPosition(newPos) && oppenent.board.IsAttackable(newPos))
-                        {
-                            AddHighCandidate(Board.GridToIndex(newPos));
-                            break;
-                        }
-                    }
-                    lastAttackSuccessPos = attackGridPos;
-                }
-                else
-                {
-                    // 공격은 성공했지만 옆이 아니라 다른 위치를 공격했다.
-                    lastAttackSuccessPos = attackGridPos;       // 공격 성공한 지점 기록
-                    AddNeigborToHighCandidate(attackGridPos);   // 그 위치의 4방향을 후보지에 추가
-                }
+            {
+                // 이전에 공격이 성공한 적이 있으면 
+                // 지금 공격한지점(attackGridPos)와 마지작 성공지점(lastAttackSuccessPos)를 기준으로
+                // 한줄로 진행되는 상황으로 처리할 것인지 결정
+                CheckHighCandidate(attackGridPos, lastAttackSuccessPos);
             }
             else
             {
-                // 공격은 성공했는데 이전에 성공한적이 없다.
-                lastAttackSuccessPos = attackGridPos;       // 공격 성공한 지점 기록
-                AddNeigborToHighCandidate(attackGridPos);   // 그 위치의 4방향을 후보지에 추가
+                // 이전에 공격이 성공한적이 없다.
+                Vector2Int oldAttackSuccessPos;
+                if (CheckNeighborSuccess(attackGridPos, out oldAttackSuccessPos))    // 공격지점 주변에 공격 성공지점이 있는지 체크
+                {
+                    // attackGridPos근처에 공격 성공지점이 있으면 그 줄로 성공중이다라고 판별
+                    CheckHighCandidate(attackGridPos, oldAttackSuccessPos);
+                }
+                else
+                {
+                    lastAttackSuccessPos = attackGridPos;       // 공격 성공한 지점 기록
+                    AddNeighborToHighCandidate(attackGridPos);   // 그 위치의 4방향을 후보지에 추가
+                }
             }
-            
-            //// 공격이 성공했으면 연속 성공인지 확인
-            //attackComboIndice.Add(indexPos);
-            //if (attackComboIndice.Count > 1)
-            //{
-            //    // 연속적으로 공격이 성공했다.
-            //    // 연속 공격 줄의 앞뒤를 후보지에 넣어야 한다.
-
-            //    // 앞과 뒤 구하기
-            //    // 한줄로 들어있는지 판단하기 + 방향 확인용 데이터 만들기
-            //    int diff = Mathf.Abs(attackComboIndice[0] - attackComboIndice[1]);  // 1이면 가로, 10이면 세로. oldDiff때문에 따로 계산
-            //    if (diff == 1 || diff == 10)    // 일단 한줄이다.
-            //    {
-            //        bool isLine = true;
-            //        for (int i = 2; i < attackComboIndice.Count; i++)  // 첫번째 2개는 확인 했으니 2번 부터.
-            //        {
-            //            int oldDiff = diff;
-            //            diff = Mathf.Abs(attackComboIndice[i - 1] - attackComboIndice[i]);  // 새 차이 구해서 
-            //            if (oldDiff != diff)   // 서로 다르면 한줄로 공격하고 있는 것이 아니다.
-            //            {
-            //                isLine = false;     // 한줄이 아니라고 표시
-            //                break;
-            //            }
-            //        }
-
-            //        // 한줄로 되어있는 상황 일때
-            //        if (isLine)
-            //        {
-            //            Vector2Int hitGrid = gridPos;   // 이번에 공격받은 지점
-            //            Vector2Int direction;
-            //            if (diff == 1)
-            //            {
-            //                // diff가 1이면 가로
-            //                direction = Vector2Int.right;
-            //            }
-            //            else
-            //            {
-            //                // diff가 10이면 세로
-            //                direction = Vector2Int.up;
-            //            }
-
-            //            do
-            //            {
-            //                hitGrid += direction;   // 정해진 방향으로 계속 더하면서 이미 공격한 지점은 넘어가기
-            //            } while (Board.IsValidPosition(hitGrid) && !oppenent.Board.IsAttackable(hitGrid));
-            //            AddHighCandidate(Board.GridToIndex(hitGrid));   // 아직 공격 안한 지점을 후보지에 추가
-
-            //            do
-            //            {
-            //                hitGrid -= direction;
-            //            } while (Board.IsValidPosition(hitGrid) && !oppenent.Board.IsAttackable(hitGrid));
-            //            AddHighCandidate(Board.GridToIndex(hitGrid));
-            //        }
-            //        else
-            //        {
-            //            attackComboIndice.Clear();          // 한줄이 아니니까 비우고
-            //            attackComboIndice.Add(indexPos);    // 다음 확인을 위해서 마지막 공격은 남겨놓기
-            //            AddNeigborToHighCandidate(gridPos); // 이웃들 전체 추가
-            //        }
-            //    }
-            //    else
-            //    {
-            //        attackComboIndice.Clear();          // 한줄이 아니니까 비우고
-            //        attackComboIndice.Add(indexPos);    // 다음 확인을 위해서 마지막 공격은 남겨놓기
-            //        AddNeigborToHighCandidate(gridPos); // 이웃들 전체 추가
-            //    }
-            //}
-            //else
-            //{
-            //    AddNeigborToHighCandidate(gridPos);     // 이웃들 추가
-            //}
         }
         else
         {
@@ -529,10 +397,93 @@ public class PlayerBase : MonoBehaviour
     }
 
     /// <summary>
+    /// 지금 공격 성공한 곳과 마지막에 성공한 곳이 한줄이냐 아니냐에 따라 후보지 추가 방식 결정하고 추가
+    /// </summary>
+    /// <param name="now">지금 공격 성공한 곳</param>
+    /// <param name="last">이전에 공격 성공한 곳</param>
+    void CheckHighCandidate(Vector2Int now, Vector2Int last)
+    {
+        // 이전에 공격을 성공한 적이 있으면                
+        if (Mathf.Abs(now.x - last.x) == 1 && (now.y == last.y))
+        {
+            // 가로로 옆에 공격을 성공 했다.
+
+            // 기본 원리
+            // attackGridPos.x를 계속 증가하고 (감소하고)
+            // 보드 끝까지 계속 증가시키다가
+            //   공격 실패한 지점이 나오면 취소
+            //   공격을 안한 유효구간이 나오면 후보지에 추가
+
+            Vector2Int newPos = now;
+            for (int i = now.x - 1; i > -1; i--)
+            {
+                newPos.x = i;   // attackGridPos.x를 계속 감소시켜서 newPos에 넣기
+                if (oppenent.board.IsAttackFailPosition(newPos))    // 공격 실패한 지점이 나오면 더 이상 진행안함.
+                    break;
+                if (Board.IsValidPosition(newPos) && oppenent.board.IsAttackable(newPos))
+                {
+                    // 그리드 영역 안이고 공격이 가능한 지점이다.
+                    AddHighCandidate(Board.GridToIndex(newPos));    // 이 지점을 후보지에 추가하고 찾기 중지
+                    break;
+                }
+            }
+
+            for (int i = now.x + 1; i < Board.BoardSize; i++)
+            {
+                newPos.x = i;   // attackGridPos.x를 계속 증가시켜서 newPos에 넣기
+                if (oppenent.board.IsAttackFailPosition(newPos))    // 공격 실패한 지점이 나오면 더 이상 진행안함.
+                    break;
+                if (Board.IsValidPosition(newPos) && oppenent.board.IsAttackable(newPos))
+                {
+                    // 그리드 영역 안이고 공격이 가능한 지점이다.
+                    AddHighCandidate(Board.GridToIndex(newPos));    // 이 지점을 후보지에 추가하고 찾기 중지
+                    break;
+                }
+            }
+            lastAttackSuccessPos = now;   // 공격 성공한 지점으로 기록
+        }
+        else if (Mathf.Abs(now.y - last.y) == 1 && (now.x == last.x))     // 세로로 위아래에 있다.
+        {
+            // 세로로 공격에 성공했다. (가로와 x,y만 다르고 똑같다.)
+            Vector2Int newPos = now;
+            for (int i = now.y - 1; i > -1; i--)
+            {
+                newPos.y = i;
+                if (oppenent.board.IsAttackFailPosition(newPos))
+                    break;
+                if (Board.IsValidPosition(newPos) && oppenent.board.IsAttackable(newPos))
+                {
+                    AddHighCandidate(Board.GridToIndex(newPos));
+                    break;
+                }
+            }
+
+            for (int i = now.y + 1; i < Board.BoardSize; i++)
+            {
+                newPos.y = i;
+                if (oppenent.board.IsAttackFailPosition(newPos))
+                    break;
+                if (Board.IsValidPosition(newPos) && oppenent.board.IsAttackable(newPos))
+                {
+                    AddHighCandidate(Board.GridToIndex(newPos));
+                    break;
+                }
+            }
+            lastAttackSuccessPos = now;
+        }
+        else
+        {
+            // 공격은 성공했지만 옆이 아니라 다른 위치를 공격했다.
+            lastAttackSuccessPos = now;         // 공격 성공한 지점 기록
+            AddNeighborToHighCandidate(now);    // 그 위치의 4방향을 후보지에 추가
+        }
+    }
+
+    /// <summary>
     /// 목표 지점의 이웃들을 모두 후보지에 추가
     /// </summary>
     /// <param name="gridPos">목표지점(그리드좌표)</param>
-    private void AddNeigborToHighCandidate(Vector2Int gridPos)
+    private void AddNeighborToHighCandidate(Vector2Int gridPos)
     {
         // 공격이 성공했으면 공격한 지점의 동서남북에 highCandidatePrefab 생성해서 표시하기
         Vector2Int[] neighbor = { new(-1, 0), new(1, 0), new(0, 1), new(0, -1) };
@@ -546,6 +497,26 @@ public class PlayerBase : MonoBehaviour
                 AddHighCandidate(index);
             }
         }
+    }
+
+    private bool CheckNeighborSuccess(Vector2Int gridPos, out Vector2Int successPos)
+    {
+        bool result = false;
+        Vector2Int[] neighbor = { new(-1, 0), new(1, 0), new(0, 1), new(0, -1) };
+        successPos = NOT_SUCCESS_YET;
+
+        foreach (var side in neighbor)
+        {
+            Vector2Int n = gridPos + side;
+            if (Board.IsValidPosition(n) && oppenent.Board.IsAttackSuccessPosition(n))
+            {
+                successPos = n;
+                result = true;
+                break;
+            }
+        }
+
+        return result;
     }
 
     public void Attack(int index)
