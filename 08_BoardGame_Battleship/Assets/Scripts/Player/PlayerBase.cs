@@ -351,7 +351,7 @@ public class PlayerBase : MonoBehaviour
 
         if( attackHighCandidateIndice.Count > 0 )
         {
-            target = attackHighCandidateIndice[0];
+            target = attackHighCandidateIndice[0];  // 첫번째 후보지를 뽑아서 그것을 제거한다.
             RemoveHighCandidate(target);
             attackCandidateIndice.Remove(target);
         }
@@ -558,8 +558,7 @@ public class PlayerBase : MonoBehaviour
         // index가 attackHighCandidateIndice에 없으면 if가 true
         if (!attackHighCandidateIndice.Exists((x) => x == index))
         {
-
-            attackHighCandidateIndice.Add(index);
+            attackHighCandidateIndice.Insert(0, index); // 스택처럼 항상 제일 앞에 추가
 
 #if UNITY_EDITOR
             // highCandidatePrefab 생성하기
