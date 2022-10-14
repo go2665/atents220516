@@ -352,7 +352,7 @@ public class PlayerBase : MonoBehaviour
         if( attackHighCandidateIndice.Count > 0 )
         {
             target = attackHighCandidateIndice[0];
-            attackHighCandidateIndice.RemoveAt(0);
+            RemoveHighCandidate(target);
             attackCandidateIndice.Remove(target);
         }
         else
