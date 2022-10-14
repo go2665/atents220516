@@ -437,7 +437,22 @@ public class PlayerBase : MonoBehaviour
         {
             // 가로로 옆에 공격을 성공 했다.
 
-            // 기본 원리
+            // 한 줄로 늘어서 있을 때 선 밖의 후보지 제거
+            List<int> dels = new List<int>();
+            foreach (var index in attackHighCandidateIndice )
+            {
+                Vector2Int pos = Board.IndexToGrid(index);
+                if( pos.y != now.y)
+                {
+                    dels.Add(index);
+                }
+            }
+            foreach(var del in dels)
+            {
+                RemoveHighCandidate(del);
+            }
+
+            // 후보지 선정 기본 원리
             // attackGridPos.x를 계속 증가하고 (감소하고)
             // 보드 끝까지 계속 증가시키다가
             //   공격 실패한 지점이 나오면 취소
@@ -474,6 +489,21 @@ public class PlayerBase : MonoBehaviour
         else if (Mathf.Abs(now.y - last.y) == 1 && (now.x == last.x))     // 세로로 위아래에 있다.
         {
             // 세로로 공격에 성공했다. (가로와 x,y만 다르고 똑같다.)
+            // 한 줄로 늘어서 있을 때 선 밖의 후보지 제거
+            List<int> dels = new List<int>();
+            foreach (var index in attackHighCandidateIndice)
+            {
+                Vector2Int pos = Board.IndexToGrid(index);
+                if (pos.x != now.x)
+                {
+                    dels.Add(index);
+                }
+            }
+            foreach (var del in dels)
+            {
+                RemoveHighCandidate(del);
+            }
+
             Vector2Int newPos = now;
             for (int i = now.y - 1; i > -1; i--)
             {
