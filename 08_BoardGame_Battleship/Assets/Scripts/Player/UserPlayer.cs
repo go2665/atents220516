@@ -76,7 +76,7 @@ public class UserPlayer : PlayerBase
     {
         base.Start();
 
-        oppenent = GameManager.Inst.EnemyPlayer;
+        opponent = GameManager.Inst.EnemyPlayer;
 
         // 인풋 컨트롤러와 유저 플레이어 연결
         GameManager.Inst.Input.onClick += OnClick;

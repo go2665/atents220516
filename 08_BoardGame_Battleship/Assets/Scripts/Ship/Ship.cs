@@ -47,7 +47,7 @@ public class Ship : MonoBehaviour
     Renderer shipRenderer;
 
     // 델리게이트 ----------------------------------------------------------------------------------
-    public Action<ShipType> onDead;
+    public Action<Ship> onDead;
 
     // 프로퍼티들 ----------------------------------------------------------------------------------
     /// <summary>
@@ -187,6 +187,6 @@ public class Ship : MonoBehaviour
     {
         Debug.Log($"{type} 침몰");
         isAlive = false;
-        onDead?.Invoke(type);
+        onDead?.Invoke(this);
     }
 }
