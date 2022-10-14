@@ -85,6 +85,8 @@ public class PlayerBase : MonoBehaviour
     /// </summary>
     public Board Board => board;
 
+    // 델리게이트 ----------------------------------------------------------------------------------
+    public Action onActionEnd;
 
     // 함수들 --------------------------------------------------------------------------------------
 
@@ -461,6 +463,8 @@ public class PlayerBase : MonoBehaviour
             RemoveAllHightCandidate();      // 내 후보지들을 모두 제거
             opponentShipDestroyed = false;  // 다시 플래그 off
         }
+
+        onActionEnd?.Invoke(); // 행동이 끝났음을 알림
     }
 
     /// <summary>

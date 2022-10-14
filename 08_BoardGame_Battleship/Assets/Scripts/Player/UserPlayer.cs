@@ -105,6 +105,14 @@ public class UserPlayer : PlayerBase
         SelectedShip.gameObject.SetActive(true);        // 배가 보이게 활성화
     }
 
+    public override void OnTurnStart()
+    {
+    }
+
+    public override void OnTurnEnd()
+    {
+    }
+
     /// <summary>
     /// 클릭했을 때 상태에따라 다른 함수를 호출하는 함수
     /// </summary>

@@ -14,6 +14,12 @@ public class EnemyPlayer : PlayerBase
         AutoShipDeployment();
     }
 
+    public override void OnTurnStart()
+    {
+    }
 
-    
+    public override void OnTurnEnd()
+    {
+    }
+
 }
