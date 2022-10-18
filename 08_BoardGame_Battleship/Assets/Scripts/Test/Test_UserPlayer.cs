@@ -13,7 +13,7 @@ public class Test_UserPlayer : TestBase
     {
         userPlayer = FindObjectOfType<UserPlayer>();
         userPlayer.AutoShipDeployment();
-        userPlayer.Test_SetState(PlayerState.Battle);
+        GameManager.Inst.Test_SetState(GameState.Battle);
 
         enemyPlayer = FindObjectOfType<EnemyPlayer>();
 

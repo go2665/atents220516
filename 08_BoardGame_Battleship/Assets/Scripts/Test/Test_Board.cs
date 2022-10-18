@@ -37,7 +37,7 @@ public class Test_Board : TestBase
 
     protected override void OnTest0(InputAction.CallbackContext obj)
     {
-        userPlayer.Test_SetState(PlayerState.Battle);
+        GameManager.Inst.Test_SetState(GameState.Battle);
     }
 
     protected override void OnTestClick(InputAction.CallbackContext obj)
@@ -63,10 +63,10 @@ public class Test_Board : TestBase
 
     void Start()
     {
-        userPlayer.Test_SetState(PlayerState.ShipDeployment);   // 테스트 유저의 상태를 함선 배치모드로 설정
+        GameManager.Inst.Test_SetState(GameState.ShipDeployment);   // 테스트 유저의 상태를 함선 배치모드로 설정
         userPlayer.SelectShipToDeploy(ShipType.Carrier);      // 현재 배치할 배를 잠수함으로 설정
 
-        //userPlayer.Test_SetState(PlayerState.Battle);
+        GameManager.Inst.Test_SetState(GameState.Battle);
     }
 
 }

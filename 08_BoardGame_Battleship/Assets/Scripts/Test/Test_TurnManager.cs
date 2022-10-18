@@ -8,6 +8,11 @@ public class Test_TurnManager : TestBase
     public UserPlayer userPlayer;
     public EnemyPlayer enemyPlayer;
 
+    private void Start()
+    {
+        GameManager.Inst.Test_SetState(GameState.Battle);
+    }
+
     protected override void OnTest1(InputAction.CallbackContext obj)
     {
         userPlayer.AutoAttack();

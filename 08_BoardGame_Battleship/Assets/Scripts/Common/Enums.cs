@@ -20,7 +20,7 @@ public enum ShipDirection : byte
     WEST
 }
 
-public enum PlayerState : byte
+public enum GameState : byte
 {
     Title = 0,      // 타이틀 화면 모드
     ShipDeployment, // 함선 배치 모드

@@ -9,8 +9,8 @@ public class Test_Ship : TestBase
 
     private void Start()
     {
-        userPlayer.Test_SetState(PlayerState.ShipDeployment);
-        //userPlayer.Test_SetState(PlayerState.Battle);
+        GameManager.Inst.Test_SetState(GameState.ShipDeployment);
+        //GameManager.Inst.Test_SetState(PlayerState.Battle);
     }
 
     protected override void OnTest1(InputAction.CallbackContext obj)
@@ -40,7 +40,7 @@ public class Test_Ship : TestBase
     
     protected override void OnTest0(InputAction.CallbackContext obj)
     {
-        userPlayer.Test_SetState(PlayerState.Battle);
+        GameManager.Inst.Test_SetState(GameState.Battle);
         //Material mat = ShipManager.Inst.TempShipMaterial;
         //mat.SetColor("_Color", new Color(1, 0, 0, 0.2f));
 

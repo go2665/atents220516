@@ -17,7 +17,7 @@ public class Test_EnemyPlayer : TestBase
     protected override void OnTest2(InputAction.CallbackContext obj)
     {
         //enemy.AutoAttack();
-        enemy.Test_SetState(PlayerState.Battle);
+        GameManager.Inst.Test_SetState(GameState.Battle);
     }
 
     protected override void OnTest3(InputAction.CallbackContext obj)

@@ -14,7 +14,7 @@ public class PlayerBase : MonoBehaviour
     /// <summary>
     /// 플레이어의 상태
     /// </summary>
-    protected PlayerState state = PlayerState.Title;
+    protected GameState state = GameState.Title;
 
     /// <summary>
     /// 이 플레이어의 게임판( 보드는 플레이어의 자식 )
@@ -30,6 +30,11 @@ public class PlayerBase : MonoBehaviour
     /// 남아 있는 배의 대수
     /// </summary>
     protected int remainShipCount;
+
+    /// <summary>
+    /// 행동 완료 표시. true면 이번턴에 행동 완료
+    /// </summary>
+    bool isActionDone = false;
 
     // 플레이어의 상대 정보 -------------------------------------------------------------------------
     
@@ -86,6 +91,9 @@ public class PlayerBase : MonoBehaviour
     public Board Board => board;
 
     // 델리게이트 ----------------------------------------------------------------------------------
+    /// <summary>
+    /// 플레이어의 행동이 끝났음을 알리는 델리게이트
+    /// </summary>
     public Action onActionEnd;
 
     // 함수들 --------------------------------------------------------------------------------------
@@ -126,18 +134,37 @@ public class PlayerBase : MonoBehaviour
 
     // 일반 이벤트 함수들 --------------------------------------------------------------------------
 
+    public void OnStateChange(GameState gameState)
+    {
+        state = gameState;
+
+        switch (state)
+        {
+            case GameState.Title:
+                break;
+            case GameState.ShipDeployment:
+                break;
+            case GameState.Battle:
+                break;
+            case GameState.GameEnd:
+                break;
+            default:
+                break;
+        }
+    }
+
     /// <summary>
     /// 턴이 시작될 때 실행될 함수
     /// </summary>
-    public virtual void OnTurnStart()
+    public virtual void OnPlayerTurnStart()
     {
-
+        isActionDone = false;
     }
 
     /// <summary>
     /// 턴이 종료될 때 실행될 함수
     /// </summary>
-    public virtual void OnTurnEnd()
+    public virtual void OnPlayerTurnEnd()
     {
 
     }
@@ -164,7 +191,7 @@ public class PlayerBase : MonoBehaviour
     /// </summary>
     private void OnDefeat()
     {
-
+        Debug.Log($"{gameObject.name} 패배");
     }
 
     // 함선 배치용 함수 ----------------------------------------------------------------------------
@@ -417,23 +444,26 @@ public class PlayerBase : MonoBehaviour
     /// </summary>
     public void AutoAttack()
     {
-        int target; // 공격할 인덱스
-        
-        if( attackHighCandidateIndice.Count > 0 )
+        if (!isActionDone)
         {
-            // 공격할 후보지역이 있는 경우
-            target = attackHighCandidateIndice[0];  // 첫번째 후보지역을 뽑고
-            RemoveHighCandidate(target);            // 후보지역에서 제거
-            attackCandidateIndice.Remove(target);   // 전체 Board좌표에서도 제거
-        }
-        else
-        {
-            // 공격할 후보지역이 없는 경우 
-            target = attackCandidateIndice[0];  // 전체 Board 좌표 중 첫번째 선택(중복없는 랜덤으로 골라진다.)
-            attackCandidateIndice.RemoveAt(0);  // 전체 Board 좌표에서 제거
-        }
+            int target; // 공격할 인덱스
 
-        Attack(target); // 선택된 target 지점을 공격
+            if (attackHighCandidateIndice.Count > 0)
+            {
+                // 공격할 후보지역이 있는 경우
+                target = attackHighCandidateIndice[0];  // 첫번째 후보지역을 뽑고
+                RemoveHighCandidate(target);            // 후보지역에서 제거
+                attackCandidateIndice.Remove(target);   // 전체 Board좌표에서도 제거
+            }
+            else
+            {
+                // 공격할 후보지역이 없는 경우 
+                target = attackCandidateIndice[0];  // 전체 Board 좌표 중 첫번째 선택(중복없는 랜덤으로 골라진다.)
+                attackCandidateIndice.RemoveAt(0);  // 전체 Board 좌표에서 제거
+            }
+
+            Attack(target); // 선택된 target 지점을 공격
+        }
     }
 
     /// <summary>
@@ -442,29 +472,33 @@ public class PlayerBase : MonoBehaviour
     /// <param name="attackGridPos">공격할 그리드 좌표</param>
     public void Attack(Vector2Int attackGridPos)
     {
-        RemoveHighCandidate(Board.GridToIndex(attackGridPos));  // 공격을 할것이라 후보지에서 제거
-
-        bool result = opponent.Board.Attacked(attackGridPos);   // 실제로 공격해서 공격 결과 얻기
-
-        if(result)
+        if (!isActionDone)
         {
-            // 공격이 성공했다.
-            AttackSuccessProcess(attackGridPos);
-        }
-        else
-        {
-            // 공격이 실패했다.            
-            lastAttackSuccessPos = NOT_SUCCESS_YET; // 마지막 공격 성공 위치 제거(없어도 상관 없으나 있는 쪽이 연산을 줄일 수 있을 것 같다)
-        }
+            RemoveHighCandidate(Board.GridToIndex(attackGridPos));  // 공격을 할것이라 후보지에서 제거
 
-        // 이번 공격으로 상대방의 배가 부서졌으면
-        if( opponentShipDestroyed )
-        {
-            RemoveAllHightCandidate();      // 내 후보지들을 모두 제거
-            opponentShipDestroyed = false;  // 다시 플래그 off
-        }
+            bool result = opponent.Board.Attacked(attackGridPos);   // 실제로 공격해서 공격 결과 얻기
 
-        onActionEnd?.Invoke(); // 행동이 끝났음을 알림
+            if (result)
+            {
+                // 공격이 성공했다.
+                AttackSuccessProcess(attackGridPos);
+            }
+            else
+            {
+                // 공격이 실패했다.            
+                lastAttackSuccessPos = NOT_SUCCESS_YET; // 마지막 공격 성공 위치 제거(없어도 상관 없으나 있는 쪽이 연산을 줄일 수 있을 것 같다)
+            }
+
+            // 이번 공격으로 상대방의 배가 부서졌으면
+            if (opponentShipDestroyed)
+            {
+                RemoveAllHightCandidate();      // 내 후보지들을 모두 제거
+                opponentShipDestroyed = false;  // 다시 플래그 off
+            }
+
+            isActionDone = true;
+            onActionEnd?.Invoke();              // 행동이 끝났음을 알림
+        }
     }
 
     /// <summary>
@@ -742,13 +776,5 @@ public class PlayerBase : MonoBehaviour
 
     // 테스트 함수 ---------------------------------------------------------------------------------
 
-    /// <summary>
-    /// (테스트)플레이어의 상태 설정
-    /// </summary>
-    /// <param name="state">설정할 상태</param>
-    public void Test_SetState(PlayerState state)
-    {
-        this.state = state;
-    }
 
 }

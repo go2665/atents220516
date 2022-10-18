@@ -52,24 +52,24 @@ public class UserPlayer : PlayerBase
         base.Awake();
 
         // 모든 델리게이트 등록
-        int length = Enum.GetValues(typeof(PlayerState)).Length;
+        int length = Enum.GetValues(typeof(GameState)).Length;
         onClick = new Action<Vector2>[length];
-        onClick[(int)PlayerState.Title] = OnClick_Title;
-        onClick[(int)PlayerState.ShipDeployment] = OnClick_ShipDeployment;
-        onClick[(int)PlayerState.Battle] = OnClick_Battle;
-        onClick[(int)PlayerState.GameEnd] = OnClick_GameEnd;
+        onClick[(int)GameState.Title] = OnClick_Title;
+        onClick[(int)GameState.ShipDeployment] = OnClick_ShipDeployment;
+        onClick[(int)GameState.Battle] = OnClick_Battle;
+        onClick[(int)GameState.GameEnd] = OnClick_GameEnd;
 
         onMouseMove = new Action<Vector2>[length];
-        onMouseMove[(int)PlayerState.Title] = OnMouseMove_Title;
-        onMouseMove[(int)PlayerState.ShipDeployment] = OnMouseMove_ShipDeployment;
-        onMouseMove[(int)PlayerState.Battle] = OnMouseMove_Battle;
-        onMouseMove[(int)PlayerState.GameEnd] = OnMouseMove_GameEnd;
+        onMouseMove[(int)GameState.Title] = OnMouseMove_Title;
+        onMouseMove[(int)GameState.ShipDeployment] = OnMouseMove_ShipDeployment;
+        onMouseMove[(int)GameState.Battle] = OnMouseMove_Battle;
+        onMouseMove[(int)GameState.GameEnd] = OnMouseMove_GameEnd;
 
         onMouseWheel = new Action<float>[length];
-        onMouseWheel[(int)PlayerState.Title] = OnMouseWheel_Title;
-        onMouseWheel[(int)PlayerState.ShipDeployment] = OnMouseWheel_ShipDeployment;
-        onMouseWheel[(int)PlayerState.Battle] = OnMouseWheel_Battle;
-        onMouseWheel[(int)PlayerState.GameEnd] = OnMouseWheel_GameEnd;
+        onMouseWheel[(int)GameState.Title] = OnMouseWheel_Title;
+        onMouseWheel[(int)GameState.ShipDeployment] = OnMouseWheel_ShipDeployment;
+        onMouseWheel[(int)GameState.Battle] = OnMouseWheel_Battle;
+        onMouseWheel[(int)GameState.GameEnd] = OnMouseWheel_GameEnd;
     }    
 
     protected override void Start()
@@ -105,11 +105,18 @@ public class UserPlayer : PlayerBase
         SelectedShip.gameObject.SetActive(true);        // 배가 보이게 활성화
     }
 
-    public override void OnTurnStart()
+    /// <summary>
+    /// 플레이어가 턴이 시작될 때 해야할 일들을 만들어 놓은 함수
+    /// </summary>
+    public override void OnPlayerTurnStart()
     {
+        base.OnPlayerTurnStart();   // 턴 시작 설정
     }
 
-    public override void OnTurnEnd()
+    /// <summary>
+    /// 플레이어가 턴이 종료될 때해야할 일들을 만들어 놓은 함수
+    /// </summary>
+    public override void OnPlayerTurnEnd()
     {
     }
 

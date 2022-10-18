@@ -14,11 +14,12 @@ public class EnemyPlayer : PlayerBase
         AutoShipDeployment();
     }
 
-    public override void OnTurnStart()
+    public override void OnPlayerTurnStart()
     {
+        base.OnPlayerTurnStart();   // 턴 시작 설정
     }
 
-    public override void OnTurnEnd()
+    public override void OnPlayerTurnEnd()
     {
     }
 

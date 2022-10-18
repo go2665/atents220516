@@ -370,7 +370,7 @@ public class Enemy : MonoBehaviour, IHealth, IBattle
         Handles.DrawWireDisc(transform.position, transform.up, closeSightRange); // 근접 시야 범위
 
         Vector3 forward = transform.forward * sightRange;
-        Quaternion q1 = Quaternion.Euler(0.5f * sightAngle * transform.up);
+        Quaternion q1 = Quaternion.Euler(0.5f * sightAngle * transform.up);        
         Quaternion q2 = Quaternion.Euler(-0.5f * sightAngle * transform.up);
         Handles.DrawLine(transform.position, transform.position + q1 * forward);    // 시야각 오른쪽 끝
         Handles.DrawLine(transform.position, transform.position + q2 * forward);    // 시야각 왼쪽 끝
