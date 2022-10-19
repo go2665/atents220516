@@ -35,12 +35,12 @@ public class GameManager : Singleton<GameManager>
     private GameState state = GameState.Title;
 
     /// <summary>
-    /// 상태 설정 및 확인용 프로퍼티(설정은 자신만 가능)
+    /// 상태 설정 및 확인용 프로퍼티
     /// </summary>
     public GameState State
     {
         get => state;
-        private set
+        set
         {
             state = value;                  // 상태 변경하고
             onStateChange?.Invoke(state);   // 델리게이트에 연결된 함수들 실행
@@ -61,6 +61,9 @@ public class GameManager : Singleton<GameManager>
         input = GetComponent<InputController>();    // 인풋 컨트롤러 찾기
     }
 
+    /// <summary>
+    /// 씬이 로드되었을 때 호출되는 초기화 함수
+    /// </summary>
     protected override void Initialize()
     {
         userPlayer = FindObjectOfType<UserPlayer>();
@@ -68,8 +71,16 @@ public class GameManager : Singleton<GameManager>
 
         onStateChange = null;   // 씬이 다시 로드되었을 때 이전에 연결된 함수들을 제거
 
-        onStateChange += userPlayer.OnStateChange;  // 플레이어의 상태처리 함수 연결
-        onStateChange += enemyPlayer.OnStateChange;
+        // 씬에 따라 특정 플레이어가 없을 수 있음
+        if (userPlayer != null)
+        {
+            onStateChange += userPlayer.OnStateChange;  // 유저 플레이어의 상태처리 함수 연결
+        }
+        if (enemyPlayer != null)
+        {
+            // 적은 함선배치모드에서는 없다.
+            onStateChange += enemyPlayer.OnStateChange; // 컴퓨터 플레이어의 상태처리 함수 연결
+        }
     }
 
 

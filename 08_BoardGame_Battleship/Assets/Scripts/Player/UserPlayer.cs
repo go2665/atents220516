@@ -33,6 +33,20 @@ public class UserPlayer : PlayerBase
     }
 
     /// <summary>
+    /// 지금 배치하기 위해 선택 중인 배의 종류. 없으면 None
+    /// </summary>
+    public ShipType SelectedShipType
+    {
+        get
+        {
+            ShipType type = ShipType.None;
+            if (selectedShip != null)
+                type = selectedShip.Type;   // 선택 중인 배가 있으면 해당 배의 종류를 리턴
+            return type;
+        }
+    }
+
+    /// <summary>
     /// 상태별로 클릭했을 때 실행될 함수들
     /// </summary>
     Action<Vector2>[] onClick;
@@ -103,6 +117,22 @@ public class UserPlayer : PlayerBase
 
         OnMouseMove(Mouse.current.position.ReadValue());// 마우스 위치로 배 이동
         SelectedShip.gameObject.SetActive(true);        // 배가 보이게 활성화
+    }
+
+    /// <summary>
+    /// 특정 함선을 배치 취소하는 함수
+    /// </summary>
+    /// <param name="type">배치 취소할 배의 종류</param>
+    public void UndoShipDeploy(ShipType type)
+    {
+        if (SelectedShip != null)   // 이미 선택 중인 배가 있다면
+        {
+            SelectedShip.gameObject.SetActive(false);   // 비활성화 하고
+        }
+        SelectedShip = null;                        // 선택 중인 배 제거하고
+        Ship targetShip = ships[(int)(type - 1)];   // 배치 취소할 배 찾고
+        board.UndoShipDeployment(targetShip);       // 보드에서 배치 취소
+        targetShip.gameObject.SetActive(false);     // 배 모델도 보이지 않게 하기
     }
 
     /// <summary>
