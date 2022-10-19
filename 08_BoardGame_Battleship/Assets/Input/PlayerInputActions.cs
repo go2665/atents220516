@@ -238,6 +238,56 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Title"",
+            ""id"": ""bb937d88-8a8d-4fe5-b610-18a26aa2fd14"",
+            ""actions"": [
+                {
+                    ""name"": ""AnyKey"",
+                    ""type"": ""Button"",
+                    ""id"": ""8f4580e7-f817-4ced-9652-9d58f7975ca5"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""2cd57ded-07db-428b-9fb9-0b99b4d60263"",
+                    ""path"": ""<Keyboard>/anyKey"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""AnyKey"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""014eba37-8c82-4127-bd6f-6261aa903565"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""AnyKey"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5415c9ef-1ea5-495d-8374-bec3d290d3ce"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""AnyKey"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -273,6 +323,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         m_Test_Test4 = m_Test.FindAction("Test4", throwIfNotFound: true);
         m_Test_Test5 = m_Test.FindAction("Test5", throwIfNotFound: true);
         m_Test_Test0 = m_Test.FindAction("Test0", throwIfNotFound: true);
+        // Title
+        m_Title = asset.FindActionMap("Title", throwIfNotFound: true);
+        m_Title_AnyKey = m_Title.FindAction("AnyKey", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -458,6 +511,39 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         }
     }
     public TestActions @Test => new TestActions(this);
+
+    // Title
+    private readonly InputActionMap m_Title;
+    private ITitleActions m_TitleActionsCallbackInterface;
+    private readonly InputAction m_Title_AnyKey;
+    public struct TitleActions
+    {
+        private @PlayerInputActions m_Wrapper;
+        public TitleActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @AnyKey => m_Wrapper.m_Title_AnyKey;
+        public InputActionMap Get() { return m_Wrapper.m_Title; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(TitleActions set) { return set.Get(); }
+        public void SetCallbacks(ITitleActions instance)
+        {
+            if (m_Wrapper.m_TitleActionsCallbackInterface != null)
+            {
+                @AnyKey.started -= m_Wrapper.m_TitleActionsCallbackInterface.OnAnyKey;
+                @AnyKey.performed -= m_Wrapper.m_TitleActionsCallbackInterface.OnAnyKey;
+                @AnyKey.canceled -= m_Wrapper.m_TitleActionsCallbackInterface.OnAnyKey;
+            }
+            m_Wrapper.m_TitleActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @AnyKey.started += instance.OnAnyKey;
+                @AnyKey.performed += instance.OnAnyKey;
+                @AnyKey.canceled += instance.OnAnyKey;
+            }
+        }
+    }
+    public TitleActions @Title => new TitleActions(this);
     private int m_KeyboardMouseSchemeIndex = -1;
     public InputControlScheme KeyboardMouseScheme
     {
@@ -482,5 +568,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         void OnTest4(InputAction.CallbackContext context);
         void OnTest5(InputAction.CallbackContext context);
         void OnTest0(InputAction.CallbackContext context);
+    }
+    public interface ITitleActions
+    {
+        void OnAnyKey(InputAction.CallbackContext context);
     }
 }
