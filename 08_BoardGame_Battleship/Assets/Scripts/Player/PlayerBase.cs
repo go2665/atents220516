@@ -90,6 +90,11 @@ public class PlayerBase : MonoBehaviour
     /// </summary>
     public Board Board => board;
 
+    /// <summary>
+    /// 이 플레이어가 가지고 있는 배들의 배열을 읽을 수 있는 읽기전용 프로퍼티
+    /// </summary>
+    public Ship[] Ships => ships;
+
     // 델리게이트 ----------------------------------------------------------------------------------
     /// <summary>
     /// 플레이어의 행동이 끝났음을 알리는 델리게이트
@@ -266,7 +271,35 @@ public class PlayerBase : MonoBehaviour
         foreach (var ship in ships)
         {
             if (ship.IsDeployed)            // 배치 완료된 배는 다시 배치하지 않음
+            {
+                // 배의 그리드 좌표를 인덱스로 변경
+                int[] shipIndice = new int[ship.Size];                
+                for (int i = 0; i < ship.Size; i++)
+                {
+                    shipIndice[i] = Board.GridToIndex(ship.Positions[i]);
+                }
+                // 배의 그리드 좌표를 변환한 인덱스를 목록에서 제거
+                foreach (var index in shipIndice)
+                {
+                    lowPriority.Remove(index);
+                    highPriority.Remove(index);
+                }
+
+                // 함선 주변 위치 구하기
+                List<int> toLow = ShipAroundPositions(ship);
+                // Low로 보낼 인덱스들을 Low로 보내기
+                foreach (var index in toLow)
+                {
+                    // highPriority에서 이미 제거된 위치를 다시 제거할 수 있으므로 highPriority에 있는 인덱스만 이동
+                    if (highPriority.Exists((x) => x == index))
+                    {
+                        highPriority.Remove(index); // High에서 제거하기
+                        lowPriority.Add(index);     // Low에 추가하기
+                    }
+                }
+
                 continue;
+            }
 
             // 함선 회전 시키기
             ship.RandomRotate();
@@ -317,7 +350,7 @@ public class PlayerBase : MonoBehaviour
                 lowPriority.RemoveAt(0);
                 pos = Board.IndexToGrid(headIndex);
 
-                failDeployment = !board.IsShipDeployment(ship, pos, out shipPositions); // 배치할 수 있는 위치면 무조건 배치(우선순위 생각하지 않음)
+                failDeployment = !board.IsShipDeployment(ship, pos, out _); // 배치할 수 있는 위치면 무조건 배치(우선순위 생각하지 않음)
                 if (failDeployment)
                 {
                     // 배치 실패. 원래 리스트에 되돌리기
@@ -344,86 +377,99 @@ public class PlayerBase : MonoBehaviour
                 lowPriority.Remove(tempIndex);
             }
 
-            // 함선 주변 지역을 high에서 low로 이동
-            List<int> toLowList = new List<int>(ship.Size * 2 + 6);
-            
-            // 함선 주변 위치 계산            
-            if( ship.Direction == ShipDirection.NORTH || ship.Direction == ShipDirection.SOUTH)
-            {
-                // 배가 세로 방향이다.
-                foreach (var tempPos in shipPositions)
-                {
-                    // 배 위치의 좌우 위치를 low로 이동                    
-                    toLowList.Add(Board.GridToIndex(tempPos + new Vector2Int(1, 0)));
-                    toLowList.Add(Board.GridToIndex(tempPos + new Vector2Int(-1, 0)));
-                }
-
-                Vector2Int headFrontPos;    // 머리 앞쪽 위치
-                Vector2Int tailRearPos;     // 꼬리 뒤쪽 위치
-                if ( ship.Direction == ShipDirection.NORTH )
-                {
-                    // 북쪽을 바라보고 있다. => 머리 위치 -y
-                    headFrontPos = shipPositions[0] + Vector2Int.down;
-                    tailRearPos = shipPositions[^1] + Vector2Int.up;                    
-                }
-                else
-                {
-                    // 남쪽을 바라보고 있다 -> 머리 위치 +y
-                    headFrontPos = shipPositions[0] + Vector2Int.up;
-                    tailRearPos = shipPositions[^1] + Vector2Int.down;
-                }
-                // 머리 앞쪽과 머리 앞쪽의 양옆과 꼬리 뒤쪽의 양옆을 low로 이동
-                toLowList.Add(Board.GridToIndex(headFrontPos));
-                toLowList.Add(Board.GridToIndex(headFrontPos + new Vector2Int(1, 0)));
-                toLowList.Add(Board.GridToIndex(headFrontPos + new Vector2Int(-1, 0)));
-                toLowList.Add(Board.GridToIndex(tailRearPos));
-                toLowList.Add(Board.GridToIndex(tailRearPos + new Vector2Int(1, 0)));
-                toLowList.Add(Board.GridToIndex(tailRearPos + new Vector2Int(-1, 0)));
-            }
-            else
-            {
-                // 배가 가로 방향 이다.
-                foreach (var tempPos in shipPositions)
-                {
-                    // 배 위치의 위아래 위치를 low로 이동
-                    toLowList.Add(Board.GridToIndex(tempPos + new Vector2Int(0, 1)));
-                    toLowList.Add(Board.GridToIndex(tempPos + new Vector2Int(0, -1)));
-                }
-
-                Vector2Int headFrontPos;    // 머리 앞쪽 위치
-                Vector2Int tailRearPos;     // 꼬리 뒤쪽 위치
-                if (ship.Direction == ShipDirection.EAST)
-                {
-                    // 동쪽을 바라보고 있다. => 머리 위치 +x
-                    headFrontPos = shipPositions[0] + Vector2Int.right;
-                    tailRearPos = shipPositions[^1] + Vector2Int.left;
-                }
-                else
-                {
-                    // 서쪽을 바라보고 있다 => 머리 위치 -x
-                    headFrontPos = shipPositions[0] + Vector2Int.left;
-                    tailRearPos = shipPositions[^1] + Vector2Int.right;
-                }
-                // 머리 앞쪽과 머리 앞쪽의 양옆과 꼬리 뒤쪽의 양옆을 low로 이동
-                toLowList.Add(Board.GridToIndex(headFrontPos));
-                toLowList.Add(Board.GridToIndex(headFrontPos + new Vector2Int(0, 1)));
-                toLowList.Add(Board.GridToIndex(headFrontPos + new Vector2Int(0, -1)));
-                toLowList.Add(Board.GridToIndex(tailRearPos));
-                toLowList.Add(Board.GridToIndex(tailRearPos + new Vector2Int(0, 1)));
-                toLowList.Add(Board.GridToIndex(tailRearPos + new Vector2Int(0, -1)));
-            }
+            // 배 주면 위치들 인덱스로 구하기
+            List<int> toLowList = ShipAroundPositions(ship);
 
             // Low로 보낼 인덱스들을 Low로 보내기
-            foreach(var index in toLowList)
+            foreach (var index in toLowList)
             {
                 // highPriority에서 이미 제거된 위치를 다시 제거할 수 있으므로 highPriority에 있는 인덱스만 이동
-                if ( highPriority.Exists((x) => x == index))    
+                if (highPriority.Exists((x) => x == index))
                 {
                     highPriority.Remove(index); // High에서 제거하기
                     lowPriority.Add(index);     // Low에 추가하기
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// 함선 주변 지역 위치 인덱스 구하는 함수
+    /// </summary>
+    /// <param name="ship">주변을 찾을 배</param>
+    /// <returns>함선 주변 위치의 인덱스 리스트</returns>
+    private List<int> ShipAroundPositions(Ship ship)
+    {        
+        // 함선 주변 지역을 high에서 low로 이동
+        List<int> toLowList = new List<int>(ship.Size * 2 + 6);
+
+        // 함선 주변 위치 계산            
+        if (ship.Direction == ShipDirection.NORTH || ship.Direction == ShipDirection.SOUTH)
+        {
+            // 배가 세로 방향이다.
+            foreach (var tempPos in ship.Positions)
+            {
+                // 배 위치의 좌우 위치를 low로 이동                    
+                toLowList.Add(Board.GridToIndex(tempPos + new Vector2Int(1, 0)));
+                toLowList.Add(Board.GridToIndex(tempPos + new Vector2Int(-1, 0)));
+            }
+
+            Vector2Int headFrontPos;    // 머리 앞쪽 위치
+            Vector2Int tailRearPos;     // 꼬리 뒤쪽 위치
+            if (ship.Direction == ShipDirection.NORTH)
+            {
+                // 북쪽을 바라보고 있다. => 머리 위치 -y
+                headFrontPos = ship.Positions[0] + Vector2Int.down;
+                tailRearPos = ship.Positions[^1] + Vector2Int.up;
+            }
+            else
+            {
+                // 남쪽을 바라보고 있다 -> 머리 위치 +y
+                headFrontPos = ship.Positions[0] + Vector2Int.up;
+                tailRearPos = ship.Positions[^1] + Vector2Int.down;
+            }
+            // 머리 앞쪽과 머리 앞쪽의 양옆과 꼬리 뒤쪽의 양옆을 low로 이동
+            toLowList.Add(Board.GridToIndex(headFrontPos));
+            toLowList.Add(Board.GridToIndex(headFrontPos + new Vector2Int(1, 0)));
+            toLowList.Add(Board.GridToIndex(headFrontPos + new Vector2Int(-1, 0)));
+            toLowList.Add(Board.GridToIndex(tailRearPos));
+            toLowList.Add(Board.GridToIndex(tailRearPos + new Vector2Int(1, 0)));
+            toLowList.Add(Board.GridToIndex(tailRearPos + new Vector2Int(-1, 0)));
+        }
+        else
+        {
+            // 배가 가로 방향 이다.
+            foreach (var tempPos in ship.Positions)
+            {
+                // 배 위치의 위아래 위치를 low로 이동
+                toLowList.Add(Board.GridToIndex(tempPos + new Vector2Int(0, 1)));
+                toLowList.Add(Board.GridToIndex(tempPos + new Vector2Int(0, -1)));
+            }
+
+            Vector2Int headFrontPos;    // 머리 앞쪽 위치
+            Vector2Int tailRearPos;     // 꼬리 뒤쪽 위치
+            if (ship.Direction == ShipDirection.EAST)
+            {
+                // 동쪽을 바라보고 있다. => 머리 위치 +x
+                headFrontPos = ship.Positions[0] + Vector2Int.right;
+                tailRearPos = ship.Positions[^1] + Vector2Int.left;
+            }
+            else
+            {
+                // 서쪽을 바라보고 있다 => 머리 위치 -x
+                headFrontPos = ship.Positions[0] + Vector2Int.left;
+                tailRearPos = ship.Positions[^1] + Vector2Int.right;
+            }
+            // 머리 앞쪽과 머리 앞쪽의 양옆과 꼬리 뒤쪽의 양옆을 low로 이동
+            toLowList.Add(Board.GridToIndex(headFrontPos));
+            toLowList.Add(Board.GridToIndex(headFrontPos + new Vector2Int(0, 1)));
+            toLowList.Add(Board.GridToIndex(headFrontPos + new Vector2Int(0, -1)));
+            toLowList.Add(Board.GridToIndex(tailRearPos));
+            toLowList.Add(Board.GridToIndex(tailRearPos + new Vector2Int(0, 1)));
+            toLowList.Add(Board.GridToIndex(tailRearPos + new Vector2Int(0, -1)));
+        }
+
+        return toLowList;
     }
 
     /// <summary>

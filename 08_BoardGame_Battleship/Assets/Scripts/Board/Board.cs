@@ -326,7 +326,7 @@ public class Board : MonoBehaviour
                 shipPositions[ship.Type].Add(tempPos);          // 배 종류별로 해당 칸들을 기록
             }
 
-            ship.IsDeployed = true; // 배를 배치했다고 표시
+            ship.Deploy(gridPositions);                         // 배를 배치했다고 표시하고 그리드 좌표 받아서 기록
 
 #if UNITY_EDITOR
             // 함선이 배치된 곳에 표시
@@ -376,8 +376,8 @@ public class Board : MonoBehaviour
         {
             shipInfo[GridToIndex(pos)] = ShipType.None;
         }
-        shipPositions[ship.Type].Clear();   // 전부 비우고
-        ship.IsDeployed = false;            // 배가 배치되지 않은 것으로 표시
+        shipPositions[ship.Type].Clear();   // 전부 비우고            
+        ship.UnDeploy();                    // 배가 배치되지 않은 것으로 표시
     }
 
     // 피격용 함수들--------------------------------------------------------------------------------

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -48,10 +49,10 @@ public class DeploymentToggle : MonoBehaviour
     /// 이 종류의 배가 배치되었는지 or 버튼이 눌러졌는지를 알려주는 프로퍼티.
     /// 배치됬다고 표시되면 버튼의 색상 변경(현재 투명하게 처리)
     /// </summary>
-    bool IsDeployed
+    public bool IsDeployed
     {
         get => isDeployed;
-        set
+        private set
         {
             isDeployed = value;
             if(isDeployed)
@@ -62,10 +63,17 @@ public class DeploymentToggle : MonoBehaviour
             {
                 image.color = Color.white;      // 원상 복구
             }
+            onDeployStateChange?.Invoke(IsDeployed);
         }
     }
     // --------------------------------------------------------------------------------------------
 
+    // 델리게이트 ----------------------------------------------------------------------------------
+    /// <summary>
+    /// 버튼이 눌러졌을 때 실행되는 델리게이트
+    /// </summary>
+    public Action<bool> onDeployStateChange;
+    // --------------------------------------------------------------------------------------------
 
     private void Awake()
     {
@@ -74,7 +82,7 @@ public class DeploymentToggle : MonoBehaviour
         image = GetComponent<Image>();
         button = GetComponent<Button>();
 
-        button.onClick.AddListener(OnClick);    // 버튼 클릭되었을 때 실행될 함수 등록
+        button.onClick.AddListener(OnClick);    // 버튼 클릭되었을 때 실행될 함수 등록        
     }
 
     private void Start()
@@ -112,5 +120,13 @@ public class DeploymentToggle : MonoBehaviour
     public void UndoToggle()
     {
         IsDeployed = false; // 버튼 색상 변경
+    }
+
+    /// <summary>
+    /// 버튼을 선택한(누른) 상태로 변경
+    /// </summary>
+    public void SetToggleSelect()
+    {
+        IsDeployed = true;
     }
 }

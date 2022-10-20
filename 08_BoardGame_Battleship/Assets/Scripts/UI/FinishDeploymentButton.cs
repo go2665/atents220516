@@ -1,0 +1,41 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class FinishDeploymentButton : MonoBehaviour
+{
+    /// <summary>
+    /// 함선 배치 버튼이 있는 패널
+    /// </summary>
+    ShipDeploymentPanel deploymentPanel;
+
+    /// <summary>
+    /// 자기 자신의 버튼
+    /// </summary>
+    Button button;
+
+    private void Awake()
+    {
+        button = GetComponent<Button>();
+        button.onClick.AddListener(OnClick);
+
+        deploymentPanel = FindObjectOfType<ShipDeploymentPanel>();
+        deploymentPanel.onDeploymentStateChange += Ready;   // ShipDeploymentPanel에서 함선 배치 상태 변화에 따라 실행시킴
+    }
+
+    private void OnClick()
+    {
+        Debug.Log("클릭");
+    }
+
+    /// <summary>
+    /// 배의 배치가 상태에 따라 버튼 사용가능/불가능 설정
+    /// </summary>
+    /// <param name="isReady">true면 버튼 사용가능. fals면 버튼 사용 불가능</param>
+    void Ready(bool isReady)
+    {
+        button.interactable = isReady;
+    }
+}

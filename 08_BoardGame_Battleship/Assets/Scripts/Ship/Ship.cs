@@ -22,6 +22,11 @@ public class Ship : MonoBehaviour
     int size = 2;
 
     /// <summary>
+    /// 배의 칸별 그리드 위치
+    /// </summary>
+    Vector2Int[] positions;
+
+    /// <summary>
     /// 배의 모델링 게임오브젝트의 트랜스폼
     /// </summary>
     Transform model;
@@ -47,6 +52,17 @@ public class Ship : MonoBehaviour
     Renderer shipRenderer;
 
     // 델리게이트 ----------------------------------------------------------------------------------
+
+    /// <summary>
+    /// 배가 배치되거나 배치해제가 되었을 때 실행되는 델리게이트.
+    /// 파라메터 : 배치할때는 true, 해제할 때는 false
+    /// </summary>
+    public Action<bool> onDeploy;
+    
+    /// <summary>
+    /// 배가 침몰할 때 실행될 델리게이트.
+    /// 파라메터 : 자기 자신
+    /// </summary>
     public Action<Ship> onDead;
 
     // 프로퍼티들 ----------------------------------------------------------------------------------
@@ -72,12 +88,12 @@ public class Ship : MonoBehaviour
     /// <summary>
     /// 배의 크기 확인용 프로퍼티
     /// </summary>
-    public int Size { get => size; }
+    public int Size => size;
 
     /// <summary>
-    /// 배의 배치 여부 확인용 프로퍼티
+    /// 배의 배치 여부 확인용 프로퍼티. 읽기 전용
     /// </summary>
-    public bool IsDeployed { get => isDeployed; set => isDeployed = value; }
+    public bool IsDeployed => isDeployed;
 
     /// <summary>
     /// 함선의 생존 여부를 알려주는 프로퍼티
@@ -88,6 +104,11 @@ public class Ship : MonoBehaviour
     /// 배가 가지고 있는 모델의 랜더러에 접근하기 위한 프로퍼티
     /// </summary>
     public Renderer Renderer => shipRenderer;
+
+    /// <summary>
+    /// 배의 칸별 그리드 좌표를 읽을 수 있는 프로퍼티
+    /// </summary>
+    public Vector2Int[] Positions => positions;
 
     // 함수들 --------------------------------------------------------------------------------------
 
@@ -131,6 +152,26 @@ public class Ship : MonoBehaviour
 
         // 배의 초기방향 지정
         Direction = ShipDirection.NORTH;
+    }
+
+    /// <summary>
+    /// 함선이 배치될 때 실행될 함수
+    /// </summary>
+    /// <param name="positions">배치된 위치들</param>
+    public void Deploy(Vector2Int[] positions)
+    {
+        this.positions = positions;
+        isDeployed = true;
+        onDeploy?.Invoke(true);
+    }
+
+    /// <summary>
+    /// 함선이 배치 해제되었을 때 실행될 함수
+    /// </summary>
+    public void UnDeploy()
+    {
+        isDeployed = false;
+        onDeploy?.Invoke(false);
     }
 
     /// <summary>
