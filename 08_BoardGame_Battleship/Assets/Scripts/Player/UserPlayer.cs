@@ -195,12 +195,7 @@ public class UserPlayer : PlayerBase
 
             // 클릭한 위치에 함선 배치 시도
             Vector3 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
-            bool result = board.ShipDeployment(SelectedShip, worldPos);
-            if (result)
-            {
-                SelectedShip.transform.position -= Vector3.up * 2;
-                SelectedShip = null;    // 배치에 성공했으면 SelectedShip 해제
-            }
+            board.ShipDeployment(SelectedShip, worldPos);
         }
     }
 

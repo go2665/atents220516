@@ -23,6 +23,7 @@ public class GameManager : Singleton<GameManager>
     // 플레이어들 ----------------------------------------------------------------------------------
     private UserPlayer userPlayer;
     private EnemyPlayer enemyPlayer;
+    private ShipDeployData[] shipDeployDatas;
 
     public UserPlayer UserPlayer => userPlayer;
     public EnemyPlayer EnemyPlayer => enemyPlayer;
@@ -80,6 +81,34 @@ public class GameManager : Singleton<GameManager>
         {
             // 적은 함선배치모드에서는 없다.
             onStateChange += enemyPlayer.OnStateChange; // 컴퓨터 플레이어의 상태처리 함수 연결
+        }
+    }
+
+    public void SaveShipDeployData(PlayerBase targetPlayer)
+    {
+        shipDeployDatas = new ShipDeployData[targetPlayer.Ships.Length];
+        for (int i = 0; i < shipDeployDatas.Length; i++)
+        {
+            shipDeployDatas[i] = new ShipDeployData();
+            shipDeployDatas[i].shipType = targetPlayer.Ships[i].Type;
+            shipDeployDatas[i].direction = targetPlayer.Ships[i].Direction;
+            shipDeployDatas[i].size = targetPlayer.Ships[i].Size;
+            shipDeployDatas[i].position = targetPlayer.Ships[i].Positions[0];
+        }
+    }
+
+    public void LoadShipDeplyData(PlayerBase targetPlayer)
+    {
+        if (shipDeployDatas != null)
+        {
+            targetPlayer.UndoAllShipDeployment();
+
+            for (int i = 0; i < shipDeployDatas.Length; i++)
+            {
+                Ship targetShip = targetPlayer.Ships[i];
+                targetShip.Direction = shipDeployDatas[i].direction;
+                targetPlayer.Board.ShipDeployment(targetShip, shipDeployDatas[i].position);                
+            }
         }
     }
 

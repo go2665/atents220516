@@ -326,6 +326,9 @@ public class Board : MonoBehaviour
                 shipPositions[ship.Type].Add(tempPos);          // 배 종류별로 해당 칸들을 기록
             }
 
+            Vector3 worldPos = GridToWorld(pos);
+            ship.transform.position = worldPos;                 // 함선을 보드위에 배치시키기
+
             ship.Deploy(gridPositions);                         // 배를 배치했다고 표시하고 그리드 좌표 받아서 기록
 
 #if UNITY_EDITOR
