@@ -45,7 +45,7 @@ public class TurnManager : Singleton<TurnManager>
     /// <summary>
     /// 턴이 시작될 때 실행될 델리게이트
     /// </summary>
-    Action onTurnStart;
+    public Action<int> onTurnStart;
 
     /// <summary>
     /// 턴이 끝날 때 실행될 델리게이트
@@ -100,7 +100,7 @@ public class TurnManager : Singleton<TurnManager>
         isTurnEnd = false;      // 턴이 시작되었으니 isTurnEnd를 false로 변경
         isUserEnd = false;      // 플레이어들도 턴 종료 표시를 false로 변경
         isEnemyEnd = false;
-        onTurnStart?.Invoke();  // 델리게이트를 실행시켜서 등록되어있는 플레이어의 OnPlayerTurnStart도 실행 시킴
+        onTurnStart?.Invoke(turnNumber);  // 델리게이트를 실행시켜서 등록되어있는 플레이어의 OnPlayerTurnStart도 실행 시킴
     }
 
     /// <summary>

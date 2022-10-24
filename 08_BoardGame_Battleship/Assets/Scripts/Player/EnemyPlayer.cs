@@ -16,9 +16,9 @@ public class EnemyPlayer : PlayerBase
         AutoShipDeployment();
     }
 
-    public override void OnPlayerTurnStart()
+    public override void OnPlayerTurnStart(int turnNumber)
     {
-        base.OnPlayerTurnStart();   // 턴 시작 설정
+        base.OnPlayerTurnStart(turnNumber);   // 턴 시작 설정
 
         // 적은 턴이 시작되면 몇초후에 자동으로 공격
         StartCoroutine(TurnStartDelay());

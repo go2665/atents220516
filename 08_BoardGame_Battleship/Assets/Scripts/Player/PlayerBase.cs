@@ -161,7 +161,7 @@ public class PlayerBase : MonoBehaviour
     /// <summary>
     /// 턴이 시작될 때 실행될 함수
     /// </summary>
-    public virtual void OnPlayerTurnStart()
+    public virtual void OnPlayerTurnStart(int turnNumber)
     {
         isActionDone = false;
     }

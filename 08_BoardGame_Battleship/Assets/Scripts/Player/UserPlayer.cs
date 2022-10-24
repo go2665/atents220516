@@ -139,9 +139,9 @@ public class UserPlayer : PlayerBase
     /// <summary>
     /// 플레이어가 턴이 시작될 때 해야할 일들을 만들어 놓은 함수
     /// </summary>
-    public override void OnPlayerTurnStart()
+    public override void OnPlayerTurnStart(int turnNumber)
     {
-        base.OnPlayerTurnStart();   // 턴 시작 설정
+        base.OnPlayerTurnStart(turnNumber);   // 턴 시작 설정
     }
 
     /// <summary>
