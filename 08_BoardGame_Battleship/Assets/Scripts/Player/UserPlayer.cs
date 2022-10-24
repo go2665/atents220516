@@ -115,6 +115,7 @@ public class UserPlayer : PlayerBase
             board.UndoShipDeployment(SelectedShip);     // 기존에 배치 되었던 것을 취소
         }
 
+        SelectedShip.Direction = ShipDirection.EAST;    // 배치할 배는 동쪽을 먼저 바라보도록 설정
         OnMouseMove(Mouse.current.position.ReadValue());// 마우스 위치로 배 이동
         SelectedShip.gameObject.SetActive(true);        // 배가 보이게 활성화
     }
@@ -195,7 +196,11 @@ public class UserPlayer : PlayerBase
 
             // 클릭한 위치에 함선 배치 시도
             Vector3 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
-            board.ShipDeployment(SelectedShip, worldPos);
+            bool result = board.ShipDeployment(SelectedShip, worldPos);
+            if (result)
+            {
+                SelectedShip = null;    //배치 완료되고 나면 SelectedShip은 비우기(머티리얼 복구)
+            }
         }
     }
 
