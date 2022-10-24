@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 9043104902092967531}
   - component: {fileID: 9043104902092967532}
   m_Layer: 0
-  m_Name: BombInfoObject
+  m_Name: TestBombInfoObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -208,7 +208,7 @@ GameObject:
   - component: {fileID: 8346130871452495538}
   - component: {fileID: 8346130871452495539}
   m_Layer: 0
-  m_Name: BombInfo
+  m_Name: BombMark
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -241,9 +241,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21412527a48e6e24da4b05bfc6717c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  infoPrefab: {fileID: 9043104902092967533, guid: f3586ae79a7243241ac74c3f74e286e0,
+  successMark: {fileID: 3009144092079436276, guid: e4af4c90b864a7c4fb65424aecdccff7,
     type: 3}
-  infoMaterial: {fileID: 2100000, guid: a72057bf5bc9e7840a3d108f60ebaba4, type: 2}
+  failMark: {fileID: 1614624948595839995, guid: e8736a707f56130469692ac082e8bca6,
+    type: 3}
+  testInfoPrefab: {fileID: 9043104902092967533, guid: f3586ae79a7243241ac74c3f74e286e0,
+    type: 3}
+  testInfoMaterial: {fileID: 2100000, guid: a72057bf5bc9e7840a3d108f60ebaba4, type: 2}
 --- !u!1001 &8346130870267981055
 PrefabInstance:
   m_ObjectHideFlags: 0

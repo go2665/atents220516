@@ -27,7 +27,8 @@ public class FinishDeploymentButton : MonoBehaviour
 
     private void OnClick()
     {
-        Debug.Log("클릭");
+        GameManager.Inst.SaveShipDeployData(GameManager.Inst.UserPlayer);
+        Debug.Log("다음 씬으로 넘어가기");
     }
 
     /// <summary>

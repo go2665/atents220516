@@ -36,6 +36,6 @@ public class Test_ShipDeployment : TestBase
         board.ShipDeployment(player.Ships[3], new Vector2Int(3, 0));
         board.ShipDeployment(player.Ships[4], new Vector2Int(4, 0));
 
-        int i = 0;
+        //int i = 0;
     }
 }

@@ -84,6 +84,10 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
+    /// <summary>
+    /// 배치한 배의 위치와 방향 저장하는 함수
+    /// </summary>
+    /// <param name="targetPlayer">저장할 배치정보를 가지고 있는 플레이어</param>
     public void SaveShipDeployData(PlayerBase targetPlayer)
     {
         shipDeployDatas = new ShipDeployData[targetPlayer.Ships.Length];
@@ -97,19 +101,28 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
-    public void LoadShipDeplyData(PlayerBase targetPlayer)
+    /// <summary>
+    /// 저장된 배 배치정보를 불러오는 함수
+    /// </summary>
+    /// <param name="targetPlayer">불러올 배치정보를 적용받을 플레이어</param>
+    /// <returns>저장된 정보가 있어서 불어왔다면 true, 없어서 읽지 못했다면 false</returns>
+    public bool LoadShipDeplyData(PlayerBase targetPlayer)
     {
+        bool result = false;
         if (shipDeployDatas != null)
         {
-            targetPlayer.UndoAllShipDeployment();
+            targetPlayer.UndoAllShipDeployment();               // 기존의 배치 모두 취소
 
             for (int i = 0; i < shipDeployDatas.Length; i++)
             {
                 Ship targetShip = targetPlayer.Ships[i];
                 targetShip.Direction = shipDeployDatas[i].direction;
-                targetPlayer.Board.ShipDeployment(targetShip, shipDeployDatas[i].position);                
+                targetPlayer.Board.ShipDeployment(targetShip, shipDeployDatas[i].position); // 다시 전부 배치
             }
+            result = true;
         }
+
+        return result;
     }
 
 
