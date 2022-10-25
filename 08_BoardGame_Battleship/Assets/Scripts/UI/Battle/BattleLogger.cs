@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System.Text;
 
 public class BattleLogger : MonoBehaviour
 {
@@ -30,35 +31,43 @@ public class BattleLogger : MonoBehaviour
     /// </summary>
     TextMeshProUGUI logText;
 
+    const int MaxLineCount = 20;
+
+    List<string> logLines;
+    StringBuilder builder;
+
     private void Awake()
     {
         // 컴포넌트 찾기
         logText = GetComponentInChildren<TextMeshProUGUI>();
+        logLines = new List<string>(MaxLineCount + 5);  // capacity를 5개 여유있게 확보
+        builder = new StringBuilder(logLines.Capacity); // StringBuilder의 크기를 logLines의 capacity 만큼 확보
     }
 
     private void Start()
     {
-        // 턴 시작할 때 턴 번호 출력하기 위해 델리게이트에 함수 등록
-        TurnManager turnManager = TurnManager.Inst;
-        turnManager.onTurnStart += Log_Turn_Start;
+        //// 턴 시작할 때 턴 번호 출력하기 위해 델리게이트에 함수 등록
+        //TurnManager turnManager = TurnManager.Inst;
+        //turnManager.onTurnStart += Log_Turn_Start;
 
-        // 배가 공격 당하고 침몰 할 때 상황을 출력하기 위해서 델리게이트에 함수 등록
-        GameManager gameManager = GameManager.Inst;
-        foreach (var ship in gameManager.UserPlayer.Ships)
-        {
-            ship.onHit += Log_Attack_Success;
-            ship.onSinking += Log_Ship_Destroy;
-        }
-        foreach (var ship in gameManager.EnemyPlayer.Ships)
-        {
-            ship.onHit += Log_Attack_Success;
-            ship.onSinking += Log_Ship_Destroy;
-        }
+        //// 배가 공격 당하고 침몰 할 때 상황을 출력하기 위해서 델리게이트에 함수 등록
+        //GameManager gameManager = GameManager.Inst;
+        //foreach (var ship in gameManager.UserPlayer.Ships)
+        //{
+        //    ship.onHit += Log_Attack_Success;
+        //    ship.onSinking += Log_Ship_Destroy;
+        //}
+        //foreach (var ship in gameManager.EnemyPlayer.Ships)
+        //{
+        //    ship.onHit += Log_Attack_Success;
+        //    ship.onSinking += Log_Ship_Destroy;
+        //}
 
-        // 플레이어가 공격을 실패했을 때 상황을 출력하기 위해서 델리게이트에 함수 등록
-        gameManager.UserPlayer.onAttackFail += Log_Attack_Fail;
-        gameManager.EnemyPlayer.onAttackFail += Log_Attack_Fail;
-        //gameManager.UserPlayer.onAttackFail += () => Log_Attack_Fail(gameManager.UserPlayer);
+        //// 플레이어가 공격을 실패했을 때 상황을 출력하기 위해서 델리게이트에 함수 등록
+        //gameManager.UserPlayer.onAttackFail += Log_Attack_Fail;
+        //gameManager.EnemyPlayer.onAttackFail += Log_Attack_Fail;
+
+        //logText.text = "";
     }
 
     /// <summary>
@@ -67,7 +76,28 @@ public class BattleLogger : MonoBehaviour
     /// <param name="text">출력할 글자</param>
     public void Log(string text)
     {
-        logText.text = text;
+        logLines.Add(text);
+        if(logLines.Count > MaxLineCount)
+        {
+            logLines.RemoveAt(0);
+        }
+        
+        builder.Clear();
+        foreach (var line in logLines)
+        {
+            builder.AppendLine(line);
+        }
+
+        logText.text = builder.ToString();
+    }
+
+    /// <summary>
+    /// 로거의 내용을 다 지우는 함수
+    /// </summary>
+    public void Clear()
+    {
+        logLines.Clear();
+        logText.text = "";
     }
 
     /// <summary>

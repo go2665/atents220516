@@ -8,7 +8,7 @@ public class Test_ShipDeployment : TestBase
     protected override void OnTest1(InputAction.CallbackContext obj)
     {
         GameManager.Inst.SaveShipDeployData(GameManager.Inst.UserPlayer);
-        int i = 0;
+        //int i = 0;
     }
 
     protected override void OnTest2(InputAction.CallbackContext obj)
