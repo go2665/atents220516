@@ -12,6 +12,11 @@ public class Ship : MonoBehaviour
     ShipType type;
 
     /// <summary>
+    /// 배의 이름
+    /// </summary>
+    string shipName;
+
+    /// <summary>
     /// 배가 바라보는 방향
     /// </summary>
     ShipDirection direction;
@@ -72,6 +77,11 @@ public class Ship : MonoBehaviour
     public ShipType Type { get => type; }
 
     /// <summary>
+    /// 배의 이름 확인용 프로퍼티
+    /// </summary>
+    public string Name { get => shipName; }
+
+    /// <summary>
     /// 배의 방향 확인 및 설정용 프로퍼티
     /// </summary>
     public ShipDirection Direction 
@@ -123,15 +133,22 @@ public class Ship : MonoBehaviour
         {
             case ShipType.Carrier:
                 size = 5;
+                shipName = "항공모함";
                 break;
             case ShipType.Battleship:
+                shipName = "전함";
                 size = 4;
                 break;
             case ShipType.Destroyer:
+                shipName = "구축함";
+                size = 3;
+                break;
             case ShipType.Submarine:
+                shipName = "잠수함";
                 size = 3;
                 break;
             case ShipType.PatrolBoat:
+                shipName = "경비정";
                 size = 2;
                 break;
             case ShipType.None:

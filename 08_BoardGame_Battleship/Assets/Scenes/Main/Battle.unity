@@ -2747,6 +2747,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37f8c507d69b77145ba4806d66cb1a3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shipColor: {r: 0.6320754, g: 0.04472231, b: 0.04472231, a: 0}
 --- !u!1001 &1607996775
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2836,6 +2837,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1680144155}
   - component: {fileID: 1680144154}
+  - component: {fileID: 1680144156}
   m_Layer: 0
   m_Name: BattleScean
   m_TagString: Untagged
@@ -2870,6 +2872,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1680144156
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1680144153}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55f8fbf6385cac14fb2e32af45bb6b06, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1773358539
 GameObject:
   m_ObjectHideFlags: 0
@@ -3283,6 +3297,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Enemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 5086552099364082679, guid: 20c086bc7d9f569409c112c5a7d53cdc,
+        type: 3}
+      propertyPath: thinkingTimeMax
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5086552099364082679, guid: 20c086bc7d9f569409c112c5a7d53cdc,
+        type: 3}
+      propertyPath: thinkingTimeMin
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 20c086bc7d9f569409c112c5a7d53cdc, type: 3}
