@@ -96,6 +96,12 @@ public class PlayerBase : MonoBehaviour
     public Ship[] Ships => ships;
 
     // 델리게이트 ----------------------------------------------------------------------------------
+    
+    /// <summary>
+    /// 플레이어의 공격이 실패했음을 알리는 델리게이트
+    /// </summary>
+    public Action<PlayerBase> onAttackFail;
+
     /// <summary>
     /// 플레이어의 행동이 끝났음을 알리는 델리게이트
     /// </summary>
@@ -119,7 +125,7 @@ public class PlayerBase : MonoBehaviour
         for ( int i=0;i< shipTypeCount; i++)
         {
             ships[i] = ShipManager.Inst.MakeShip((ShipType)(i + 1), this);  // 배 종류별로 생성
-            ships[i].onDead += OnShipDestroy;                               // 배가 침몰될 때 실행될 함수 연결
+            ships[i].onSinking += OnShipDestroy;                               // 배가 침몰될 때 실행될 함수 연결
             board.onShipAttacked[(ShipType)(i + 1)] = ships[i].OnAttacked;  // 배 종류별로 공격 당할 때 실행될 함수 연결
         }
         board.onShipAttacked[ShipType.None] = null; // 키값 추가용.
@@ -533,6 +539,7 @@ public class PlayerBase : MonoBehaviour
             {
                 // 공격이 실패했다.            
                 lastAttackSuccessPos = NOT_SUCCESS_YET; // 마지막 공격 성공 위치 제거(없어도 상관 없으나 있는 쪽이 연산을 줄일 수 있을 것 같다)
+                onAttackFail?.Invoke(this);             // 공격 실패를 알림
             }
 
             // 이번 공격으로 상대방의 배가 부서졌으면

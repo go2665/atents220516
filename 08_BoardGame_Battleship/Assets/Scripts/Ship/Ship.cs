@@ -68,12 +68,18 @@ public class Ship : MonoBehaviour
     /// 파라메터 : 배치할때는 true, 해제할 때는 false
     /// </summary>
     public Action<bool> onDeploy;
-    
+
+    /// <summary>
+    /// 배가 공격을 당했을 때 실행될 델리게이트
+    /// 파라메터 : 자기자신
+    /// </summary>
+    public Action<Ship> onHit;
+
     /// <summary>
     /// 배가 침몰할 때 실행될 델리게이트.
     /// 파라메터 : 자기 자신
     /// </summary>
-    public Action<Ship> onDead;
+    public Action<Ship> onSinking;
 
     // 프로퍼티들 ----------------------------------------------------------------------------------
     /// <summary>
@@ -243,21 +249,25 @@ public class Ship : MonoBehaviour
     /// </summary>
     public void OnAttacked()
     {
-        //Debug.Log($"{type} 공격 받음");
+        //Debug.Log($"{owner.name}의 {shipName}이 공격 받음");
         hp--;
-        if(hp <= 0)
+        if(hp > 0)
         {
-            OnDie();
+            onHit?.Invoke(this);    // 맞았는데 침몰되지 않았으면 맞았다고 델리게이트 실행
+        }
+        else
+        {
+            OnSinking();            // 맞았는데 HP가 0 이하면 침몰
         }
     }
 
     /// <summary>
     /// 이 배가 침몰당했을 때 실행될 함수
     /// </summary>
-    private void OnDie()
+    private void OnSinking()
     {
         Debug.Log($"{type} 침몰");
         isAlive = false;
-        onDead?.Invoke(this);
+        onSinking?.Invoke(this);
     }
 }
