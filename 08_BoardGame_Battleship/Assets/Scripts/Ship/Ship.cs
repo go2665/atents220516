@@ -56,6 +56,11 @@ public class Ship : MonoBehaviour
     /// </summary>
     Renderer shipRenderer;
 
+    /// <summary>
+    /// 이 배를 가지고 있는 플레이어
+    /// </summary>
+    PlayerBase owner;
+
     // 델리게이트 ----------------------------------------------------------------------------------
 
     /// <summary>
@@ -120,6 +125,11 @@ public class Ship : MonoBehaviour
     /// </summary>
     public Vector2Int[] Positions => positions;
 
+    /// <summary>
+    /// 이 배를 가지고 있는 플레이어를 확인 할 수 있는 프로퍼티
+    /// </summary>
+    public PlayerBase Owner => owner;
+
     // 함수들 --------------------------------------------------------------------------------------
 
     /// <summary>
@@ -169,6 +179,9 @@ public class Ship : MonoBehaviour
 
         // 배의 초기방향 지정
         Direction = ShipDirection.NORTH;
+
+        // 배의 소유자 등록
+        owner = GetComponentInParent<PlayerBase>();
     }
 
     /// <summary>

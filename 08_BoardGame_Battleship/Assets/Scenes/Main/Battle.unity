@@ -2747,7 +2747,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37f8c507d69b77145ba4806d66cb1a3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shipColor: {r: 0.6320754, g: 0.04472231, b: 0.04472231, a: 0}
+  userColor: {r: 0, g: 1, b: 0, a: 0}
+  enemyColor: {r: 1, g: 0, b: 0, a: 0}
+  shipColor: {r: 1, g: 1, b: 0, a: 0}
+  turnColor: {r: 1, g: 0.305, b: 0, a: 0}
 --- !u!1001 &1607996775
 PrefabInstance:
   m_ObjectHideFlags: 0
