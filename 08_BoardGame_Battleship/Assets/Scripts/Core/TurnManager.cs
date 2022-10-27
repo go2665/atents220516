@@ -60,19 +60,20 @@ public class TurnManager : Singleton<TurnManager>
     {
         // 델리게이트 연결
         userPlayer = FindObjectOfType<UserPlayer>();    // 유저 플레이어 찾고
+        enemyPlayer = FindObjectOfType<EnemyPlayer>();  // 적 플레이어 찾고
+                
         userPlayer.onActionEnd += () =>                 // 공격이 끝났을 때 실행될 델리게이트에 함수 연결
         {
             isUserEnd = true;   // 자기 행동 끝났음을 표시
-            if (isEnemyEnd)     // 적의 행동도 끝났는지 확인하고
+            if (!enemyPlayer.IsDepeat && isEnemyEnd)     // 적이 아직 지지 않았고 적의 행동이 끝났는지 확인
             {
                 OnTurnEnd();    // 둘 다 행동이 끝났으면 턴 종료
             }
         };
-        enemyPlayer = FindObjectOfType<EnemyPlayer>();  // 적 플레이어 찾고
         enemyPlayer.onActionEnd += () =>                // 적의 공격이 끝났을 때 실행될 델리게이트에 함수 연결
         {
             isEnemyEnd = true;  // 적의 행동이 끝났음을 표시
-            if (isUserEnd)      // 유저의 행동도 끝났는지 확인하고
+            if (!userPlayer.IsDepeat && isUserEnd)      // 유저가 아직 지지 않았고 유저의 행동이 끝났는지 확인
             {
                 OnTurnEnd();    // 둘 다 행동이 끝났으면 턴 종료
             }
