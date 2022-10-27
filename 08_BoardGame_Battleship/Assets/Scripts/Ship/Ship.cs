@@ -112,6 +112,11 @@ public class Ship : MonoBehaviour
     public int Size => size;
 
     /// <summary>
+    /// 배의 HP
+    /// </summary>
+    public int HP => hp;
+
+    /// <summary>
     /// 배의 배치 여부 확인용 프로퍼티. 읽기 전용
     /// </summary>
     public bool IsDeployed => isDeployed;
