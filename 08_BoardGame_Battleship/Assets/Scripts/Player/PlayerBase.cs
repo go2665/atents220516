@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 /// <summary>
 /// 플레이어 기본 클래스
@@ -95,6 +94,11 @@ public class PlayerBase : MonoBehaviour
     /// </summary>
     public Ship[] Ships => ships;
 
+    /// <summary>
+    /// 이 플레이어가 패배했는지 알려주는 프로퍼티(true면 이 플레이어가 패배)
+    /// </summary>
+    public bool IsDepeat => remainShipCount < 1;
+
     // 델리게이트 ----------------------------------------------------------------------------------
     
     /// <summary>
@@ -106,6 +110,11 @@ public class PlayerBase : MonoBehaviour
     /// 플레이어의 행동이 끝났음을 알리는 델리게이트
     /// </summary>
     public Action onActionEnd;
+
+    /// <summary>
+    /// 플레이어가 패배했음을 알리는 델리게이트
+    /// </summary>
+    public Action<PlayerBase> onDefeat;
 
     // 함수들 --------------------------------------------------------------------------------------
 
@@ -203,6 +212,7 @@ public class PlayerBase : MonoBehaviour
     private void OnDefeat()
     {
         Debug.Log($"{gameObject.name} 패배");
+        onDefeat?.Invoke(this);
     }
 
     // 함선 배치용 함수 ----------------------------------------------------------------------------
@@ -524,8 +534,10 @@ public class PlayerBase : MonoBehaviour
     /// <param name="attackGridPos">공격할 그리드 좌표</param>
     public void Attack(Vector2Int attackGridPos)
     {
-        if (!isActionDone)
-        {
+        if (!isActionDone 
+            && Board.IsValidPosition(attackGridPos)         // 중복 Board.Attacked에서 체크함
+            && opponent.Board.IsAttackable(attackGridPos))  // 중복 Board.Attacked에서 체크함
+        {            
             RemoveHighCandidate(Board.GridToIndex(attackGridPos));  // 공격을 할것이라 후보지에서 제거
 
             bool result = opponent.Board.Attacked(attackGridPos);   // 실제로 공격해서 공격 결과 얻기
