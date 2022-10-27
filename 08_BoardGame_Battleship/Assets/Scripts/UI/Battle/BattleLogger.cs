@@ -71,17 +71,21 @@ public class BattleLogger : MonoBehaviour
         foreach (var ship in gameManager.UserPlayer.Ships)
         {
             ship.onHit += (targetShip) => { Log_Attack_Success(false, targetShip); };   // 람다식을 이용해서 파라메터 갯수가 달라도 실행되게 설정
-            ship.onSinking += (targetShip) => { Log_Ship_Destroy(false, targetShip); };
+            ship.onSinking = (targetShip) => { Log_Ship_Destroy(false, targetShip); } + ship.onSinking;
         }
         foreach (var ship in gameManager.EnemyPlayer.Ships)
         {
             ship.onHit += (targetShip) => { Log_Attack_Success(true, targetShip); };
-            ship.onSinking += (targetShip) => { Log_Ship_Destroy(true, targetShip); };
+            ship.onSinking = (targetShip) => { Log_Ship_Destroy(true, targetShip); } + ship.onSinking;
         }
 
         // 플레이어가 공격을 실패했을 때 상황을 출력하기 위해서 델리게이트에 함수 등록
         gameManager.UserPlayer.onAttackFail += Log_Attack_Fail;
         gameManager.EnemyPlayer.onAttackFail += Log_Attack_Fail;
+
+        // 플레이어의 모든 배가 파괴 되었을 때의 상황을 출력하기 위해서 델리게이트에 함수 등록
+        gameManager.UserPlayer.onDefeat += Log_Defeat;
+        gameManager.EnemyPlayer.onDefeat += Log_Defeat;
 
         Clear();  // 시작할 때 로거 비우기
     }
@@ -228,5 +232,24 @@ public class BattleLogger : MonoBehaviour
         //"{턴숫자} 번째 턴이 시작했습니다."
         string color = ColorUtility.ToHtmlStringRGB(turnColor);
         Log($"<#{color}>{number}</color> 번째 턴이 시작했습니다.");
+    }
+
+
+    /// <summary>
+    /// 게임이 끝날 때 상황을 출력하는 함수
+    /// </summary>
+    /// <param name="player">패배한 플레이어</param>
+    private void Log_Defeat(PlayerBase player)
+    {
+        if( player is UserPlayer )
+        {
+            // 사람이 졌다.
+            Log($"당신의 <#ff0000>패배</color>입니다.");
+        }
+        else
+        {
+            // 컴퓨터가 졌다.
+            Log($"당신의 <#00ff00>승리</color>입니다.");
+        }
     }
 }
