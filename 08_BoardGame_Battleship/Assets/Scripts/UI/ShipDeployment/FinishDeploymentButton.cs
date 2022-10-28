@@ -24,6 +24,8 @@ public class FinishDeploymentButton : MonoBehaviour
 
         deploymentPanel = FindObjectOfType<ShipDeploymentPanel>();
         deploymentPanel.onDeploymentStateChange += Ready;   // ShipDeploymentPanel에서 함선 배치 상태 변화에 따라 실행시킴
+
+        button.interactable = true; // 빌드 버전에서 정상적으로 수행이 되지 않아 임시조치로 추가
     }
 
     private void OnClick()

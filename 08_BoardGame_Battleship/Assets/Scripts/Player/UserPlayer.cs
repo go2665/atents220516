@@ -97,7 +97,17 @@ public class UserPlayer : PlayerBase
         GameManager.Inst.Input.onMouseMove += OnMouseMove;
         GameManager.Inst.Input.onMouseWheel += OnMouseWheel;
     }
-        
+
+    private void OnDisable()
+    {
+        if (GameManager.Inst.Input != null)
+        {
+            GameManager.Inst.Input.onClick -= OnClick;
+            GameManager.Inst.Input.onMouseMove -= OnMouseMove;
+            GameManager.Inst.Input.onMouseWheel -= OnMouseWheel;
+        }
+    }
+
     /// <summary>
     /// 배치할 배를 선택하는 함수
     /// </summary>
