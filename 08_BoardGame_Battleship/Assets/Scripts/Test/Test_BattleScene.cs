@@ -30,6 +30,14 @@ public class Test_BattleScene : TestBase
 
     protected override void OnTest3(InputAction.CallbackContext obj)
     {
-        base.OnTest3(obj);
+        //ResultPanel resultPanel = FindObjectOfType<ResultPanel>();
+        //resultPanel.userAnalysis.AllAttackCount = 10;
+        //resultPanel.userAnalysis.SuccessAttackCount = 7;
+        //resultPanel.userAnalysis.FailAttackCount = 3;
+        //resultPanel.userAnalysis.SuccessAttackRatio = (float)7 / 10;
+        //resultPanel.enemyAnalysis.AllAttackCount = 11;
+        //resultPanel.enemyAnalysis.SuccessAttackCount = 8;
+        //resultPanel.enemyAnalysis.FailAttackCount = 3;
+        //resultPanel.enemyAnalysis.SuccessAttackRatio = (float)8 / 11;
     }
 }

@@ -82,3 +82,9 @@
 3. FinishButton 완성하기
    3.1. 함선이 모두 배치되기 전까지는 Interactable이 false로 되어있는다.
    시간 : 7시 50분까지
+
+
+10/28
+1. ResultAnalysis에 제대로 된 데이터 넘겨주기
+   1.1. PlayerBase 수정
+   시간 : 5시까지

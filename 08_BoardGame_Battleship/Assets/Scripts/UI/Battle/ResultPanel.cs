@@ -14,10 +14,16 @@ public class ResultPanel : MonoBehaviour
     bool isTableOpen = false;
 
     ResultTable table;
+    ResultAnalysis userAnalysis;
+    ResultAnalysis enemyAnalysis;
 
     private void Awake()
     {
         table = GetComponentInChildren<ResultTable>();
+        ResultAnalysis[] analysises = GetComponentsInChildren<ResultAnalysis>();
+        userAnalysis = analysises[0];
+        enemyAnalysis = analysises[1];
+
         dropdown = GetComponentInChildren<Button>();
         dropdown.onClick.AddListener(ToggleTable);
     }
