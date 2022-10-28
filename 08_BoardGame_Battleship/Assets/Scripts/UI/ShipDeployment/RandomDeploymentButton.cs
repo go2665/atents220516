@@ -38,7 +38,7 @@ public class RandomDeploymentButton : MonoBehaviour
         }
 
         // 아직 배치되지 않은 배만 자동 배치
-        player.AutoShipDeployment();
+        player.AutoShipDeployment(true);
 
         // 모든 함선 배치 버튼을 눌러진 것으로 표시
         deploymentPanel.SetToggleSelectAll();

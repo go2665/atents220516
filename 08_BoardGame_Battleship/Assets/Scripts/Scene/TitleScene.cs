@@ -29,6 +29,7 @@ public class TitleScene : MonoBehaviour
     private void OnPressAnyKey(InputAction.CallbackContext _)
     {
         // 다음 씬으로 넘어가기 위해 아무 키보드나 마우스 좌우클릭이 되면 실행됨
-        Debug.Log("함선 배치 씬으로 넘어가기");
+        //Debug.Log("함선 배치 씬으로 넘어가기");
+        SceneManager.LoadScene(1);
     }
 }

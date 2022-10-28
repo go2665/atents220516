@@ -118,6 +118,7 @@ public class GameManager : Singleton<GameManager>
                 Ship targetShip = targetPlayer.Ships[i];
                 targetShip.Direction = shipDeployDatas[i].direction;
                 targetPlayer.Board.ShipDeployment(targetShip, shipDeployDatas[i].position); // 다시 전부 배치
+                targetShip.gameObject.SetActive(true);
             }
             result = true;
         }

@@ -274,7 +274,7 @@ public class PlayerBase : MonoBehaviour
     /// 자동 함선 배치 함수
     /// 조건 : 가능한 배끼리 붙지 않고, 가능한 벽부분에 배가 배치되지 않도록 설정
     /// </summary>
-    public void AutoShipDeployment()
+    public void AutoShipDeployment(bool isShowShips = false)
     {
         int maxCapacity = Board.BoardSize * Board.BoardSize;    // 보드의 모든 칸수만큼 크기 확보
         List<int> highPriority = new(maxCapacity);              // 우선 순위가 높은 배치 후보지
@@ -403,7 +403,7 @@ public class PlayerBase : MonoBehaviour
 
             // 배 모델 위치도 이동시키기
             ship.transform.position = board.GridToWorld(pos);   // 배치된 그리드 좌표를 월드 좌표로 변환해서 이동
-            ship.gameObject.SetActive(true);        // 실제로 보여주기
+            ship.gameObject.SetActive(isShowShips);             // 보여주고 싶을 때만 보여주기
 
             // 함선이 차지하는 영역은 모든 리스트에서 제거
             List<int> tempList = new List<int>(shipPositions.Length);
