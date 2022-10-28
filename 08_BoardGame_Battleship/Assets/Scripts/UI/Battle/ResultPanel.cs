@@ -59,6 +59,17 @@ public class ResultPanel : MonoBehaviour
 
     private void Open()
     {
+        userAnalysis.AllAttackCount = user.SuccessAttackCount + user.FailAttackCount;
+        userAnalysis.SuccessAttackCount = user.SuccessAttackCount;
+        userAnalysis.FailAttackCount = user.FailAttackCount;
+        userAnalysis.SuccessAttackRatio = (float)user.SuccessAttackCount / (user.SuccessAttackCount + user.FailAttackCount);
+
+        enemyAnalysis.AllAttackCount = enemy.SuccessAttackCount + enemy.FailAttackCount;
+        enemyAnalysis.SuccessAttackCount = enemy.SuccessAttackCount;
+        enemyAnalysis.FailAttackCount = enemy.FailAttackCount;
+        enemyAnalysis.SuccessAttackRatio = (float)enemy.SuccessAttackCount / (enemy.SuccessAttackCount + enemy.FailAttackCount);
+
+        //enemyAnalysis;
         gameObject.SetActive(true);
     }
 

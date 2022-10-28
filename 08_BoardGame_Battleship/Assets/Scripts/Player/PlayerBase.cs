@@ -35,6 +35,16 @@ public class PlayerBase : MonoBehaviour
     /// </summary>
     bool isActionDone = false;
 
+    /// <summary>
+    /// 성공한 공격 횟수
+    /// </summary>
+    int successAttackCount = 0;
+
+    /// <summary>
+    /// 실패한 공격 횟수
+    /// </summary>
+    int failAttackCount = 0;
+
     // 플레이어의 상대 정보 -------------------------------------------------------------------------
     
     /// <summary>
@@ -99,8 +109,18 @@ public class PlayerBase : MonoBehaviour
     /// </summary>
     public bool IsDepeat => remainShipCount < 1;
 
+    /// <summary>
+    /// 성공한 공격 횟수를 알려주는 프로퍼티
+    /// </summary>
+    public int SuccessAttackCount => successAttackCount;
+
+    /// <summary>
+    /// 실패한 공격 횟수를 알려주는 프로퍼티
+    /// </summary>
+    public int FailAttackCount => failAttackCount;
+
     // 델리게이트 ----------------------------------------------------------------------------------
-    
+
     /// <summary>
     /// 플레이어의 공격이 실패했음을 알리는 델리게이트
     /// </summary>
@@ -150,6 +170,10 @@ public class PlayerBase : MonoBehaviour
         }
         Utils.Shuffle<int>(tempCandidate);  // 배열 섞고
         attackCandidateIndice = new List<int>(tempCandidate);   // 섞은 배열을 기반으로 리스트 만들기        
+
+        // 공격 횟수 초기화
+        successAttackCount = 0;
+        failAttackCount = 0;
     }
 
     // 일반 이벤트 함수들 --------------------------------------------------------------------------
@@ -545,11 +569,13 @@ public class PlayerBase : MonoBehaviour
             if (result)
             {
                 // 공격이 성공했다.
+                successAttackCount++;
                 AttackSuccessProcess(attackGridPos);
             }
             else
             {
-                // 공격이 실패했다.            
+                // 공격이 실패했다.
+                failAttackCount++;
                 lastAttackSuccessPos = NOT_SUCCESS_YET; // 마지막 공격 성공 위치 제거(없어도 상관 없으나 있는 쪽이 연산을 줄일 수 있을 것 같다)
                 onAttackFail?.Invoke(this);             // 공격 실패를 알림
             }

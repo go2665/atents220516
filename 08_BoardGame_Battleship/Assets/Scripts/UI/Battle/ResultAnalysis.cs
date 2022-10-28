@@ -42,7 +42,7 @@ public class ResultAnalysis : MonoBehaviour
         set
         {
             successRatio = value;
-            texts[3].text = $"{successRatio:f2}";
+            texts[3].text = $"{successRatio*100.0f:f1}%";
         }
     }
 
