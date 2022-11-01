@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class UI_Manager : Singleton<UI_Manager>
 {
     public Button startHost;
     public Button startClient;
+    public TMP_InputField nameInputField;
+
+    public TMP_InputField NameInputField => nameInputField;
 
     private void Start()
     {
