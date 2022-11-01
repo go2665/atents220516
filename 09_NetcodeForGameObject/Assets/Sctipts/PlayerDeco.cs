@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
@@ -16,8 +17,14 @@ public class PlayerDeco : NetworkBehaviour
         if( IsServer )
         {
             //OwnerClientId;
-            playerName.Value = "aaaaaa";
+            playerName.Value = $"Player {OwnerClientId}";
         }
+
+        TextMeshPro playerNamePlate = GetComponentInChildren<TextMeshPro>();
+        playerNamePlate.text = playerName.Value.ToString();
+
+        Renderer renderer = GetComponentInChildren<Renderer>();
+        renderer.material.color = Color.blue;
     }
 
         
