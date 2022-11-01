@@ -48,10 +48,7 @@ public class PlayerDeco : NetworkBehaviour
         }
 
         Renderer renderer = GetComponentInChildren<Renderer>();     // 색상 설정하기 위해 랜더러 찾기
-        renderer.material.color = playerColor.Value;                // 렌덤으로 정해진 색상으로 설정
-
-        TMP_InputField input = UI_Manager.Inst.NameInputField;      // 인풋필드 찾아서 
-        SetPlayerNameServerRpc(input.text);                         // 플레이어 이름 설정 요청        
+        renderer.material.color = playerColor.Value;                // 렌덤으로 정해진 색상으로 설정  
     }
 
     /// <summary>
@@ -59,7 +56,7 @@ public class PlayerDeco : NetworkBehaviour
     /// </summary>
     /// <param name="text">새 이름</param>
     [ServerRpc]
-    void SetPlayerNameServerRpc(string text)
+    public void SetPlayerNameServerRpc(string text)
     {
         playerName.Value = text;
     }        

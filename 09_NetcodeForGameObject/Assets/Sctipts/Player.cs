@@ -28,6 +28,8 @@ public class Player : NetworkBehaviour
     /// </summary>
     CharacterController controller;
 
+    Animator anim;
+
     // NetworkVariable
     // Netcode for GameObjects에서 네트워크를 통해 데이터를 공유하기 위해 사용하는 타입
     // 공유 가능한 데이터 타입은 unmanaged 타입만 가능(대략적으로 값타입만 가능)
@@ -47,6 +49,7 @@ public class Player : NetworkBehaviour
     {
         inputActions = new PlayerInputActions();            // 인풋 액션 만들고
         controller = GetComponent<CharacterController>();   // 컴포넌트 가져오기
+        anim = GetComponent<Animator>();
     }
 
     private void OnEnable()
@@ -81,6 +84,19 @@ public class Player : NetworkBehaviour
             float rotateDelta = moveInput.x * rotateSpeed;                      // 좌우로 회전 정도
 
             UpdateClientMoveAndRotateServerRpc(moveDelta, rotateDelta);         // ServerRpc를 통해 서버에 변경 사항을 알림
+
+            if( moveInput.y > 0)
+            {
+                anim.SetTrigger("Walk");
+            }
+            else if( moveInput.y < 0 )
+            {
+                anim.SetTrigger("BackWalk");
+            }
+            else
+            {
+                anim.SetTrigger("Idle");
+            }
         }
     }
 
