@@ -9,6 +9,8 @@ using UnityEngine.InputSystem;
 
 public class Player : NetworkBehaviour
 {
+    public GameObject ballPrefab;
+
     /// <summary>
     /// 걷는 속도
     /// </summary>
@@ -84,10 +86,12 @@ public class Player : NetworkBehaviour
         inputActions.Player.Enable();                       // 입력 활성화하고 함수 연결
         inputActions.Player.Move.performed += OnMoveInput;
         inputActions.Player.Move.canceled += OnMoveInput;
+        inputActions.Player.Attack.performed += OnAttakInput;
     }
 
     private void OnDisable()
     {
+        inputActions.Player.Attack.performed -= OnAttakInput;
         inputActions.Player.Move.canceled -= OnMoveInput;
         inputActions.Player.Move.performed -= OnMoveInput;
         inputActions.Player.Disable();
@@ -149,6 +153,27 @@ public class Player : NetworkBehaviour
         }
     }
 
+    private void OnAttakInput(InputAction.CallbackContext context)
+    {
+        GameObject ball = Instantiate(ballPrefab);
+        ball.transform.position = transform.position + transform.forward + transform.up * 1.5f;
+        Rigidbody ballRigid = ball.GetComponent<Rigidbody>();
+        ballRigid.velocity = transform.forward * 10.0f;
+
+        NetworkObject netObj = ball.GetComponent<NetworkObject>();
+        //SpawnBallServerRpc();
+        SpawnInstance(netObj);
+
+    }
+
+    void SpawnInstance(NetworkObject netObj)
+    {
+        if (!IsServer)
+            return;
+
+        netObj.Spawn(true);
+    }
+
 
     // [ServerRpc] : 서버가 실행하는 함수라는 표시
 
@@ -174,6 +199,12 @@ public class Player : NetworkBehaviour
     private void UpdatePlayerAnimStateServerRpc(PlayerAnimState playerAnimState)
     {
         networkPlayerAnimState.Value = playerAnimState;        
+    }
+
+    [ServerRpc]
+    void SpawnBallServerRpc()
+    {
+        
     }
 
     /// <summary>

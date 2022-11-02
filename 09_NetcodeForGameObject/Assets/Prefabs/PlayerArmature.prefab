@@ -1480,6 +1480,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22034d28fd55bbd4b94ca629e97cd2b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ballPrefab: {fileID: 3111462180344997512, guid: 26c3ff8a2d3dbea42b661827a7bd18a3, type: 3}
   walkSpeed: 3.5
   rotateSpeed: 180
 --- !u!114 &7818713529795249425
