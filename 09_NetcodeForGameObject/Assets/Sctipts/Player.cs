@@ -8,6 +8,16 @@ using UnityEngine.InputSystem;
 
 public class Player : NetworkBehaviour
 {
+    public enum PlayerAnimState
+    {
+        Idle,
+        Walk,
+        BackWalk
+    }
+
+    PlayerAnimState playerAnimState = PlayerAnimState.Idle;
+    NetworkVariable<PlayerAnimState> networkPlayerAnimState = new NetworkVariable<PlayerAnimState>();
+
     /// <summary>
     /// 걷는 속도
     /// </summary>
@@ -50,6 +60,13 @@ public class Player : NetworkBehaviour
         inputActions = new PlayerInputActions();            // 인풋 액션 만들고
         controller = GetComponent<CharacterController>();   // 컴포넌트 가져오기
         anim = GetComponent<Animator>();
+
+        networkPlayerAnimState.OnValueChanged += OnPlayerAnimStateChange;
+    }
+
+    private void OnPlayerAnimStateChange(PlayerAnimState previousValue, PlayerAnimState newValue)
+    {
+        anim.SetTrigger($"{newValue}");
     }
 
     private void OnEnable()
@@ -87,17 +104,27 @@ public class Player : NetworkBehaviour
 
             if( moveInput.y > 0)
             {
-                anim.SetTrigger("Walk");
+                playerAnimState = PlayerAnimState.Walk;
             }
             else if( moveInput.y < 0 )
             {
-                anim.SetTrigger("BackWalk");
+                playerAnimState = PlayerAnimState.BackWalk;
             }
             else
             {
-                anim.SetTrigger("Idle");
+                playerAnimState = PlayerAnimState.Idle;
+            }
+            if( playerAnimState != networkPlayerAnimState.Value )
+            {
+                UpdatePlayerAnimStateServerRpc(playerAnimState);
             }
         }
+    }
+
+    [ServerRpc]
+    private void UpdatePlayerAnimStateServerRpc(PlayerAnimState playerAnimState)
+    {
+        networkPlayerAnimState.Value = playerAnimState;
     }
 
     /// <summary>
