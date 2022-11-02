@@ -31,6 +31,11 @@ public class PlayerDeco : NetworkBehaviour
         playerName.OnValueChanged += OnNameChange;
     }
 
+    /// <summary>
+    /// 플레이어의 이름이 변경되었을때 실행될 함수
+    /// </summary>
+    /// <param name="previousValue"></param>
+    /// <param name="newValue"></param>
     private void OnNameChange(FixedString64Bytes previousValue, FixedString64Bytes newValue)
     {
         // 플레이어의 이름이 변경되면 이름판에 표시되는 이름 갱신

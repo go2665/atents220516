@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Collections.LowLevel.Unsafe;
 using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -8,16 +9,6 @@ using UnityEngine.InputSystem;
 
 public class Player : NetworkBehaviour
 {
-    public enum PlayerAnimState
-    {
-        Idle,
-        Walk,
-        BackWalk
-    }
-
-    PlayerAnimState playerAnimState = PlayerAnimState.Idle;
-    NetworkVariable<PlayerAnimState> networkPlayerAnimState = new NetworkVariable<PlayerAnimState>();
-
     /// <summary>
     /// 걷는 속도
     /// </summary>
@@ -28,17 +19,16 @@ public class Player : NetworkBehaviour
     /// </summary>
     public float rotateSpeed = 3.5f;
 
-    /// <summary>
-    /// 인풋 액션맵
-    /// </summary>
-    PlayerInputActions inputActions;
 
     /// <summary>
-    /// 캐릭터 컨트롤러 컴포넌트
+    /// 플레이어의 애니메이션 상태를 알려주는 enum
     /// </summary>
-    CharacterController controller;
-
-    Animator anim;
+    public enum PlayerAnimState
+    {
+        Idle,
+        Walk,
+        BackWalk
+    }
 
     // NetworkVariable
     // Netcode for GameObjects에서 네트워크를 통해 데이터를 공유하기 위해 사용하는 타입
@@ -55,18 +45,38 @@ public class Player : NetworkBehaviour
     /// </summary>
     NetworkVariable<float> networkRotateDelta = new NetworkVariable<float>();
 
+    /// <summary>
+    /// 네트워크에서 동기화가 이루어지는 애니메이션 상태 변수.(실질적으로는 값이 바뀔 때 함수 실행해는 목적)
+    /// </summary>
+    NetworkVariable<PlayerAnimState> networkPlayerAnimState = new NetworkVariable<PlayerAnimState>();
+
+    /// <summary>
+    /// 현재 플레이어의 애니메이션 상태. 기본값은 idle
+    /// </summary>
+    PlayerAnimState playerAnimState = PlayerAnimState.Idle;
+    
+    /// <summary>
+    /// 인풋 액션맵
+    /// </summary>
+    PlayerInputActions inputActions;
+
+    /// <summary>
+    /// 캐릭터 컨트롤러 컴포넌트
+    /// </summary>
+    CharacterController controller;
+
+    /// <summary>
+    /// 애니메이터 컴포넌트
+    /// </summary>
+    Animator anim;
+
     private void Awake()
     {
         inputActions = new PlayerInputActions();            // 인풋 액션 만들고
         controller = GetComponent<CharacterController>();   // 컴포넌트 가져오기
-        anim = GetComponent<Animator>();
+        anim = GetComponent<Animator>();        
 
-        networkPlayerAnimState.OnValueChanged += OnPlayerAnimStateChange;
-    }
-
-    private void OnPlayerAnimStateChange(PlayerAnimState previousValue, PlayerAnimState newValue)
-    {
-        anim.SetTrigger($"{newValue}");
+        networkPlayerAnimState.OnValueChanged += OnPlayerAnimStateChange;   // 애니메이션 상태 변수가 변경되었을 때 실행될 함수 연결
     }
 
     private void OnEnable()
@@ -85,7 +95,24 @@ public class Player : NetworkBehaviour
 
     private void Update()
     {
-        ClientMoveAndRotate();  // 이동과 회전 처리
+        ClientMoveAndRotate();  // 이동과 회전 실제 처리
+    }
+
+    /// <summary>
+    /// 클라이언트 캐릭터를 실제로 움직이고 회전시키는 함수
+    /// </summary>
+    void ClientMoveAndRotate()
+    {
+        if (networkMoveDelta.Value != Vector3.zero) 
+        {
+            // 이동에 변화가 있으면 이동 처리
+            controller.SimpleMove(networkMoveDelta.Value);
+        }
+        if (networkRotateDelta.Value != 0.0f)
+        {
+            // 회전에 변화가 있으면 회전 처리
+            transform.Rotate(0, networkRotateDelta.Value * Time.deltaTime, 0, Space.World);
+        }
     }
 
     /// <summary>
@@ -102,52 +129,31 @@ public class Player : NetworkBehaviour
 
             UpdateClientMoveAndRotateServerRpc(moveDelta, rotateDelta);         // ServerRpc를 통해 서버에 변경 사항을 알림
 
+            // 애니메이션 용 처리
             if( moveInput.y > 0)
             {
-                playerAnimState = PlayerAnimState.Walk;
+                playerAnimState = PlayerAnimState.Walk;         // 앞으로 갈 때는 그냥 걷는 상태
             }
             else if( moveInput.y < 0 )
             {
-                playerAnimState = PlayerAnimState.BackWalk;
+                playerAnimState = PlayerAnimState.BackWalk;     // 뒤로 갈때는 거꾸로 걷는 상태
             }
             else
             {
-                playerAnimState = PlayerAnimState.Idle;
+                playerAnimState = PlayerAnimState.Idle;         // 가만히 있을 때는 Idle 상태
             }
-            if( playerAnimState != networkPlayerAnimState.Value )
+            if( playerAnimState != networkPlayerAnimState.Value )   // 상태의 변화가 있으면
             {
-                UpdatePlayerAnimStateServerRpc(playerAnimState);
+                UpdatePlayerAnimStateServerRpc(playerAnimState);    // 네트워크 변수를 변경하도록 ServerRpc 보내기
             }
         }
     }
 
-    [ServerRpc]
-    private void UpdatePlayerAnimStateServerRpc(PlayerAnimState playerAnimState)
-    {
-        networkPlayerAnimState.Value = playerAnimState;
-    }
-
-    /// <summary>
-    /// 클라이언트 캐릭터를 실제로 움직이고 회전시키는 함수
-    /// </summary>
-    void ClientMoveAndRotate()
-    {
-        if (networkMoveDelta.Value != Vector3.zero)
-        {
-            // 이동에 변화가 있으면 이동 처리
-            controller.SimpleMove(networkMoveDelta.Value);
-        }
-        if (networkRotateDelta.Value != 0.0f)
-        {
-            // 회전에 변화가 있으면 회전 처리
-            transform.Rotate(0, networkRotateDelta.Value * Time.deltaTime, 0, Space.World);
-        }
-    }
 
     // [ServerRpc] : 서버가 실행하는 함수라는 표시
 
     /// <summary>
-    /// 네트워크 변수를 서버에서 변경 처리하는 함수
+    /// 이동과 회전용 네트워크 변수를 서버에서 변경 처리하는 함수
     /// </summary>
     /// <param name="moveDelta">이동 정도</param>
     /// <param name="rotateDelta">회전 정도</param>
@@ -159,5 +165,24 @@ public class Player : NetworkBehaviour
         networkMoveDelta.Value = moveDelta;
         networkRotateDelta.Value = rotateDelta;
     }
-    
+
+    /// <summary>
+    /// 애니메이션 상태 네트워크 변수를 서버에서 변경 처리하는 함수
+    /// </summary>
+    /// <param name="playerAnimState">새 애니메이션 상태</param>
+    [ServerRpc]
+    private void UpdatePlayerAnimStateServerRpc(PlayerAnimState playerAnimState)
+    {
+        networkPlayerAnimState.Value = playerAnimState;        
+    }
+
+    /// <summary>
+    /// playerAnimState 변경되었을 때 실행되는 함수. 변화된 상태에 따라 애니메이션 실행.
+    /// </summary>
+    /// <param name="previousValue"></param>
+    /// <param name="newValue"></param>
+    private void OnPlayerAnimStateChange(PlayerAnimState previousValue, PlayerAnimState newValue)
+    {
+        anim.SetTrigger($"{newValue}");
+    }
 }
