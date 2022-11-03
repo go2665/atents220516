@@ -153,25 +153,16 @@ public class Player : NetworkBehaviour
         }
     }
 
+    /// <summary>
+    /// 공격 입력에 바인딩 된 함수
+    /// </summary>
+    /// <param name="context"></param>
     private void OnAttakInput(InputAction.CallbackContext context)
     {
-        GameObject ball = Instantiate(ballPrefab);
-        ball.transform.position = transform.position + transform.forward + transform.up * 1.5f;
-        Rigidbody ballRigid = ball.GetComponent<Rigidbody>();
-        ballRigid.velocity = transform.forward * 10.0f;
-
-        NetworkObject netObj = ball.GetComponent<NetworkObject>();
-        //SpawnBallServerRpc();
-        SpawnInstance(netObj);
-
-    }
-
-    void SpawnInstance(NetworkObject netObj)
-    {
-        if (!IsServer)
-            return;
-
-        netObj.Spawn(true);
+        if (IsOwner)
+        {
+            SpawnBallServerRpc();
+        }
     }
 
 
@@ -201,10 +192,19 @@ public class Player : NetworkBehaviour
         networkPlayerAnimState.Value = playerAnimState;        
     }
 
+    /// <summary>
+    /// 서버에 볼 스폰을 요청
+    /// </summary>
     [ServerRpc]
     void SpawnBallServerRpc()
     {
-        
+        GameObject ball = Instantiate(ballPrefab);  // 프리팹 생성.
+        ball.transform.position = transform.position + transform.forward + transform.up * 1.5f;
+        Rigidbody ballRigid = ball.GetComponent<Rigidbody>();
+        ballRigid.velocity = transform.forward * 10.0f;
+
+        NetworkObject netObj = ball.GetComponent<NetworkObject>();
+        netObj.Spawn(true); // Spawn을 통해 네트워크상에서 생성. Server에서만 가능
     }
 
     /// <summary>
