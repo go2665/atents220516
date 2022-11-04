@@ -47,7 +47,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 25
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -809,8 +809,7 @@ TextureImporter:
     nameFileIdTable:
       Number_-: -769791306
       Number_5: -648339337
-      Reset_GameOver: 2015483703
-      Block_MineCount_4: -15668820
+      Number_8: -191358360
       Block_MineCount_6: -1953645453
       Number_Empty: 1274059262
       Reset_Clear: -1943142701
@@ -838,7 +837,8 @@ TextureImporter:
       Block_Mine: -1012028528
       Number_2: -1000400878
       Reset_Smile: 1543339470
-      Number_8: -191358360
+      Reset_GameOver: 2015483703
+      Block_MineCount_4: -15668820
       MineSweeper_21: -1012028528
   spritePackingTag: 
   pSDRemoveMatte: 0
