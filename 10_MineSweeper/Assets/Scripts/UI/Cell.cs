@@ -69,7 +69,10 @@ public class Cell : MonoBehaviour, IPointerClickHandler
                 Debug.LogWarning("ID는 한번만 설정 가능합니다.");
             }
         }
-    }    
+    }
+
+
+    public bool HasMine => isMine;
 
     // 함수 ---------------------------------------------------------------------------------------
 
@@ -101,12 +104,15 @@ public class Cell : MonoBehaviour, IPointerClickHandler
     /// 셀의 열린 이미지 설정
     /// </summary>
     /// <param name="type">보일 이미지 종류</param>
-    public void SetOpenImage(CloseCellType type) => cellImage.sprite = images[type];
+    public void SetOpenImage(int count)
+    { 
+        cellImage.sprite = images[OpenCellType.Empty+count]; 
+    }
 
     /// <summary>
     /// 셀을 여는 함수
     /// </summary>
-    private void OpenCell()
+    public void OpenCell()
     {
         if (!isOpen)        // 열리지 않은 셀만 열기
         {
