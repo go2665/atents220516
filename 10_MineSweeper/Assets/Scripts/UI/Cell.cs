@@ -36,7 +36,7 @@ public class Cell : MonoBehaviour, IPointerClickHandler
     /// <summary>
     /// 이 셀에 지뢰가 있는지 표시(true면 지뢰가 있다.)
     /// </summary>
-    bool isMine = false;
+    public bool isMine = false;
 
     /// <summary>
     /// 이 셀에 우클릭을 얼마나 했는지 표시
@@ -44,7 +44,7 @@ public class Cell : MonoBehaviour, IPointerClickHandler
     CloseCellType cellState = CloseCellType.Normal;
 
     // 캐싱용 --------------------------------------------------------------------------------------
-    CellImageManager images;    // 이미지 받아오기 위한 매니저
+    CellImageManager cellImages;    // 이미지 받아오기 위한 매니저
     GameManager gameManager;    // 게임 매니저
 
     // 델리게이트 ----------------------------------------------------------------------------------
@@ -55,6 +55,10 @@ public class Cell : MonoBehaviour, IPointerClickHandler
     public Action<Cell> onSafeOpen;
 
     // 프로퍼티 ------------------------------------------------------------------------------------
+    
+    /// <summary>
+    /// ID 설정 및 확인용 프로퍼티(설정은 한번만 가능)
+    /// </summary>
     public int ID
     {
         get => id;
@@ -71,7 +75,9 @@ public class Cell : MonoBehaviour, IPointerClickHandler
         }
     }
 
-
+    /// <summary>
+    /// 지뢰가 있는지 여부를 확인하는 프로퍼티
+    /// </summary>
     public bool HasMine => isMine;
 
     // 함수 ---------------------------------------------------------------------------------------
@@ -85,14 +91,11 @@ public class Cell : MonoBehaviour, IPointerClickHandler
     private void Start()
     {
         // 각종 초기화
-        isMine = false;
-        isOpen = false;
-        cellState = CloseCellType.Normal;
-
-
         gameManager = GameManager.Inst;
-        images = gameManager.CellImage;
-        cellImage.sprite = images[global::CloseCellType.Normal];    // 기본 스프라이트 설정
+        cellImages = gameManager.CellImage;
+
+        CellReset();
+        //Debug.Log("Cell start");
     }
 
     /// <summary>
@@ -106,7 +109,7 @@ public class Cell : MonoBehaviour, IPointerClickHandler
     /// <param name="type">보일 이미지 종류</param>
     public void SetOpenImage(int count)
     { 
-        cellImage.sprite = images[OpenCellType.Empty+count]; 
+        cellImage.sprite = cellImages[OpenCellType.Empty+count]; 
     }
 
     /// <summary>
@@ -121,19 +124,27 @@ public class Cell : MonoBehaviour, IPointerClickHandler
             if( isMine )
             {
                 // 지뢰가 있다.
-                cellImage.sprite = images[OpenCellType.MineExplosion];  // 지뢰가 터진 스프라이트로 변경
+                cellImage.sprite = cellImages[OpenCellType.MineExplosion];  // 지뢰가 터진 스프라이트로 변경
                 gameManager.GameOver(); // 게임오버 처리
             }
             else
             {
-                // 지뢰가 없다.
+                // 지뢰가 없다. => 주변 8칸 검사
                 onSafeOpen?.Invoke(this);
-                // 델리게이트에 연결한 곳에서 처리(CellManager?)
-                //      이셀 위치 주변의 지뢰수를 센다.
-                //      이셀 주변의 지뢰수에 맞는 숫자 표시
-                //      없으면 빈이미지 표시하고 주변 8방향 셀 open
             }
         }
+    }
+
+    /// <summary>
+    /// 이 셀을 초기화 하는 함수
+    /// </summary>
+    public void CellReset()
+    {
+        cellState = CloseCellType.Normal;                           // 기본 상태 설정
+        cellImage.sprite = cellImages[global::CloseCellType.Normal];    // 기본 스프라이트 설정
+
+        isOpen = false; // 닫혔다고 표시
+        isMine = false; // 지뢰가 없다고 표시
     }
 
     /// <summary>
@@ -169,7 +180,7 @@ public class Cell : MonoBehaviour, IPointerClickHandler
                         break;
                 }
 
-                cellImage.sprite = images[cellState];   // 셀 우클릭 상태에 맞는 이미지 표현
+                cellImage.sprite = cellImages[cellState];   // 셀 우클릭 상태에 맞는 이미지 표현
             }
         }
     }

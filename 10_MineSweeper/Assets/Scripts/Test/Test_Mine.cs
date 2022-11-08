@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 
 public class Test_Mine : TestBase
 {
-    public Cell cell;
+    public Stage stage;
 
     private void Start()
     {        
@@ -13,6 +13,12 @@ public class Test_Mine : TestBase
 
     protected override void OnTest1(InputAction.CallbackContext obj)
     {
-        cell.SetMine();
+        //stage.Test_SetMines();
+        //int i = 0;
+    }
+
+    protected override void OnTest2(InputAction.CallbackContext obj)
+    {
+        stage.ResetAll();
     }
 }
