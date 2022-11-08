@@ -51,6 +51,14 @@ public class Stage : MonoBehaviour
     /// </summary>
     GameManager gameManager;
 
+
+    // 델리게이트 ----------------------------------------------------------------------------------
+
+    /// <summary>
+    /// 깃발 갯수가 변경되었다는 델리게이트. 파라메터는 변경된 갯수
+    /// </summary>
+    public Action<int> onFlagCountChange;
+
     // 함수들 --------------------------------------------------------------------------------------
 
     private void Awake()
@@ -73,6 +81,7 @@ public class Stage : MonoBehaviour
                 cells[id] = obj.GetComponent<Cell>();               // cells에 모든 셀 보관
                 cells[id].ID = id;                                  // cell에 ID할당
                 cells[id].onSafeOpen += GetAroundMineCount;         // 터지지 않고 열렸을 때 실행될 함수 연결(주변 8칸 검사)
+                cells[id].onFlagCountChange += (x) => onFlagCountChange?.Invoke(x); // 셀의 델리게이트에 스테이지의 델리게이트를 연결
             }
         }
     }

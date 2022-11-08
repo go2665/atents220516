@@ -45,7 +45,7 @@ public class Cell : MonoBehaviour, IPointerClickHandler
 
     // 캐싱용 --------------------------------------------------------------------------------------
     CellImageManager cellImages;    // 이미지 받아오기 위한 매니저
-    GameManager gameManager;    // 게임 매니저
+    GameManager gameManager;        // 게임 매니저
 
     // 델리게이트 ----------------------------------------------------------------------------------
     
@@ -54,8 +54,13 @@ public class Cell : MonoBehaviour, IPointerClickHandler
     /// </summary>
     public Action<Cell> onSafeOpen;
 
+    /// <summary>
+    /// 이 셀로 인해 깃발 갯수의 변경이 있으면 실행되는 델리게이트
+    /// </summary>
+    public Action<int> onFlagCountChange;
+
     // 프로퍼티 ------------------------------------------------------------------------------------
-    
+
     /// <summary>
     /// ID 설정 및 확인용 프로퍼티(설정은 한번만 가능)
     /// </summary>
@@ -129,8 +134,13 @@ public class Cell : MonoBehaviour, IPointerClickHandler
             }
             else
             {
-                // 지뢰가 없다. => 주변 8칸 검사
-                onSafeOpen?.Invoke(this);
+                // 지뢰가 없다. 
+                if(cellState == CloseCellType.Flag) // 깃발이 있는 셀이 열리면
+                {
+                    onFlagCountChange?.Invoke(1);   // 깃발 갯수 회복
+                }
+
+                onSafeOpen?.Invoke(this);   // 주변 8칸 검사
             }
         }
     }
@@ -169,9 +179,11 @@ public class Cell : MonoBehaviour, IPointerClickHandler
                     // Normal -> Flag -> Question -> Normal .... 순으로 계속 반복
                     case CloseCellType.Normal:
                         cellState = CloseCellType.Flag;                        
+                        onFlagCountChange?.Invoke(-1);      // 깃발 설치했으니 깃발 갯수 감소
                         break;
                     case CloseCellType.Flag:
                         cellState = CloseCellType.Question;
+                        onFlagCountChange?.Invoke(1);       // 깃발 설치가 취소되었으니 깃발 갯수 회복
                         break;
                     case CloseCellType.Question:
                         cellState = CloseCellType.Normal;
