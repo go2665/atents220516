@@ -20,7 +20,7 @@ public class FlagCounter : MonoBehaviour
     public int FlagCount
     {
         get => flagCount;
-        set
+        private set
         {
             if( flagCount != value )
             {

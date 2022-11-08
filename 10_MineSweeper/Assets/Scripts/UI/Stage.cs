@@ -51,6 +51,10 @@ public class Stage : MonoBehaviour
     /// </summary>
     GameManager gameManager;
 
+    public int totalCount = 0;
+    public int openCount = 0;
+    public int flagCount = 0;
+
 
     // 델리게이트 ----------------------------------------------------------------------------------
 
@@ -81,7 +85,20 @@ public class Stage : MonoBehaviour
                 cells[id] = obj.GetComponent<Cell>();               // cells에 모든 셀 보관
                 cells[id].ID = id;                                  // cell에 ID할당
                 cells[id].onSafeOpen += GetAroundMineCount;         // 터지지 않고 열렸을 때 실행될 함수 연결(주변 8칸 검사)
-                cells[id].onFlagCountChange += (x) => onFlagCountChange?.Invoke(x); // 셀의 델리게이트에 스테이지의 델리게이트를 연결
+                cells[id].onSafeOpen += (_) => 
+                { 
+                    openCount++; 
+
+                    if(flagCount == 0 && totalCount <= openCount + mineCount)
+                    {
+                        gameManager.GameClear();
+                    }
+                };
+                cells[id].onFlagCountChange += (x) =>
+                {
+                    flagCount += x;
+                    onFlagCountChange?.Invoke(x); // 셀의 델리게이트에 스테이지의 델리게이트를 연결
+                };
             }
         }
     }
@@ -91,6 +108,9 @@ public class Stage : MonoBehaviour
         //Debug.Log("Stage start");
         gameManager = GameManager.Inst;         // 게임 매니저 찾기
         gameManager.onGameReset += ResetAll;    // 게임이 리셋 될 때 스테이지 전체 리셋(초기화 하고 지뢰 다시 배치)
+
+        totalCount = width * height;
+        flagCount = mineCount;
     }
 
     /// <summary>

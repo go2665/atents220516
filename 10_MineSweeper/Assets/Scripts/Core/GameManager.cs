@@ -90,6 +90,9 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     public void GameClear()
     {
+        Debug.Log("게임 클리어");
+
         onGameClear?.Invoke();
+
     }
 }
