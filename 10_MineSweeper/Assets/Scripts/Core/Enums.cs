@@ -11,8 +11,8 @@ public enum CloseCellType
 
 public enum OpenCellType
 {
-    Mine = 0,
-    MineFind,
+    MineNotFound = 0,
+    MineFindMistake,
     MineExplosion,
     Empty,
     MineCount_1,

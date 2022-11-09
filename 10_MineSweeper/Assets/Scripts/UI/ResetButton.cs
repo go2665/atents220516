@@ -70,7 +70,15 @@ public class ResetButton : MonoBehaviour
 
     private void Start()
     {
-        button.onClick.AddListener(() => { GameManager.Inst.GameReset(); });        // 버튼 클릭했을 때 게임 리셋 수행
+        GameManager gameManager = GameManager.Inst;
+        gameManager.onGameClear += () => State = ButtonState.GameClear; // 게임 상태에 따라 표시할 이미지 변경
+        gameManager.onGameOver += () => State = ButtonState.GameOver;   
+
+        button.onClick.AddListener(() =>
+        {
+            State = ButtonState.Normal;
+            gameManager.GameReset(); 
+        });        // 버튼 클릭했을 때 게임 리셋 수행
     }
 
     IEnumerator BackToNormal()

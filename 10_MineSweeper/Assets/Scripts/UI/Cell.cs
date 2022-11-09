@@ -36,7 +36,7 @@ public class Cell : MonoBehaviour, IPointerClickHandler
     /// <summary>
     /// 이 셀에 지뢰가 있는지 표시(true면 지뢰가 있다.)
     /// </summary>
-    public bool isMine = false;
+    bool hasMine = false;
 
     /// <summary>
     /// 이 셀에 우클릭을 얼마나 했는지 표시
@@ -58,7 +58,8 @@ public class Cell : MonoBehaviour, IPointerClickHandler
     /// 이 셀로 인해 깃발 갯수의 변경이 있으면 실행되는 델리게이트
     /// </summary>
     public Action<int> onFlagCountChange;
-
+    
+    
     // 프로퍼티 ------------------------------------------------------------------------------------
 
     /// <summary>
@@ -83,7 +84,17 @@ public class Cell : MonoBehaviour, IPointerClickHandler
     /// <summary>
     /// 지뢰가 있는지 여부를 확인하는 프로퍼티
     /// </summary>
-    public bool HasMine => isMine;
+    public bool HasMine => hasMine;
+
+    /// <summary>
+    /// 깃발이 설치되었는지 확인하는 프로퍼티
+    /// </summary>
+    public bool IsFlaged => (cellState == CloseCellType.Flag);
+
+    /// <summary>
+    /// 열린 셀인지 확인하는 프로퍼티
+    /// </summary>
+    public bool IsOpen => isOpen;
 
     // 함수 ---------------------------------------------------------------------------------------
 
@@ -106,7 +117,7 @@ public class Cell : MonoBehaviour, IPointerClickHandler
     /// <summary>
     /// 지뢰 설정 함수
     /// </summary>
-    public void SetMine() => isMine = true;
+    public void SetMine() => hasMine = true;
 
     /// <summary>
     /// 셀의 열린 이미지 설정
@@ -126,7 +137,7 @@ public class Cell : MonoBehaviour, IPointerClickHandler
         {
             isOpen = true;  // 열렸다고 표시
 
-            if( isMine )
+            if( hasMine )
             {
                 // 지뢰가 있다.
                 cellImage.sprite = cellImages[OpenCellType.MineExplosion];  // 지뢰가 터진 스프라이트로 변경
@@ -146,6 +157,15 @@ public class Cell : MonoBehaviour, IPointerClickHandler
     }
 
     /// <summary>
+    /// 게임 종료시 셀에 표시할 이미지 설정용 함수
+    /// </summary>
+    /// <param name="type">설정할 이미지 종류</param>
+    public void SetOpenCellImage(OpenCellType type)
+    {
+        cellImage.sprite = cellImages[type];
+    }
+
+    /// <summary>
     /// 이 셀을 초기화 하는 함수
     /// </summary>
     public void CellReset()
@@ -154,7 +174,7 @@ public class Cell : MonoBehaviour, IPointerClickHandler
         cellImage.sprite = cellImages[global::CloseCellType.Normal];    // 기본 스프라이트 설정
 
         isOpen = false; // 닫혔다고 표시
-        isMine = false; // 지뢰가 없다고 표시
+        hasMine = false; // 지뢰가 없다고 표시
     }
 
     /// <summary>

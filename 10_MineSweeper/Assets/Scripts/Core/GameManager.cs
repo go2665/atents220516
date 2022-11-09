@@ -82,6 +82,7 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     public void GameOver()
     {
+        Debug.Log("게임 오버");
         onGameOver?.Invoke();        
     }
 

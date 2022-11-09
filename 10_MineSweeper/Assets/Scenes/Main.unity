@@ -214,6 +214,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3436941320670080257, guid: f1173828d3313bd4fb78510f2ef6bfa2, type: 3}
+      propertyPath: width
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 3436941320670080257, guid: f1173828d3313bd4fb78510f2ef6bfa2, type: 3}
+      propertyPath: height
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 3436941320670080257, guid: f1173828d3313bd4fb78510f2ef6bfa2, type: 3}
+      propertyPath: mineCount
+      value: 40
+      objectReference: {fileID: 0}
     - target: {fileID: 3436941320670080263, guid: f1173828d3313bd4fb78510f2ef6bfa2, type: 3}
       propertyPath: m_Name
       value: Stage

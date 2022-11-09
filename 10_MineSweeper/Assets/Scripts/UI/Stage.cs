@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class Stage : MonoBehaviour
@@ -51,9 +50,15 @@ public class Stage : MonoBehaviour
     /// </summary>
     GameManager gameManager;
 
-    public int totalCount = 0;
-    public int openCount = 0;
-    public int flagCount = 0;
+    /// <summary>
+    /// 연 셀의 갯수
+    /// </summary>
+    int openCount = 0;
+
+    /// <summary>
+    /// 남은 깃발 갯수
+    /// </summary>
+    int flagCount = 0;
 
 
     // 델리게이트 ----------------------------------------------------------------------------------
@@ -69,7 +74,7 @@ public class Stage : MonoBehaviour
     {
         // 스테이지 커버 연결
         StageCover cover = GetComponentInChildren<StageCover>();    // 일단 찾고
-        cover.onStartClick += ResetMine;                            // 커버가 클릭되면 지뢰를 설치하도록 함수 연결
+        cover.onStartClick += ResetAll;                             // 커버가 클릭되면 지뢰를 설치하도록 함수 연결
 
         // 셀 생성 작업        
         int totalCount = width * height;
@@ -98,6 +103,10 @@ public class Stage : MonoBehaviour
                 {
                     flagCount += x;
                     onFlagCountChange?.Invoke(x); // 셀의 델리게이트에 스테이지의 델리게이트를 연결
+                    if (flagCount == 0 && totalCount <= openCount + mineCount)
+                    {
+                        gameManager.GameClear();
+                    }
                 };
             }
         }
@@ -108,9 +117,9 @@ public class Stage : MonoBehaviour
         //Debug.Log("Stage start");
         gameManager = GameManager.Inst;         // 게임 매니저 찾기
         gameManager.onGameReset += ResetAll;    // 게임이 리셋 될 때 스테이지 전체 리셋(초기화 하고 지뢰 다시 배치)
+        gameManager.onGameOver += OnGameOver;   // 게임 오버가 되었을 때 각종 처리(잘못 찾은 지뢰와 못찾은 지뢰 표시)
 
-        totalCount = width * height;
-        flagCount = mineCount;
+        flagCount = mineCount;                  // 깃발 갯수 초기화
     }
 
     /// <summary>
@@ -118,6 +127,7 @@ public class Stage : MonoBehaviour
     /// </summary>
     public void ResetAll()
     {
+        flagCount = mineCount;      // 깃발 갯수 초기화
         foreach (var cell in cells) // 모든 셀을 리셋
         {
             cell.CellReset();   
@@ -153,7 +163,7 @@ public class Stage : MonoBehaviour
         {
             int cellIndex = suffleArray[i]; // 랜덤으로 섞인 인덱스 가져와서
             cells[cellIndex].SetMine();     // 지뢰설치
-
+            //mineCellList.Add(cells[cellIndex]);
             //Debug.Log($"{IndexToGrid(cellIndex)}에 지뢰 추가");
         }
     }
@@ -226,4 +236,30 @@ public class Stage : MonoBehaviour
     //        cells[i].SetMine();
     //    }
     //}
+
+    /// <summary>
+    /// 게임 오버시 지뢰들 표시하기
+    /// </summary>
+    void OnGameOver()
+    {
+        foreach(var cell in cells)
+        {
+            if( cell.IsFlaged )
+            {
+                // 잘못 찾은 지뢰 처리(깃발이 설치되어있고 지뢰가 없다.)
+                if (!cell.HasMine)
+                {
+                    cell.SetOpenCellImage(OpenCellType.MineFindMistake);    // 잘못찾은 지뢰용 이미지(X표시 되어있는 지뢰)로 변경
+                }
+            }
+            else
+            {
+                // 못찾은 지뢰 처리(깃발이 설치되어있지 않고 지뢰가 있다.)
+                if (cell.HasMine)
+                {
+                    cell.SetOpenCellImage(OpenCellType.MineNotFound);       // 못찾은 지뢰용 이미지(일반 지뢰)로 변경
+                }
+            }
+        }
+    }
 }

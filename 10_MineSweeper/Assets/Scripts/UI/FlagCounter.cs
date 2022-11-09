@@ -42,5 +42,7 @@ public class FlagCounter : MonoBehaviour
         stage.onFlagCountChange += (x) => { FlagCount += x; };  // 스테이지에서 깃발 갯수 변경 신호가 들어오면 FlagCount에 적용
         
         FlagCount = stage.mineCount;                            // 최초 깃발 갯수 설정
+
+        GameManager.Inst.onGameReset += () => FlagCount = stage.mineCount;  // 리셋버튼이 눌러졌을 때 표시되는 숫자 초기화 용도
     }
 }

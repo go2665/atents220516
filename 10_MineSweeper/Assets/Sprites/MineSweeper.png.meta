@@ -566,7 +566,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Block_Mine
+      name: Block_Mine_NotFound
       rect:
         serializedVersion: 2
         x: 85
@@ -608,7 +608,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Block_Mine_Find
+      name: Block_Mine_Find_Mistake
       rect:
         serializedVersion: 2
         x: 119
@@ -810,6 +810,7 @@ TextureImporter:
       Number_-: -769791306
       Number_5: -648339337
       Number_8: -191358360
+      Block_Mine_NotFound: -1012028528
       Block_MineCount_6: -1953645453
       Number_Empty: 1274059262
       Reset_Smile_Pressed: -1618625926
@@ -825,16 +826,15 @@ TextureImporter:
       Block_MineCount_1: -444285267
       Number_3: -1935152539
       Number_0: -1507243044
+      Block_Mine_Find_Mistake: 250447215
       Block_MineCount_8: -397565686
       BlockCover_Flag: -2068905725
       Block_Mine_Explosion: 524531768
-      Block_Mine_Find: 250447215
       Number_7: -1417141640
       Number_1: -98276984
       Block_MineCount_3: 977598830
       Block_MineCount_5: 142977294
       Number_9: -229737758
-      Block_Mine: -1012028528
       Number_2: -1000400878
       Reset_Smile: 1543339470
       Reset_GameOver: 2015483703
