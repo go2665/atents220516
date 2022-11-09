@@ -92,9 +92,9 @@ public class Stage : MonoBehaviour
                 cells[id].onSafeOpen += GetAroundMineCount;         // 터지지 않고 열렸을 때 실행될 함수 연결(주변 8칸 검사)
                 cells[id].onSafeOpen += (_) => 
                 { 
-                    openCount++; 
+                    openCount++;
 
-                    if(flagCount == 0 && totalCount <= openCount + mineCount)
+                    if (flagCount == 0 && totalCount <= openCount + mineCount)
                     {
                         gameManager.GameClear();
                     }
@@ -107,7 +107,7 @@ public class Stage : MonoBehaviour
                     {
                         gameManager.GameClear();
                     }
-                };
+                };                
             }
         }
     }

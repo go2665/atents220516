@@ -49,7 +49,7 @@ public class Cell : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IPoi
     GameManager gameManager;        // 게임 매니저
 
     // 델리게이트 ----------------------------------------------------------------------------------
-    
+
     /// <summary>
     /// 이 셀이 지뢰없이 열렸을 때 실행되는 델리게이트
     /// </summary>
@@ -59,6 +59,16 @@ public class Cell : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IPoi
     /// 이 셀로 인해 깃발 갯수의 변경이 있으면 실행되는 델리게이트
     /// </summary>
     public Action<int> onFlagCountChange;
+
+    /// <summary>
+    /// 셀이 눌러지면 실행되는 델리게이트
+    /// </summary>
+    Action onCellPress;
+
+    /// <summary>
+    /// 눌렀던 셀을 때면 실행되는 델리게이트
+    /// </summary>
+    Action onCellRelease;
     
     
     // 프로퍼티 ------------------------------------------------------------------------------------
@@ -110,6 +120,9 @@ public class Cell : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IPoi
         // 각종 초기화
         gameManager = GameManager.Inst;
         cellImages = gameManager.CellImage;
+
+        onCellPress += () => gameManager.ResetBtn.SetSurprise();    // 함수 등록
+        onCellRelease += () => gameManager.ResetBtn.SetNormal();
 
         CellReset();
         //Debug.Log("Cell start");
@@ -234,7 +247,8 @@ public class Cell : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IPoi
             Cell cell = eventData.pointerCurrentRaycast.gameObject.GetComponent<Cell>();
             if (cell != null)
             {
-                cell.OpenCell(); // 해당 위치의 셀을 열기
+                onCellRelease?.Invoke();    // 버튼을 땠다고 알림
+                cell.OpenCell();            // 해당 위치의 셀을 열기
             }
         }
     }
@@ -266,6 +280,7 @@ public class Cell : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IPoi
         if (!IsOpen && cellState == CloseCellType.Normal && Mouse.current.leftButton.isPressed)
         {
             cellImage.sprite = cellImages[OpenCellType.Empty];  // 눌린 이미지로 변경
+            onCellPress?.Invoke();                              // 버튼을 눌렀다고 알림
         }
     }
 
@@ -277,6 +292,7 @@ public class Cell : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IPoi
         // 셀이 닫혀 있고, 아무런 표시가 되어 있지 않다고 표시된 셀일 때 실행
         if (!IsOpen && cellState == CloseCellType.Normal)
         {
+            onCellRelease?.Invoke();                                // 버튼을 땠다고 알림
             cellImage.sprite = cellImages[CloseCellType.Normal];    // 원래 이미지로 복구
         }
     }

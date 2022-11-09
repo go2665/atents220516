@@ -15,6 +15,11 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     bool isGameStart = false;
 
+    /// <summary>
+    /// 리셋 버튼
+    /// </summary>
+    ResetButton resetButton;
+
 
     // 프로퍼티 ------------------------------------------------------------------------------------
 
@@ -22,6 +27,11 @@ public class GameManager : Singleton<GameManager>
     /// 셀 이미지 매니저에 접근하기 위한 프로퍼티
     /// </summary>
     public CellImageManager CellImage => cellImage;
+
+    /// <summary>
+    /// 리셋 버튼에 접근하기 위한 프로퍼티
+    /// </summary>
+    public ResetButton ResetBtn => resetButton;
 
     // 델리게이트 ----------------------------------------------------------------------------------
 
@@ -54,6 +64,7 @@ public class GameManager : Singleton<GameManager>
     {
         // 컴포넌트 찾기
         cellImage = GetComponent<CellImageManager>();
+        resetButton = FindObjectOfType<ResetButton>();
     }
 
     /// <summary>

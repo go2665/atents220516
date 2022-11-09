@@ -9,21 +9,21 @@ public class Test_ResetButton : TestBase
 
     protected override void OnTest1(InputAction.CallbackContext obj)
     {
-        resetButton.State = ResetButton.ButtonState.Normal;
+        //resetButton.State = ResetButton.ButtonState.Normal;
     }
 
     protected override void OnTest2(InputAction.CallbackContext obj)
     {
-        resetButton.State = ResetButton.ButtonState.Surprise;
+        //resetButton.State = ResetButton.ButtonState.Surprise;
     }
 
     protected override void OnTest3(InputAction.CallbackContext obj)
     {
-        resetButton.State = ResetButton.ButtonState.GameClear;
+        //resetButton.State = ResetButton.ButtonState.GameClear;
     }
 
     protected override void OnTest4(InputAction.CallbackContext obj)
     {
-        resetButton.State = ResetButton.ButtonState.GameOver;
+        //resetButton.State = ResetButton.ButtonState.GameOver;
     }
 }
