@@ -4,8 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
-public class Cell : MonoBehaviour, IPointerClickHandler
+public class Cell : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IPointerDownHandler, IPointerEnterHandler, IPointerExitHandler
 {
     // 상수 ---------------------------------------------------------------------------------------
 
@@ -133,7 +134,7 @@ public class Cell : MonoBehaviour, IPointerClickHandler
     /// </summary>
     public void OpenCell()
     {
-        if (!isOpen)        // 열리지 않은 셀만 열기
+        if (!isOpen && cellState == CloseCellType.Normal)        // 열리지 않았고 기본 상태인 셀만 열기
         {
             isOpen = true;  // 열렸다고 표시
 
@@ -170,7 +171,7 @@ public class Cell : MonoBehaviour, IPointerClickHandler
     /// </summary>
     public void CellReset()
     {
-        cellState = CloseCellType.Normal;                           // 기본 상태 설정
+        cellState = CloseCellType.Normal;                               // 기본 상태 설정
         cellImage.sprite = cellImages[global::CloseCellType.Normal];    // 기본 스프라이트 설정
 
         isOpen = false; // 닫혔다고 표시
@@ -183,14 +184,7 @@ public class Cell : MonoBehaviour, IPointerClickHandler
     /// <param name="eventData"></param>
     public void OnPointerClick(PointerEventData eventData)
     {
-        if( eventData.button == PointerEventData.InputButton.Left)          // 마우스 왼쪽 클릭을 했을 때
-        {            
-            if (cellState == CloseCellType.Normal)  // 셀 우클릭 상태가 노멀이면
-            {
-                OpenCell(); // 해당 셀을 열기
-            }
-        }
-        else if ( eventData.button == PointerEventData.InputButton.Right )  // 마우스 오른쪽 클릭을 했을 때
+        if ( eventData.button == PointerEventData.InputButton.Right )  // 마우스 오른쪽 클릭을 했을 때
         {
             if( !isOpen )   // 셀이 아직 안열린 상태일때만
             {
@@ -214,6 +208,76 @@ public class Cell : MonoBehaviour, IPointerClickHandler
 
                 cellImage.sprite = cellImages[cellState];   // 셀 우클릭 상태에 맞는 이미지 표현
             }
+        }
+    }
+
+    /// <summary>
+    /// 마우스 버튼을 눌렀을 때 실행되는 함수
+    /// </summary>
+    /// <param name="eventData"></param>
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        if (eventData.button == PointerEventData.InputButton.Left)          // 마우스 왼쪽 클릭을 했을 때
+        {
+            CellPress();    // 누르는 표시
+        }
+    }
+        
+    /// <summary>
+    /// 마우스 버튼을 땠을 때 실행되는 함수
+    /// </summary>
+    /// <param name="eventData"></param>
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        if (eventData.button == PointerEventData.InputButton.Left)          // 마우스 왼쪽 클릭을 했을 때
+        {
+            Cell cell = eventData.pointerCurrentRaycast.gameObject.GetComponent<Cell>();
+            if (cell != null)
+            {
+                cell.OpenCell(); // 해당 위치의 셀을 열기
+            }
+        }
+    }
+        
+    /// <summary>
+    /// 셀에 마우스 커서가 들어갔을 때 실행
+    /// </summary>
+    /// <param name="eventData"></param>
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        CellPress();    // 조건이 맞으면 눌린 표시
+    }
+
+    /// <summary>
+    /// 셀에서 마우스 커서가 나갔을 때 실행
+    /// </summary>
+    /// <param name="eventData"></param>
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        CellRelease(); // 조건이 맞으면 원상 복구
+    }
+
+    /// <summary>
+    /// 셀을 누른 효과를 내고 싶을 때 사용하는 함수
+    /// </summary>
+    void CellPress()
+    {
+        // 셀이 닫혀있고, 아무런 표시가 되지 않은 셀이고, 마우스 왼쪽 버튼이 눌러져 있을 때 실행
+        if (!IsOpen && cellState == CloseCellType.Normal && Mouse.current.leftButton.isPressed)
+        {
+            cellImage.sprite = cellImages[OpenCellType.Empty];  // 눌린 이미지로 변경
+        }
+    }
+
+    /// <summary>
+    /// 셀을 누른 효과를 복구 시키고 싶을 때 사용하는 함수
+    /// </summary>
+    void CellRelease()
+    {
+        // 셀이 닫혀 있고, 아무런 표시가 되어 있지 않다고 표시된 셀일 때 실행
+        if (!IsOpen && cellState == CloseCellType.Normal)
+        {
+            cellImage.sprite = cellImages[CloseCellType.Normal];    // 원래 이미지로 복구
         }
     }
 }

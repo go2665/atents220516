@@ -254,7 +254,7 @@ public class Stage : MonoBehaviour
             }
             else
             {
-                // 못찾은 지뢰 처리(셀이 닫혀 있고 깃발이 설치되어있지 않고 지뢰가 있다.)
+                // 못찾은 지뢰 처리(깃발이 설치되어있지 않고 셀이 닫혀 있고 지뢰가 있다.)
                 if (!cell.IsOpen && cell.HasMine)
                 {
                     cell.SetOpenCellImage(OpenCellType.MineNotFound);       // 못찾은 지뢰용 이미지(일반 지뢰)로 변경

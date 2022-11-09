@@ -15,6 +15,7 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     bool isGameStart = false;
 
+
     // 프로퍼티 ------------------------------------------------------------------------------------
 
     /// <summary>
