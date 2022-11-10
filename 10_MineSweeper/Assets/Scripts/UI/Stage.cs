@@ -17,6 +17,7 @@ public class Stage : MonoBehaviour
     /// </summary>
     const int InvalidIndex = -1;
 
+
     // 변수 ---------------------------------------------------------------------------------------
 
     /// <summary>
@@ -60,6 +61,15 @@ public class Stage : MonoBehaviour
     /// </summary>
     int flagCount = 0;
 
+    /// <summary>
+    /// 전체 셀 갯수
+    /// </summary>
+    int totalCount;
+
+    /// <summary>
+    /// 눌려져 있는 셀들의 ID
+    /// </summary>
+    List<int> pressedCellIDs = new List<int>(8);
 
     // 델리게이트 ----------------------------------------------------------------------------------
 
@@ -77,7 +87,7 @@ public class Stage : MonoBehaviour
         cover.onStartClick += ResetAll;                             // 커버가 클릭되면 지뢰를 설치하도록 함수 연결
 
         // 셀 생성 작업        
-        int totalCount = width * height;
+        totalCount = width * height;
         cells = new Cell[totalCount];       // 배열 할당 받기        
         for (int i = 0; i < height; i++)    // 가로세로 갯수만큼 셀 생성
         {
@@ -88,27 +98,156 @@ public class Stage : MonoBehaviour
                 obj.transform.localPosition = new Vector3(j * CellSideSize, -i * CellSideSize, 0);  // 위치 정하기
                 int id = i * width + j;
                 cells[id] = obj.GetComponent<Cell>();               // cells에 모든 셀 보관
-                cells[id].ID = id;                                  // cell에 ID할당
-                cells[id].onSafeOpen += GetAroundMineCount;         // 터지지 않고 열렸을 때 실행될 함수 연결(주변 8칸 검사)
-                cells[id].onSafeOpen += (_) => 
-                { 
-                    openCount++;
-
-                    if (flagCount == 0 && totalCount <= openCount + mineCount)
-                    {
-                        gameManager.GameClear();
-                    }
-                };
+                cells[id].ID = id;     
                 cells[id].onFlagCountChange += (x) =>
                 {
                     flagCount += x;
-                    onFlagCountChange?.Invoke(x); // 셀의 델리게이트에 스테이지의 델리게이트를 연결
-                    if (flagCount == 0 && totalCount <= openCount + mineCount)
-                    {
-                        gameManager.GameClear();
-                    }
-                };                
+                    onFlagCountChange?.Invoke(x);       // 셀의 델리게이트에 스테이지의 델리게이트를 연결. FlagCounter에 알림용
+                    CheckGameClear();                   // 깃발 갯수가 바뀔 때마다 게임 클리어 체크
+                };
+                cells[id].onCellPress += OnCellPressed;     // 셀이 마우스로 눌러졌을 때 처리할 함수 등록
+                cells[id].onCellRelease += OnCellRealeased; // 셀에서 마우스 버튼이 떨어졌을 때 처리할 함수 등록
+                cells[id].onCellEnter += OnCellEntered;     // 셀에 마우스 커서가 들어왔을 때 처리할 함수 등록
             }
+        }
+    }
+
+    /// <summary>
+    /// 셀에 마우스 커서가 들어왔을 때 실행될 함수
+    /// </summary>
+    /// <param name="cellId">들어간 셀의 ID</param>
+    private void OnCellEntered(int cellId)
+    {        
+        if (pressedCellIDs.Count > 0)           // 눌러진 셀이 있다면
+        {
+            foreach(var id in pressedCellIDs)
+            {
+                cells[id].CellRelease();        // 눌러진 셀들을 전부 원상복구
+            }
+
+            Cell target = cells[cellId];        // 지금 들어간 셀이
+            if (target.IsOpen)
+            {                
+                AroundCellPress(target);        // 열려있으면 주변의 셀을 누르기
+            }
+            else
+            {
+                pressedCellIDs.Clear();         // 닫혀 있으면 목록을 비우고 이 셀의 ID만 추가한 후 누르기
+                pressedCellIDs.Add(cellId);
+                target.CellPress();
+            }
+        }
+    }
+
+    /// <summary>
+    /// 셀에서 마우스 버튼이 떨어졌을 때 실행되는 함수
+    /// </summary>
+    /// <param name="cellId">대상 셀</param>
+    private void OnCellRealeased(int cellId)
+    {
+        Debug.Log($"Release : {cellId}");
+        gameManager.GameStart();            // GameStart 매번 시도(처음에만 실행됨, 타이머가 처음 셀이 열릴 때 시작되어야 되기 때문에 필요) 
+
+        Cell targetCell = cells[cellId];
+
+        // 눌린 셀들 원상 복귀
+        foreach (var id in pressedCellIDs)
+        {
+            cells[id].CellRelease();
+        }
+        pressedCellIDs.Clear();
+
+        // 셀 열기
+        OpenCell(targetCell);
+    }
+
+    /// <summary>
+    /// 셀이 마우스로 눌러졌을 때 실행할 함수
+    /// </summary>
+    /// <param name="cellId">대상 셀</param>
+    private void OnCellPressed(int cellId)
+    {
+        Debug.Log($"Press : {cellId}");
+        pressedCellIDs.Clear();
+        
+
+        Cell target = cells[cellId];
+        if(target.IsOpen)
+        {
+            // 열려있고 주변에 지뢰게 있는 셀이면 주변 셀을 누르기
+            AroundCellPress(target);
+        }
+        else
+        {
+            // 닫힌 셀이면 자신만 누르기
+            pressedCellIDs.Add(cellId);
+            target.CellPress();
+        }        
+    }
+
+    /// <summary>
+    /// 주변에 닫힌 셀을 전부 누르는 함수
+    /// </summary>
+    /// <param name="target">기준 셀</param>
+    private void AroundCellPress(Cell target)
+    {
+        if (target.AroundMineCount > 0) // 주변에 지뢰가 있으면(숫자가 씌여져 있는 셀이면)
+        {
+            List<Cell> cells = GetAroundCells(target.ID);   // 주변셀 다 가져와서
+            foreach (var cell in cells)
+            {
+                if (!cell.IsOpen)                           // 닫혀있으면
+                {
+                    pressedCellIDs.Add(cell.ID);            // 전부 기록하고 누르기
+                    cell.CellPress();
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// 셀을 재귀적으로 여는 함수
+    /// </summary>
+    /// <param name="target">열릴 셀</param>
+    void OpenCell(Cell target)
+    {
+        if (target.OpenCell())              // True면 성공적으로 열렸다(게임 오버 당하지 않음)
+        {
+            List<Cell> neighbor = GetAroundCells(target.ID);   // 주변 셀 가져오기
+            int neighborMineCount = 0;      // 주변 지뢰 갯수
+            foreach (var cell in neighbor)
+            {
+                if (cell.HasMine)
+                    neighborMineCount++;    // 주변 지뢰 갯수 누적
+            }
+
+            if (neighborMineCount > 0)
+            {
+                // 주변에 지뢰가 하나 이상이다.
+                target.SetOpenCellImage(neighborMineCount);
+            }
+            else
+            {
+                // 주변에 지뢰가 하나도 없다.
+                foreach (var cell in neighbor)
+                {
+                    OpenCell(cell);     // 재귀적으로 계속 열기
+                }
+            }
+
+            openCount++;        // 연 갯수 증가시키기
+            CheckGameClear();   // 셀이 열릴 때마다 게임 클리어 체크
+        }
+    }
+
+    /// <summary>
+    /// 게임 클리어가능한지 확인 후 가능하면 게임 클리어시키는 함수
+    /// </summary>
+    private void CheckGameClear()
+    {
+        if (flagCount == 0 && totalCount <= openCount + mineCount)
+        {
+            gameManager.GameClear();
         }
     }
 
@@ -169,40 +308,27 @@ public class Stage : MonoBehaviour
     }
 
     /// <summary>
-    /// 주변 8칸의 지뢰 여부 탐색(지뢰가 아닌 셀을 열었을 때 실행)
+    /// 대상 주변의 모든 셀을 리턴하는 함수
     /// </summary>
-    /// <param name="cell">지금 연 셀</param>
-    private void GetAroundMineCount(Cell cell)
+    /// <param name="cellId">중심이 되는 대상 셀</param>
+    /// <returns>대상 셀의 주변 셀 목록</returns>
+    private List<Cell> GetAroundCells(int cellId)
     {
-        gameManager.GameStart();    // GameStart 매번 시도(처음에만 실행됨)
-
-        int mineCount = 0;                          // 지뢰 갯수 누적할 변수
-        List<Cell> neighbor = new List<Cell>(8);    // 주변 8칸 저장할 리스트
-        Vector2Int grid = IndexToGrid(cell.ID);     // 셀의 그리드 좌표 구하기
-        for(int i=-1;i<2;i++)                       // 주변 8칸 탐색
+        //Debug.Log(this.gameObject.name);
+        List<Cell> cellList = new List<Cell>(8);
+        Vector2Int grid = IndexToGrid(cellId);                      // 셀의 그리드 좌표 구하기
+        for (int i = -1; i < 2; i++)                                // 주변 8칸 탐색
         {
-            for(int j = -1;j<2;j++)
+            for (int j = -1; j < 2; j++)
             {
                 int index = GridToIndex(j + grid.x, i + grid.y);    // 그리드 좌표를 인덱스로 다시 변환
-                if( index != InvalidIndex && !(i==0 && j==0))       // 해당 좌표가 적절한지, 자신은 아닌지 확인
+                if (index != InvalidIndex && !(i == 0 && j == 0))   // 해당 좌표가 적절한지, 자신은 아닌지 확인
                 {
-                    if( cells[index].HasMine )  // 지뢰가 있는지 확인
-                    {
-                        mineCount++;            // 지뢰가 있으면 갯수 누적
-                    }
-                    neighbor.Add(cells[index]); // 주변 셀 저장
+                    cellList.Add(cells[index]);
                 }
             }
         }
-
-        cell.SetOpenImage(mineCount);       // 해당 셀에 숫자 설정(지뢰 숫자)
-        if (mineCount == 0)                 // 지뢰 갯수가 0이면
-        {            
-            foreach(var ncell in neighbor)  // 주변 셀 다 열기
-            {
-                ncell.OpenCell();
-            }
-        }
+        return cellList;
     }
 
     /// <summary>
