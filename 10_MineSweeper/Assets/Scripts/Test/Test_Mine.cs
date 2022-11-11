@@ -19,6 +19,6 @@ public class Test_Mine : TestBase
 
     protected override void OnTest2(InputAction.CallbackContext obj)
     {
-        stage.ResetAll();
+        //stage.ResetAll();
     }
 }

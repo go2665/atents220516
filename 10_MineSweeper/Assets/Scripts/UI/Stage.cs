@@ -112,104 +112,24 @@ public class Stage : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 셀에 마우스 커서가 들어왔을 때 실행될 함수
-    /// </summary>
-    /// <param name="cellId">들어간 셀의 ID</param>
-    private void OnCellEntered(int cellId)
-    {        
-        if (pressedCellIDs.Count > 0)           // 눌러진 셀이 있다면
-        {
-            foreach(var id in pressedCellIDs)
-            {
-                cells[id].CellRelease();        // 눌러진 셀들을 전부 원상복구
-            }
-
-            Cell target = cells[cellId];        // 지금 들어간 셀이
-            if (target.IsOpen)
-            {                
-                AroundCellPress(target);        // 열려있으면 주변의 셀을 누르기
-            }
-            else
-            {
-                pressedCellIDs.Clear();         // 닫혀 있으면 목록을 비우고 이 셀의 ID만 추가한 후 누르기
-                pressedCellIDs.Add(cellId);
-                target.CellPress();
-            }
-        }
-    }
-
-    /// <summary>
-    /// 셀에서 마우스 버튼이 떨어졌을 때 실행되는 함수
-    /// </summary>
-    /// <param name="cellId">대상 셀</param>
-    private void OnCellRealeased(int cellId)
+    private void Start()
     {
-        Debug.Log($"Release : {cellId}");
-        gameManager.GameStart();            // GameStart 매번 시도(처음에만 실행됨, 타이머가 처음 셀이 열릴 때 시작되어야 되기 때문에 필요) 
+        //Debug.Log("Stage start");
+        gameManager = GameManager.Inst;         // 게임 매니저 찾기
+        gameManager.onGameReset += ResetAll;    // 게임이 리셋 될 때 스테이지 전체 리셋(초기화 하고 지뢰 다시 배치)
+        gameManager.onGameOver += OnGameOver;   // 게임 오버가 되었을 때 각종 처리(잘못 찾은 지뢰와 못찾은 지뢰 표시)
 
-        Cell targetCell = cells[cellId];
-
-        // 눌린 셀들 원상 복귀
-        foreach (var id in pressedCellIDs)
-        {
-            cells[id].CellRelease();
-        }
-        pressedCellIDs.Clear();
-
-        // 셀 열기
-        OpenCell(targetCell);
+        flagCount = mineCount;                  // 깃발 갯수 초기화
     }
 
-    /// <summary>
-    /// 셀이 마우스로 눌러졌을 때 실행할 함수
-    /// </summary>
-    /// <param name="cellId">대상 셀</param>
-    private void OnCellPressed(int cellId)
-    {
-        Debug.Log($"Press : {cellId}");
-        pressedCellIDs.Clear();
-        
 
-        Cell target = cells[cellId];
-        if(target.IsOpen)
-        {
-            // 열려있고 주변에 지뢰게 있는 셀이면 주변 셀을 누르기
-            AroundCellPress(target);
-        }
-        else
-        {
-            // 닫힌 셀이면 자신만 누르기
-            pressedCellIDs.Add(cellId);
-            target.CellPress();
-        }        
-    }
-
-    /// <summary>
-    /// 주변에 닫힌 셀을 전부 누르는 함수
-    /// </summary>
-    /// <param name="target">기준 셀</param>
-    private void AroundCellPress(Cell target)
-    {
-        if (target.AroundMineCount > 0) // 주변에 지뢰가 있으면(숫자가 씌여져 있는 셀이면)
-        {
-            List<Cell> cells = GetAroundCells(target.ID);   // 주변셀 다 가져와서
-            foreach (var cell in cells)
-            {
-                if (!cell.IsOpen)                           // 닫혀있으면
-                {
-                    pressedCellIDs.Add(cell.ID);            // 전부 기록하고 누르기
-                    cell.CellPress();
-                }
-            }
-        }
-    }
+    // 주요 함수들 ---------------------------------------------------------------------------------
 
     /// <summary>
     /// 셀을 재귀적으로 여는 함수
     /// </summary>
     /// <param name="target">열릴 셀</param>
-    void OpenCell(Cell target)
+    private void OpenCell(Cell target)
     {
         if (target.OpenCell())              // True면 성공적으로 열렸다(게임 오버 당하지 않음)
         {
@@ -251,25 +171,41 @@ public class Stage : MonoBehaviour
         }
     }
 
-    private void Start()
+    /// <summary>
+    /// 게임 오버시 지뢰들 표시하기
+    /// </summary>
+    private void OnGameOver()
     {
-        //Debug.Log("Stage start");
-        gameManager = GameManager.Inst;         // 게임 매니저 찾기
-        gameManager.onGameReset += ResetAll;    // 게임이 리셋 될 때 스테이지 전체 리셋(초기화 하고 지뢰 다시 배치)
-        gameManager.onGameOver += OnGameOver;   // 게임 오버가 되었을 때 각종 처리(잘못 찾은 지뢰와 못찾은 지뢰 표시)
-
-        flagCount = mineCount;                  // 깃발 갯수 초기화
+        foreach (var cell in cells)
+        {
+            if (cell.IsFlaged)
+            {
+                // 잘못 찾은 지뢰 처리(깃발이 설치되어있고 지뢰가 없다.)
+                if (!cell.HasMine)
+                {
+                    cell.SetOpenCellImage(OpenCellType.MineFindMistake);    // 잘못찾은 지뢰용 이미지(X표시 되어있는 지뢰)로 변경
+                }
+            }
+            else
+            {
+                // 못찾은 지뢰 처리(깃발이 설치되어있지 않고 셀이 닫혀 있고 지뢰가 있다.)
+                if (!cell.IsOpen && cell.HasMine)
+                {
+                    cell.SetOpenCellImage(OpenCellType.MineNotFound);       // 못찾은 지뢰용 이미지(일반 지뢰)로 변경
+                }
+            }
+        }
     }
 
     /// <summary>
     /// 게임 전체 리셋(셀 재활용)
     /// </summary>
-    public void ResetAll()
+    private void ResetAll()
     {
         flagCount = mineCount;      // 깃발 갯수 초기화
         foreach (var cell in cells) // 모든 셀을 리셋
         {
-            cell.CellReset();   
+            cell.CellReset();
         }
         ResetMine();                // 지뢰 다시 설치
     }
@@ -307,6 +243,126 @@ public class Stage : MonoBehaviour
         }
     }
 
+    // 입력 관련 함수 ------------------------------------------------------------------------------
+    /// <summary>
+    /// 셀에 마우스 커서가 들어왔을 때 실행될 함수
+    /// </summary>
+    /// <param name="cellId">들어간 셀의 ID</param>
+    private void OnCellEntered(int cellId)
+    {        
+        if (pressedCellIDs.Count > 0)           // 눌러진 셀이 있다면
+        {
+            foreach(var id in pressedCellIDs)
+            {
+                cells[id].CellRelease();        // 눌러진 셀들을 전부 원상복구
+            }
+
+            Cell target = cells[cellId];        // 지금 들어간 셀이
+            if (target.IsOpen)
+            {                
+                AroundCellPress(target);        // 열려있으면 주변의 셀을 누르기
+            }
+            else
+            {
+                pressedCellIDs.Clear();         // 닫혀 있으면 목록을 비우고 이 셀의 ID만 추가한 후 누르기
+                pressedCellIDs.Add(cellId);
+                target.CellPress();
+            }
+        }
+    }
+
+    /// <summary>
+    /// 셀에서 마우스 버튼이 떨어졌을 때 실행되는 함수
+    /// </summary>
+    /// <param name="cellId">대상 셀</param>
+    private void OnCellRealeased(int cellId)
+    {
+        Debug.Log($"Release : {cellId}");        
+
+        Cell targetCell = cells[cellId];
+        if(targetCell.IsOpen)
+        {
+            // 주변 깃발 갯수 세기
+            int flagCount = 0;
+            List<Cell> cellList = GetAroundCells(cellId);
+            foreach (var cell in cellList)
+            {
+                if (cell.IsFlaged)
+                    flagCount++;
+            }
+
+            if (targetCell.AroundMineCount == flagCount)
+            {
+                // 주변의 깃발 수와 지뢰의 숫자가 같으면
+                // 눌려져 있던 셀들 전부 열기
+                foreach (var id in pressedCellIDs)
+                {
+                    OpenCell(cells[id]);
+                }
+            }
+            else
+            {
+                // 주변의 깃발 수와 지뢰의 숫자가 다르면
+                // 눌린 셀들 원상 복귀
+                foreach (var id in pressedCellIDs)
+                {
+                    cells[id].CellRelease();
+                }
+            }
+        }
+        else
+        {
+            OpenCell(targetCell);   // 닫혀있던 셀이면 열기
+        }
+        pressedCellIDs.Clear();     // 목록 초기화
+    }
+
+    /// <summary>
+    /// 셀이 마우스로 눌러졌을 때 실행할 함수
+    /// </summary>
+    /// <param name="cellId">대상 셀</param>
+    private void OnCellPressed(int cellId)
+    {
+        Debug.Log($"Press : {cellId}");
+        pressedCellIDs.Clear();
+        
+
+        Cell target = cells[cellId];
+        if(target.IsOpen)
+        {
+            // 열려있고 주변에 지뢰게 있는 셀이면 주변 셀을 누르기
+            AroundCellPress(target);
+        }
+        else
+        {
+            // 닫힌 셀이면 자신만 누르기
+            pressedCellIDs.Add(cellId);
+            target.CellPress();
+        }        
+    }
+
+    // 유틸리티 함수 -------------------------------------------------------------------------------
+
+    /// <summary>
+    /// 주변에 닫힌 셀을 전부 누르는 함수
+    /// </summary>
+    /// <param name="target">기준 셀</param>
+    private void AroundCellPress(Cell target)
+    {
+        if (target.AroundMineCount > 0) // 주변에 지뢰가 있으면(숫자가 씌여져 있는 셀이면)
+        {
+            List<Cell> cells = GetAroundCells(target.ID);   // 주변셀 다 가져와서
+            foreach (var cell in cells)
+            {
+                if (!cell.IsOpen)                           // 닫혀있으면
+                {
+                    pressedCellIDs.Add(cell.ID);            // 전부 기록하고 누르기
+                    cell.CellPress();
+                }
+            }
+        }
+    }
+
     /// <summary>
     /// 대상 주변의 모든 셀을 리턴하는 함수
     /// </summary>
@@ -336,7 +392,7 @@ public class Stage : MonoBehaviour
     /// </summary>
     /// <param name="index">변환할 인덱스</param>
     /// <returns>변환된 그리드 좌표</returns>
-    Vector2Int IndexToGrid(int index)
+    private Vector2Int IndexToGrid(int index)
     {
         return new Vector2Int(index % width, index / height);
     }
@@ -347,13 +403,14 @@ public class Stage : MonoBehaviour
     /// <param name="x">변환할 그리드X</param>
     /// <param name="y">변환할 그리드Y</param>
     /// <returns>변환된 인덱스 값</returns>
-    int GridToIndex(int x, int y)
+    private int GridToIndex(int x, int y)
     {
-        if( x >= 0 && x < width && y >= 0 && y < height )
+        if (x >= 0 && x < width && y >= 0 && y < height)
             return x + y * height;
 
         return InvalidIndex;
-    }    
+    }
+
 
     //public void Test_SetMines()
     //{
@@ -361,31 +418,5 @@ public class Stage : MonoBehaviour
     //    {
     //        cells[i].SetMine();
     //    }
-    //}
-
-    /// <summary>
-    /// 게임 오버시 지뢰들 표시하기
-    /// </summary>
-    void OnGameOver()
-    {
-        foreach(var cell in cells)
-        {
-            if( cell.IsFlaged )
-            {
-                // 잘못 찾은 지뢰 처리(깃발이 설치되어있고 지뢰가 없다.)
-                if (!cell.HasMine)
-                {
-                    cell.SetOpenCellImage(OpenCellType.MineFindMistake);    // 잘못찾은 지뢰용 이미지(X표시 되어있는 지뢰)로 변경
-                }
-            }
-            else
-            {
-                // 못찾은 지뢰 처리(깃발이 설치되어있지 않고 셀이 닫혀 있고 지뢰가 있다.)
-                if (!cell.IsOpen && cell.HasMine)
-                {
-                    cell.SetOpenCellImage(OpenCellType.MineNotFound);       // 못찾은 지뢰용 이미지(일반 지뢰)로 변경
-                }
-            }
-        }
-    }
+    //}       
 }

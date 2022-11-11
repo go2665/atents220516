@@ -138,8 +138,17 @@ public class Cell : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IPoi
         gameManager = GameManager.Inst;
         cellImages = gameManager.CellImage;
 
-        onCellPress += (_) => gameManager.ResetBtn.SetSurprise();    // 함수 등록
-        onCellRelease += (_) => gameManager.ResetBtn.SetNormal();
+        // 함수 등록
+        onCellPress += (_) =>
+        {
+            if(gameManager.IsPlaying)
+                gameManager.ResetBtn.SetSurprise();    // 플레이 중에만 놀란 표정으로 바뀌기
+        };
+        onCellRelease += (_) =>
+        {
+            if (gameManager.IsPlaying)
+                gameManager.ResetBtn.SetNormal();       // 플레이 중에만 보통 얼굴로 돌아옴
+        };
 
         CellReset();
         //Debug.Log("Cell start");
@@ -221,15 +230,16 @@ public class Cell : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IPoi
     /// <param name="eventData"></param>
     public void OnPointerClick(PointerEventData eventData)
     {
-        if ( eventData.button == PointerEventData.InputButton.Right )  // 마우스 오른쪽 클릭을 했을 때
+        // 게임 플레이 상태이고 마우스 오른쪽 클릭을 했을 때
+        if (gameManager.IsPlaying && eventData.button == PointerEventData.InputButton.Right)  
         {
-            if( !isOpen )   // 셀이 아직 안열린 상태일때만
+            if (!isOpen)   // 셀이 아직 안열린 상태일때만
             {
                 switch (cellState)  // 셀 우클릭 상태에 따라 처리
                 {
                     // Normal -> Flag -> Question -> Normal .... 순으로 계속 반복
                     case CloseCellType.Normal:
-                        cellState = CloseCellType.Flag;                        
+                        cellState = CloseCellType.Flag;
                         onFlagCountChange?.Invoke(-1);      // 깃발 설치했으니 깃발 갯수 감소
                         break;
                     case CloseCellType.Flag:
@@ -254,10 +264,14 @@ public class Cell : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IPoi
     /// <param name="eventData"></param>
     public void OnPointerDown(PointerEventData eventData)
     {
-        if (eventData.button == PointerEventData.InputButton.Left)          // 마우스 왼쪽 클릭을 했을 때
+        // GameStart 매번 시도(처음에만 실행됨, 타이머가 처음 셀이 열릴 때 시작되어야 되기 때문에 필요) 
+        gameManager.GameStart();
+
+        // 게임 플레이 상태이고 마마우스 왼쪽 클릭을 했을 때
+        if (gameManager.IsPlaying && eventData.button == PointerEventData.InputButton.Left)          
         {
             onCellPress?.Invoke(ID);    // 눌렸다고 알림
-        }
+        }     
     }
         
     /// <summary>
@@ -266,7 +280,8 @@ public class Cell : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IPoi
     /// <param name="eventData"></param>
     public void OnPointerUp(PointerEventData eventData)
     {
-        if (eventData.button == PointerEventData.InputButton.Left)          // 마우스 왼쪽 클릭을 했을 때
+        // 게임 플레이 상태이고 마우스 왼쪽 클릭을 했을 때
+        if (gameManager.IsPlaying && eventData.button == PointerEventData.InputButton.Left)
         {
             Cell cell = eventData.pointerCurrentRaycast.gameObject.GetComponent<Cell>();
             if (cell != null)
@@ -282,7 +297,10 @@ public class Cell : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IPoi
     /// <param name="eventData"></param>
     public void OnPointerEnter(PointerEventData eventData)
     {
-        onCellEnter?.Invoke(ID);        // 마우스 포인터가 들어왔다고 알림
+        if (gameManager.IsPlaying)          // 게임 플레이 상태이면
+        {
+            onCellEnter?.Invoke(ID);        // 마우스 포인터가 들어왔다고 알림
+        }
     }
 
     /// <summary>

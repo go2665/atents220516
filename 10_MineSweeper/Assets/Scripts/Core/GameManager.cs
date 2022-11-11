@@ -6,14 +6,25 @@ using UnityEngine;
 public class GameManager : Singleton<GameManager>
 {    
     /// <summary>
+    /// 게임 상태표시용 enum
+    /// </summary>
+    public enum GameState
+    {
+        Ready = 0,      // 시작 전(새로 스테이지 만들어 진 후 첫번째 셀을 오픈하지 않은 상황)
+        Play,           // 게임 중(첫째 셀을 오픈 한 이후)
+        GameClear,      // 모든 지뢰를 다 찾았을 때
+        GameOver        // 지뢰를 밟았을 때
+    }
+
+    /// <summary>
+    /// 현재 게임 상태
+    /// </summary>
+    GameState state = GameState.Ready;
+
+    /// <summary>
     /// 셀 이미지 매니저 접근용 변수
     /// </summary>
     CellImageManager cellImage;
-
-    /// <summary>
-    /// 게임이 시작되었는지 여부(게임 시작은 첫번째 셀을 열었을 때 시작됨)
-    /// </summary>
-    bool isGameStart = false;
 
     /// <summary>
     /// 리셋 버튼
@@ -32,6 +43,11 @@ public class GameManager : Singleton<GameManager>
     /// 리셋 버튼에 접근하기 위한 프로퍼티
     /// </summary>
     public ResetButton ResetBtn => resetButton;
+
+    /// <summary>
+    /// 플레이 중인지 확인하는 프로퍼티
+    /// </summary>
+    public bool IsPlaying => state == GameState.Play;
 
     // 델리게이트 ----------------------------------------------------------------------------------
 
@@ -72,10 +88,10 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     public void GameStart()
     {
-        if(!isGameStart)
+        if(state == GameState.Ready)
         {
-            isGameStart = true;     // 처음 한번만 실행되게 설정
-            onGameStart?.Invoke();  // 델리게이트로 알림
+            state = GameState.Play;     // 처음 한번만 실행되게 설정
+            onGameStart?.Invoke();      // 델리게이트로 알림
         }
     }
 
@@ -85,7 +101,7 @@ public class GameManager : Singleton<GameManager>
     public void GameReset()
     {
         // 씬을 다시 부를 필요는 없음
-        isGameStart = false;
+        state = GameState.Ready;
         onGameReset?.Invoke();
     }
 
@@ -95,6 +111,7 @@ public class GameManager : Singleton<GameManager>
     public void GameOver()
     {
         Debug.Log("게임 오버");
+        state = GameState.GameOver;
         onGameOver?.Invoke();        
     }
 
@@ -104,7 +121,7 @@ public class GameManager : Singleton<GameManager>
     public void GameClear()
     {
         Debug.Log("게임 클리어");
-
+        state = GameState.GameClear;
         onGameClear?.Invoke();
 
     }
