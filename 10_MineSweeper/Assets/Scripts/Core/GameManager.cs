@@ -31,6 +31,10 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     ResetButton resetButton;
 
+    /// <summary>
+    /// 게임 스테이지
+    /// </summary>
+    Stage stage;
 
     // 프로퍼티 ------------------------------------------------------------------------------------
 
@@ -48,6 +52,13 @@ public class GameManager : Singleton<GameManager>
     /// 플레이 중인지 확인하는 프로퍼티
     /// </summary>
     public bool IsPlaying => state == GameState.Play;
+
+    /// <summary>
+    /// 게임 스테이지 확인용 프로퍼티
+    /// </summary>
+    public Stage Stage => stage;
+
+
 
     // 델리게이트 ----------------------------------------------------------------------------------
 
@@ -81,6 +92,7 @@ public class GameManager : Singleton<GameManager>
         // 컴포넌트 찾기
         cellImage = GetComponent<CellImageManager>();
         resetButton = FindObjectOfType<ResetButton>();
+        stage = FindObjectOfType<Stage>();
     }
 
     /// <summary>
@@ -112,7 +124,7 @@ public class GameManager : Singleton<GameManager>
     {
         Debug.Log("게임 오버");
         state = GameState.GameOver;
-        onGameOver?.Invoke();        
+        onGameOver?.Invoke();
     }
 
     /// <summary>
@@ -123,6 +135,5 @@ public class GameManager : Singleton<GameManager>
         Debug.Log("게임 클리어");
         state = GameState.GameClear;
         onGameClear?.Invoke();
-
     }
 }
