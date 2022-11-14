@@ -20,6 +20,7 @@ public class Test_Main : TestBase
     {
         //timeCounter.TimerStart();
         Debug.Log( testFunc() );
+
     }
     protected override void OnTest2(InputAction.CallbackContext obj)
     {
