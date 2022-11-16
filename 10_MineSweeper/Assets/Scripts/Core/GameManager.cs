@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public class GameManager : Singleton<GameManager>
@@ -35,6 +36,13 @@ public class GameManager : Singleton<GameManager>
     /// 게임 스테이지
     /// </summary>
     Stage stage;
+
+    TimeCounter timeCounter;
+
+    const int RankCount = 5;
+
+    List<int> timeRank;
+    List<int> clickRank;
 
     // 프로퍼티 ------------------------------------------------------------------------------------
 
@@ -82,6 +90,8 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     public Action onGameClear;
 
+    public Action<List<int>> onTimeRankUpdated;
+    public Action<List<int>> onClickRankUpdated;
     // 함수들 --------------------------------------------------------------------------------------
 
     /// <summary>
@@ -93,6 +103,15 @@ public class GameManager : Singleton<GameManager>
         cellImage = GetComponent<CellImageManager>();
         resetButton = FindObjectOfType<ResetButton>();
         stage = FindObjectOfType<Stage>();
+        timeCounter = FindObjectOfType<TimeCounter>();
+
+        timeRank = new List<int>(RankCount+1);
+        clickRank = new List<int>(RankCount+1);
+    }
+
+    private void Start()
+    {
+        LoadGameData();
     }
 
     /// <summary>
@@ -133,7 +152,59 @@ public class GameManager : Singleton<GameManager>
     public void GameClear()
     {
         Debug.Log("게임 클리어");
+        clickRank.Add(Stage.OpenTryCount);
+        timeRank.Add(timeCounter.CountTime);
+
+        clickRank.Sort();
+        timeRank.Sort();
+
+        clickRank.RemoveAt(RankCount);
+        timeRank.RemoveAt(RankCount);
+
+        SaveGameData();
         state = GameState.GameClear;
         onGameClear?.Invoke();
+    }
+
+    void SaveGameData()
+    {
+        SaveData saveData = new();
+        saveData.clickRank = clickRank.ToArray();
+        saveData.timeRank = timeRank.ToArray();
+
+        string json = JsonUtility.ToJson(saveData);
+
+        string path = $"{Application.dataPath}/Save/";
+        if( !Directory.Exists(path) )
+        {
+            Directory.CreateDirectory(path);
+        }
+
+        string fullPath = $"{path}Save.json";
+        File.WriteAllText(fullPath, json);
+
+        onTimeRankUpdated?.Invoke(timeRank);
+        onClickRankUpdated?.Invoke(clickRank);
+    }
+
+    void LoadGameData()
+    {
+        string path = $"{Application.dataPath}/Save/";
+        string fullPath = $"{path}Save.json";
+        if (Directory.Exists(path)&& File.Exists(fullPath))
+        {
+            string json = File.ReadAllText(fullPath);
+            SaveData data = JsonUtility.FromJson<SaveData>(json);
+            timeRank = new List<int>(data.timeRank);
+            clickRank = new List<int>(data.clickRank);
+        }
+        else
+        {
+            timeRank = new List<int>(new int[] { 999, 999, 999, 999, 999 });
+            clickRank = new List<int>(new int[] { 256, 256, 256, 256, 256 });
+        }
+
+        onTimeRankUpdated?.Invoke(timeRank);
+        onClickRankUpdated?.Invoke(clickRank);
     }
 }

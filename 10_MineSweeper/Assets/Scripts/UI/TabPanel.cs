@@ -22,6 +22,7 @@ public class TabPanel : MonoBehaviour
 
     Button[] tabTitle;
     Image[] tabBG;
+    CanvasGroup[] tabBGCanvasGroup;
 
     int SelectedTab
     {
@@ -37,12 +38,14 @@ public class TabPanel : MonoBehaviour
                     Color color = tabBG[i].color;
                     color.a = 0.5f;
                     tabBG[i].color = color;
+                    tabBGCanvasGroup[i].alpha = 1.0f;
                 }
                 else
                 {
                     Color color = tabBG[i].color;
                     color.a = 0;
                     tabBG[i].color = color;
+                    tabBGCanvasGroup[i].alpha = 0.0f;
                 }
             }
         }
@@ -56,9 +59,21 @@ public class TabPanel : MonoBehaviour
         tabTitle = tabTitleParent.GetComponentsInChildren<Button>();
         foreach(var tab in tabTitle)
         {
-            tab.onClick.AddListener(() => SelectedTab = tab.transform.GetSiblingIndex());
+            int index = tab.transform.GetSiblingIndex();
+            tab.onClick.AddListener(() => SelectedTab = index);
         }
-        tabBG = tabBGParent.GetComponentsInChildren<Image>();
+
+        tabBG = new Image[tabBGParent.childCount];
+        for(int i=0;i<tabBGParent.childCount;i++)
+        {
+            tabBG[i] = tabBGParent.GetChild(i).GetComponent<Image>();
+        }
+
+        tabBGCanvasGroup = new CanvasGroup[tabBGParent.childCount];
+        for (int i = 0; i < tabBGParent.childCount; i++)
+        {
+            tabBGCanvasGroup[i] = tabBGParent.GetChild(i).GetComponent<CanvasGroup>();
+        }
     }
 
     private void Start()
@@ -98,6 +113,7 @@ public class TabPanel : MonoBehaviour
         {
             Button[] newTabTitle = new Button[tabCount];
             Image[] newTabBG = new Image[tabCount];
+            CanvasGroup[] newTabBGCanvasGroup = new CanvasGroup[tabCount];
             string[] newText = new string[tabCount];
             Color[] newColor = new Color[tabCount];
 
@@ -105,6 +121,7 @@ public class TabPanel : MonoBehaviour
             {
                 newTabTitle[i] = tabTitle[i];
                 newTabBG[i] = tabBG[i];
+                newTabBGCanvasGroup[i] = tabBGCanvasGroup[i];
                 newText[i] = tabTitleText[i];
                 newColor[i] = tabBaseColor[i];
             }
@@ -127,12 +144,14 @@ public class TabPanel : MonoBehaviour
                 GameObject bg = Instantiate(prefab_TabBackground, tabBGParent);
                 bg.name = $"TabBG_{i}";
                 newTabBG[i] = bg.GetComponent<Image>();
+                newTabBGCanvasGroup[i] = bg.GetComponent<CanvasGroup>();
                 Color color = tabBaseColor[i];
                 color.a *= 0.5f;
                 newTabBG[i].color = color;                
             }
             tabTitle = newTabTitle;
             tabBG = newTabBG;
+            tabBGCanvasGroup = newTabBGCanvasGroup;
 
             SelectedTab = 0;
         }

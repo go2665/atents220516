@@ -22,6 +22,8 @@ public class TimeCounter : MonoBehaviour
     /// </summary>
     ImageNumber imageNumber;
 
+    public int CountTime => imageNumber.Number;
+
     private void Awake()
     {
         // 컴포넌트 찾기

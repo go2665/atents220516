@@ -9,9 +9,11 @@ public class EndPanel : MonoBehaviour
     TextMeshProUGUI openTry;
     TextMeshProUGUI find;
     TextMeshProUGUI notFind;
+    CanvasGroup canvasGroup;
 
     private void Awake()
     {
+        canvasGroup = GetComponent<CanvasGroup>();
         openTry = transform.GetChild(0).GetComponent<TextMeshProUGUI>();
         find = transform.GetChild(1).GetComponent<TextMeshProUGUI>();
         notFind = transform.GetChild(2).GetComponent<TextMeshProUGUI>();
@@ -19,6 +21,7 @@ public class EndPanel : MonoBehaviour
 
     private void Start()
     {
+        canvasGroup.alpha = 0;
         GameManager gameManager = GameManager.Inst;
         gameManager.onGameOver += Refresh;
         gameManager.onGameClear += Refresh;
@@ -41,5 +44,6 @@ public class EndPanel : MonoBehaviour
         Stage stage = gameManager.Stage;
         SetOpenTryCount(stage.OpenTryCount);
         SetMineCount(stage.FoundMineCount, stage.NotFoundMineCount);
+        canvasGroup.alpha = 1;
     }
 }
