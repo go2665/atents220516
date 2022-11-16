@@ -9,39 +9,41 @@ using UnityEngine.SceneManagement;
 // T 타입은 반드시 Component 클래스를 상속받은 타입이어야 한다.
 public class Singleton<T> : MonoBehaviour where T : Component
 {
+    private static bool isShutDown = false;
     private static T instance = null;
     public static T Inst
     {
         get
         {
+            if(isShutDown)
+            {
+                return null;
+            }
+
             if (instance == null)
             {
                 // 아직 싱글톤용 인스턴스가 만들어지지 않았다. 한번도 사용된 적이 없다.
                 T obj = FindObjectOfType<T>();                  // 일단 같은 타입이 있는지 찾기
-                if (obj != null)
-                {
-                    instance = obj;                             // 있으면 있는 것을 사용한다.
-                }
-                else
+                if (obj == null)
                 {
                     GameObject gameObject = new();             // 없으면 새로 만든다.
                     gameObject.name = $"{typeof(T).Name}";
-                    instance = gameObject.AddComponent<T>();
+                    obj = gameObject.AddComponent<T>();
                 }
+                instance = obj;
+                DontDestroyOnLoad(instance.gameObject);
             }
             return instance;    // instance는 무조건 null이 아닌 값이 리턴된다.
         }
     }
 
-    protected virtual void Awake()
+    private void Awake()
     {
         if (instance == null)       
         {
             // 새롭게 만들어진 싱글톤
             instance = this as T;
-            DontDestroyOnLoad(this.gameObject);
-
-            SceneManager.sceneLoaded += OnSceneLoaded;  // 씬이 로딩되면 OnSceneLoaded 함수를 실행시켜라.(SceneManager가 가지고 있는 델리게이트에 함수 추가)
+            DontDestroyOnLoad(this.gameObject);            
         }
         else
         {
@@ -52,6 +54,21 @@ public class Singleton<T> : MonoBehaviour where T : Component
                 Destroy(this.gameObject);   // 나를 삭제.
             }
         }
+    }
+
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;  // 씬이 로딩되면 OnSceneLoaded 함수를 실행시켜라.(SceneManager가 가지고 있는 델리게이트에 함수 추가)
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnApplicationQuit()
+    {
+        isShutDown = true;
     }
 
     /// <summary>
